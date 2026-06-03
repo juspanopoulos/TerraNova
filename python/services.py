@@ -51,3 +51,35 @@ def buscar_alertas_ativos(conexao):
     
     lista_alertas = [{"area": row[0], "tipo": row[1], "severidade": row[2], "descricao": row[3]} for row in alertas]
     return lista_alertas
+
+def consultar_historico_climatico(conexao, id_area):
+    if not conexao: return []
+    
+    cursor = conexao.cursor()
+    try:
+        # Busca os dados climáticos da área específica, ordenando do mais recente para o mais antigo
+        cursor.execute("""
+            SELECT dt_coleta, nr_temperatura, nr_umidade, nr_precipitacao, ds_fonte_api
+            FROM TN_DADO_CLIMATICO
+            WHERE id_area = :1
+            ORDER BY dt_coleta DESC
+        """, (id_area,))
+        
+        resultados = cursor.fetchall()
+        
+        historico = [
+            {
+                "data": row[0], 
+                "temperatura": row[1], 
+                "umidade": row[2], 
+                "precipitacao": row[3], 
+                "fonte": row[4]
+            } for row in resultados
+        ]
+        return historico
+        
+    except Exception as e:
+        print(f"\n[ERRO] Falha ao consultar o histórico: {e}")
+        return []
+    finally:
+        cursor.close()
