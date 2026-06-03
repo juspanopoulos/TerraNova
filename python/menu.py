@@ -2,12 +2,13 @@ import time
 from db_conexao import conectar_oracle
 from geren_arquivos import importar_dados_satelite
 from services import processar_e_inserir_dados, buscar_alertas_ativos
+from api_clima import coletar_dados_satelite
 
 def exibir_menu():
     print("\n" + "="*55)
     print("   PROJETO TERRA NOVA - MONITORAMENTO AGRÍCOLA")
     print("="*55)
-    print("1. Importar Dados Climáticos de Satélite (INMET/NASA)")
+    print("1. Extrair Dados da NASA e Atualizar Banco Oracle")
     print("2. Consultar Histórico Climático por Área")
     print("3. Registrar Novo Plantio (Vincular Área e Cultura)")
     print("4. Painel de Alertas Críticos Abertos")
@@ -25,24 +26,32 @@ def main():
         opcao = input("Selecione uma opção: ")
         
         if opcao == '1':
-            print("\nImportando Dados de Satélite...")
+            print("\nIniciando o processo de ETL (Extração, Transformação e Carga)...")
+            time.sleep(1)
+
+            # Coleta os dados reais da NASA e salva em um arquivo .json local
+            coletar_dados_satelite()
             time.sleep(1.5)
+            
+            # Lê o arquivo local gerado pela API e transforma os dados para o formato esperado pela tabela TN_DADO_CLIMATICO
+            print("\nLendo o arquivo local gerado pela API...")
             dados = importar_dados_satelite('satelite_dados.json')
+            
+            # Insere no banco de dados Oracle
             if dados:
+                print("Inserindo dados limpos na tabela TN_DADO_CLIMATICO...")
                 qtd = processar_e_inserir_dados(dados, conexao)
                 time.sleep(0.5)
-                print(f"Sucesso! {qtd} registros climáticos inseridos no Oracle (TN_DADO_CLIMATICO).")
+                print(f"Sucesso! {qtd} registros climáticos inseridos no Oracle.")
                 
         elif opcao == '2':
             print("\nAcessando Histórico Climático...")
             time.sleep(1)
-            # SELECT de TN_DADO_CLIMATICO
             print("Funcionalidade em desenvolvimento...")
             
         elif opcao == '3':
             print("\nAbrindo Registro de Plantio...")
             time.sleep(1)
-            # INSERT em TN_AREA_CULTURA
             print("Funcionalidade em desenvolvimento...")
             
         elif opcao == '4':
@@ -60,7 +69,6 @@ def main():
         elif opcao == '5':
             print("\nCarregando Relatório de Recomendações...")
             time.sleep(1)
-            # JOIN entre TN_RECOMENDACAO, TN_ALERTA e TN_AREA_MONITORADA
             print("Funcionalidade em desenvolvimento... Aguarde atualizações.")
             
         elif opcao == '0':
