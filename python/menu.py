@@ -1,7 +1,7 @@
 import time
 from db_conexao import conectar_oracle
 from geren_arquivos import importar_dados_satelite
-from services import processar_e_inserir_dados, buscar_alertas_ativos
+from services import processar_e_inserir_dados, buscar_alertas_ativos, consultar_historico_climatico
 from api_clima import coletar_dados_satelite
 
 def exibir_menu():
@@ -47,7 +47,18 @@ def main():
         elif opcao == '2':
             print("\nAcessando Histórico Climático...")
             time.sleep(1)
-            print("Funcionalidade em desenvolvimento...")
+            id_busca = 1 
+            historico = consultar_historico_climatico(conexao, id_busca)
+            
+            if historico:
+                print(f"\n--- Histórico de Clima (Área ID: {id_busca}) ---")
+                for registro in historico:
+                    # Formata a data para o padrão DD/MM/AAAA
+                    data_formatada = registro['data'].strftime('%d/%m/%Y')
+                    time.sleep(0.3)
+                    print(f"Data: {data_formatada} | Temp: {registro['temperatura']}°C | Umidade: {registro['umidade']}% | Chuva: {registro['precipitacao']}mm | Fonte: {registro['fonte']}")
+            else:
+                print(f"Nenhum registro climático encontrado para a área {id_busca}.")
             
         elif opcao == '3':
             print("\nAbrindo Registro de Plantio...")
