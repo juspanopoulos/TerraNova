@@ -1,3 +1,4 @@
+import Climate from '@/components/Climate'
 import { HomeNavbar } from '@/components/HomeNavbar'
 import { HeroParallax } from '@/components/HeroParallax'
 import { gridCards, homeMain } from '@/constants/layout'
@@ -10,6 +11,7 @@ const Home = () => {
         <HeroParallax />
         <HomeNavbar />
       </div>
+      <Climate />
       <main className={homeMain}>
         <section id="conteudo" className="w-full py-8 sm:py-10 md:py-12 lg:py-16 xl:py-16">
           <div className={gridCards}>

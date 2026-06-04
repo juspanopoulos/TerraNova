@@ -17,9 +17,13 @@ export default {
         'bege-natural': '#EFE4D2',
         'verde-claro': '#A8C7A1',
         'preto-suave': '#2A2A2A',
+        forest: '#3F6B4B',
+        solar: '#E59B3A',
+        'soft-black': '#2A2A2A',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        space: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },
