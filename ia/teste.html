@@ -1,0 +1,355 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Teste Modelos IA</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.card{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+h1,h2{
+    text-align:center;
+}
+
+label{
+    display:block;
+    margin-top:10px;
+}
+
+input,select{
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    cursor:pointer;
+}
+
+.resultado{
+    margin-top:15px;
+    padding:15px;
+    background:#f5f5f5;
+    border-radius:8px;
+    white-space:pre-wrap;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Teste dos Modelos</h1>
+
+<button onclick="testarApi()">
+Testar API
+</button>
+
+<div id="statusApi" class="resultado">
+Aguardando...
+</div>
+
+<div class="card">
+
+<h2>Modelo 1</h2>
+
+<label>Region</label>
+<input id="region" value="North">
+
+<label>Soil Type</label>
+<select id="soil_type">
+    <option>Clay</option>
+    <option selected>Loamy</option>
+    <option>Sandy</option>
+</select>
+
+<label>Crop</label>
+<select id="crop">
+    <option selected value="1">Rice</option>
+    <option>Maize</option>
+    <option>Wheat</option>
+    <option>Cotton</option>
+</select>
+
+<label>Rainfall (mm)</label>
+<input id="rainfall" type="number" value="120">
+
+<label>Temperature</label>
+<input id="temperature" type="number" value="28">
+
+<label>Fertilizer Used</label>
+<select id="fertilizer">
+    <option value="1">Sim</option>
+    <option value="0">Não</option>
+</select>
+
+<label>Irrigation Used</label>
+<select id="irrigation">
+    <option value="1">Sim</option>
+    <option value="0">Não</option>
+</select>
+
+<label>Weather Condition</label>
+<select id="weather">
+    <option>Sunny</option>
+    <option>Cloudy</option>
+    <option>Rainy</option>
+</select>
+
+<label>Days To Harvest</label>
+<input id="days" type="number" value="120">
+
+<button onclick="preverModelo1()">
+Executar Modelo 1
+</button>
+
+<div id="resultadoM1" class="resultado">
+Aguardando...
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Modelo 2</h2>
+
+<label>Latitude</label>
+<input id="latitude" value="-23.5505">
+
+<label>Longitude</label>
+<input id="longitude" value="-46.6333">
+
+<label>Soil Type</label>
+<select id="soil_type2">
+    <option>Clay</option>
+    <option selected>Loamy</option>
+    <option>Sandy</option>
+</select>
+
+<label>Soil Moisture</label>
+<input id="soil_moisture" value="45">
+
+<label>Crop Type</label>
+<select id="crop_type">
+    <option selected>Rice</option>
+    <option>Maize</option>
+    <option>Wheat</option>
+</select>
+
+<label>Growth Stage</label>
+<select id="crop_growth_stage">
+    <option>Seedling</option>
+    <option selected>Vegetative</option>
+    <option>Flowering</option>
+</select>
+
+<label>Irrigation Type</label>
+<select id="irrigation_type">
+    <option selected>Drip</option>
+    <option>Sprinkler</option>
+</select>
+
+<label>Field Area</label>
+<input id="field_area" value="5">
+
+<label>Mulching Used</label>
+<select id="mulching">
+    <option value="1">Sim</option>
+    <option value="0">Não</option>
+</select>
+
+<label>Previous Irrigation</label>
+<input id="previous_irrigation" value="10">
+
+<label>Current Water Usage</label>
+<input id="current_water_usage" value="8">
+
+<button onclick="preverModelo2()">
+Executar Modelo 2
+</button>
+
+<div id="resultadoM2" class="resultado">
+Aguardando...
+</div>
+
+</div>
+
+<script>
+
+async function testarApi(){
+
+    try{
+
+        const response = await fetch(
+            "http://localhost:5000/api/funcionando",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    teste:true
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        document.getElementById("statusApi").innerHTML =
+            JSON.stringify(data,null,2);
+
+    }catch(err){
+
+        document.getElementById("statusApi").innerHTML =
+            err.message;
+
+    }
+}
+
+async function preverModelo1(){
+
+    const payload = {
+
+        region:
+            document.getElementById("region").value,
+
+        soil_type:
+            document.getElementById("soil_type").value,
+
+        crop:
+            document.getElementById("crop").value,
+
+        rainfall_mm:
+            Number(document.getElementById("rainfall").value),
+
+        temperature_celsius:
+            Number(document.getElementById("temperature").value),
+
+        fertilizer_used:
+            Number(document.getElementById("fertilizer").value),
+
+        irrigation_used:
+            Number(document.getElementById("irrigation").value),
+
+        weather_condition:
+            document.getElementById("weather").value,
+
+        days_to_harvest:
+            Number(document.getElementById("days").value)
+    };
+
+    try{
+
+        const response = await fetch(
+            "http://localhost:5000/modelo1/predict",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(payload)
+            }
+        );
+
+        const data = await response.json();
+
+        document.getElementById("resultadoM1").innerHTML =
+            JSON.stringify(data,null,2);
+
+    }catch(err){
+
+        document.getElementById("resultadoM1").innerHTML =
+            err.message;
+
+    }
+}
+
+async function preverModelo2(){
+
+    const payload = {
+
+        latitude:
+            Number(document.getElementById("latitude").value),
+
+        longitude:
+            Number(document.getElementById("longitude").value),
+
+        soil_type:
+            document.getElementById("soil_type2").value,
+
+        soil_moisture:
+            Number(document.getElementById("soil_moisture").value),
+
+        crop_type:
+            document.getElementById("crop_type").value,
+
+        crop_growth_stage:
+            document.getElementById("crop_growth_stage").value,
+
+        irrigation_type:
+            document.getElementById("irrigation_type").value,
+
+        field_area_hectare:
+            Number(document.getElementById("field_area").value),
+
+        mulching_used:
+            Number(document.getElementById("mulching").value),
+
+        previous_irrigation_mm:
+            Number(document.getElementById("previous_irrigation").value),
+
+        current_water_usage:
+            Number(document.getElementById("current_water_usage").value)
+    };
+
+    try{
+
+        const response = await fetch(
+            "http://localhost:5000/modelo2/predict",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(payload)
+            }
+        );
+
+        const data = await response.json();
+
+        document.getElementById("resultadoM2").innerHTML =
+            JSON.stringify(data,null,2);
+
+    }catch(err){
+
+        document.getElementById("resultadoM2").innerHTML =
+            err.message;
+
+    }
+}
+
+</script>
+
+</body>
+</html>
+```
