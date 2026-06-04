@@ -15,6 +15,7 @@ export default {
         "verde-floresta": "#3F6B4B",
         "laranja-solar": "#E59B3A",
         "bege-natural": "#EFE4D2",
+        natural: "#EFE4D2",
         "verde-claro": "#A8C7A1",
         "preto-suave": "#2A2A2A",
         forest: "#3F6B4B",
