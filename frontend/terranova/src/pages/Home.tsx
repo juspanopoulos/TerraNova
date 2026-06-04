@@ -1,5 +1,6 @@
 import Climate from "@/components/Climate";
 import Growth from "@/components/Growth";
+import Alerts from "@/components/Alerts";
 import Water from "@/components/Water";
 import { HomeNavbar } from "@/components/HomeNavbar";
 import { HeroParallax } from "@/components/HeroParallax";
@@ -16,6 +17,7 @@ const Home = () => {
       <Climate />
       <Growth />
       <Water />
+      <Alerts />
       <main className={`relative z-10 bg-bege-natural ${homeMain}`}>
         <section
           id="conteudo"
