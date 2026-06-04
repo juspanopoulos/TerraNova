@@ -1,4 +1,5 @@
 import Climate from '@/components/Climate'
+import Growth from '@/components/Growth'
 import { HomeNavbar } from '@/components/HomeNavbar'
 import { HeroParallax } from '@/components/HeroParallax'
 import { gridCards, homeMain } from '@/constants/layout'
@@ -12,7 +13,8 @@ const Home = () => {
         <HomeNavbar />
       </div>
       <Climate />
-      <main className={homeMain}>
+      <Growth />
+      <main className={`relative z-10 bg-bege-natural ${homeMain}`}>
         <section id="conteudo" className="w-full py-8 sm:py-10 md:py-12 lg:py-16 xl:py-16">
           <div className={gridCards}>
             {[

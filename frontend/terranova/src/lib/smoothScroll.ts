@@ -8,6 +8,7 @@ export const setupSmoothScroll = () => {
   const lenis = new Lenis({
     lerp: 0.08,
     smoothWheel: true,
+    autoRaf: false,
   })
 
   lenis.on('scroll', ScrollTrigger.update)
