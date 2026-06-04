@@ -1,7 +1,7 @@
 import time
 from db_conexao import conectar_oracle
 from geren_arquivos import importar_dados_satelite
-from services import processar_e_inserir_dados, buscar_alertas_ativos, consultar_historico_climatico
+from services import processar_e_inserir_dados, buscar_alertas_ativos, consultar_historico_climatico, registrar_novo_plantio
 from api_clima import coletar_dados_satelite
 
 def exibir_menu():
@@ -63,7 +63,23 @@ def main():
         elif opcao == '3':
             print("\nAbrindo Registro de Plantio...")
             time.sleep(1)
-            print("Funcionalidade em desenvolvimento...")
+            
+            print("\n--- Novo Registro de Plantio ---")
+            try:
+                id_area = int(input("Digite o ID da Área Monitorada (ex: 1): "))
+                id_cultura = int(input("Digite o ID da Cultura (ex: 1 para Soja): "))
+                dt_plantio = input("Data do Plantio (DD/MM/AAAA): ")
+                dt_colheita = input("Previsão de Colheita (DD/MM/AAAA): ")
+                
+                print("\nValidando e processando registro...")
+                time.sleep(1)
+                
+                sucesso = registrar_novo_plantio(conexao, id_area, id_cultura, dt_plantio, dt_colheita)
+                
+                if sucesso:
+                    print("Sucesso! O plantio foi registrado no banco e está com status 'ATIVO'.")
+            except ValueError:
+                print("\n[ERRO] Entrada inválida. Os IDs precisam ser números inteiros (ex: 1, 2, 3).")
             
         elif opcao == '4':
             print("\nBuscando Alertas Ativos no Banco de Dados...")

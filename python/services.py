@@ -83,3 +83,23 @@ def consultar_historico_climatico(conexao, id_area):
         return []
     finally:
         cursor.close()
+
+def registrar_novo_plantio(conexao, id_area, id_cultura, dt_plantio, dt_colheita):
+    if not conexao: return False
+    
+    cursor = conexao.cursor()
+    try:
+        # ds_status tem 'ATIVO' como DEFAULT no banco, então não precisamos passar
+        cursor.execute("""
+            INSERT INTO TN_AREA_CULTURA 
+            (id_area, id_cultura, dt_plantio, dt_colheita_prevista) 
+            VALUES (:1, :2, TO_DATE(:3, 'DD/MM/YYYY'), TO_DATE(:4, 'DD/MM/YYYY'))
+        """, (id_area, id_cultura, dt_plantio, dt_colheita))
+        
+        conexao.commit()
+        return True
+    except Exception as e:
+        print(f"\n[ERRO] Falha ao registrar plantio: {e}")
+        return False
+    finally:
+        cursor.close()
