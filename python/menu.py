@@ -1,7 +1,7 @@
 import time
 from db_conexao import conectar_oracle
 from geren_arquivos import importar_dados_satelite
-from services import processar_e_inserir_dados, buscar_alertas_ativos, consultar_historico_climatico, registrar_novo_plantio
+from services import processar_e_inserir_dados, buscar_alertas_ativos, consultar_historico_climatico, registrar_novo_plantio, gerar_relatorio_recomendacoes
 from api_clima import coletar_dados_satelite
 
 def exibir_menu():
@@ -106,8 +106,25 @@ def main():
                 
         elif opcao == '5':
             print("\nCarregando Relatório de Recomendações...")
-            time.sleep(1)
-            print("Funcionalidade em desenvolvimento... Aguarde atualizações.")
+            time.sleep(1.5)
+            
+            relatorio = gerar_relatorio_recomendacoes(conexao)
+            
+            if relatorio:
+                print("\n" + "="*60)
+                print("      RELATÓRIO DE AÇÕES E RECOMENDAÇÕES (PENDENTES)")
+                print("="*60)
+                
+                for rec in relatorio:
+                    time.sleep(0.5)
+                    agua_msg = f" | Irrigação sugerida: {rec['volume_agua']}mm" if rec['volume_agua'] else ""
+                    
+                    print(f"Área: {rec['area']}")
+                    print(f"Motivo (Alerta): {rec['alerta']}")
+                    print(f"Ação: {rec['acao']}{agua_msg}")
+                    print("-" * 60)
+            else:
+                print("\nNenhuma recomendação técnica pendente no momento. Lavouras seguras!")
             
         elif opcao == '0':
             print("\nDesconectando do banco de dados...")

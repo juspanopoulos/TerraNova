@@ -89,7 +89,6 @@ def registrar_novo_plantio(conexao, id_area, id_cultura, dt_plantio, dt_colheita
     
     cursor = conexao.cursor()
     try:
-        # ds_status tem 'ATIVO' como DEFAULT no banco, então não precisamos passar
         cursor.execute("""
             INSERT INTO TN_AREA_CULTURA 
             (id_area, id_cultura, dt_plantio, dt_colheita_prevista) 
@@ -101,5 +100,37 @@ def registrar_novo_plantio(conexao, id_area, id_cultura, dt_plantio, dt_colheita
     except Exception as e:
         print(f"\n[ERRO] Falha ao registrar plantio: {e}")
         return False
+    finally:
+        cursor.close()
+
+def gerar_relatorio_recomendacoes(conexao):
+    if not conexao: return []
+    
+    cursor = conexao.cursor()
+    try:
+        cursor.execute("""
+            SELECT am.nm_area, al.ds_tipo_alerta, r.ds_acao, r.nr_volume_agua_sugerido_mm, r.ds_status
+            FROM TN_RECOMENDACAO r
+            JOIN TN_ALERTA al ON r.id_alerta = al.id_alerta
+            JOIN TN_AREA_MONITORADA am ON r.id_area = am.id_area
+            WHERE r.ds_status = 'PENDENTE'
+        """)
+        
+        resultados = cursor.fetchall()
+        
+        relatorio = [
+            {
+                "area": row[0],
+                "alerta": row[1],
+                "acao": row[2],
+                "volume_agua": row[3],
+                "status": row[4]
+            } for row in resultados
+        ]
+        return relatorio
+        
+    except Exception as e:
+        print(f"\n[ERRO] Falha ao gerar o relatório: {e}")
+        return []
     finally:
         cursor.close()
