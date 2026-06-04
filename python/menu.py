@@ -87,6 +87,17 @@ def main():
             alertas = buscar_alertas_ativos(conexao)
             
             if alertas:
+                print("\n" + "!"*50)
+                print("           PAINEL DE ALERTAS CRÍTICOS")
+                print("!"*50)
+                for alerta in alertas:
+                    time.sleep(0.5)
+                    print(f"[{alerta['severidade']}] {alerta['tipo']} na área {alerta['area']}")
+                    print(f"   ↳ {alerta['descricao']}\n")
+            else:
+                print("\nExcelente! Nenhum alerta crítico aberto no momento.")
+            
+            if alertas:
                 for alerta in alertas:
                     time.sleep(0.5)
                     print(f"[{alerta['severidade']}] {alerta['tipo']} em {alerta['area']} -> {alerta['descricao']}")
