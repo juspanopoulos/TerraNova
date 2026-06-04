@@ -1,21 +1,27 @@
-import { NAV_LINKS } from '@/constants/routes'
-import { Link } from 'react-router-dom'
+import { footerInner } from "@/constants/layout";
+import { NAV_LINKS } from "@/constants/routes";
+import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
-    <footer className="border-t border-verde-floresta/15 bg-preto-suave text-bege-natural">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-8 xs:flex-col xs:items-start md:px-8 lg:px-12 xl:px-16">
-        <div>
-          <p className="text-lg font-bold text-verde-claro">TerraNova</p>
-          <p className="mt-2 max-w-md text-sm leading-6 text-bege-natural/75">
+    <footer className="border-t border-verde-floresta/10 bg-preto-suave text-bege-natural">
+      <div className={footerInner}>
+        <div className="max-w-md xs:max-w-none">
+          <p className="text-base font-semibold text-verde-claro sm:text-lg">
+            TerraNova
+          </p>
+          <p className="mt-2 text-sm leading-6 text-bege-natural/70 sm:text-base sm:leading-7">
             Uma base preparada para paginas institucionais, navegacao simples e
             evolucao do frontend.
           </p>
         </div>
-        <nav aria-label="Navegacao secundaria" className="flex flex-wrap gap-3">
+        <nav
+          aria-label="Navegacao secundaria"
+          className="flex flex-wrap gap-2 sm:gap-3 xs:w-full"
+        >
           {NAV_LINKS.map((link) => (
             <Link
-              className="text-sm font-medium text-bege-natural/80 transition hover:text-laranja-solar"
+              className="text-xs font-medium text-bege-natural/70 transition-colors hover:text-laranja-solar sm:text-sm"
               key={link.to}
               to={link.to}
             >
@@ -25,5 +31,5 @@ export const Footer = () => {
         </nav>
       </div>
     </footer>
-  )
-}
+  );
+};

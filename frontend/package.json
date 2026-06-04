@@ -1,0 +1,10 @@
+{
+  "name": "terranova-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix terranova run dev",
+    "build": "npm --prefix terranova run build",
+    "lint": "npm --prefix terranova run lint",
+    "preview": "npm --prefix terranova run preview"
+  }
+}
