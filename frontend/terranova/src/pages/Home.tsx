@@ -1,9 +1,10 @@
-import Climate from '@/components/Climate'
-import Growth from '@/components/Growth'
-import { HomeNavbar } from '@/components/HomeNavbar'
-import { HeroParallax } from '@/components/HeroParallax'
-import { gridCards, homeMain } from '@/constants/layout'
-import styles from './Home.module.css'
+import Climate from "@/components/Climate";
+import Growth from "@/components/Growth";
+import Water from "@/components/Water";
+import { HomeNavbar } from "@/components/HomeNavbar";
+import { HeroParallax } from "@/components/HeroParallax";
+import { gridCards, homeMain } from "@/constants/layout";
+import styles from "./Home.module.css";
 
 const Home = () => {
   return (
@@ -14,13 +15,17 @@ const Home = () => {
       </div>
       <Climate />
       <Growth />
+      <Water />
       <main className={`relative z-10 bg-bege-natural ${homeMain}`}>
-        <section id="conteudo" className="w-full py-8 sm:py-10 md:py-12 lg:py-16 xl:py-16">
+        <section
+          id="conteudo"
+          className="w-full py-8 sm:py-10 md:py-12 lg:py-16 xl:py-16"
+        >
           <div className={gridCards}>
             {[
-              ['Verde Floresta', '#3F6B4B', 'bg-verde-floresta'],
-              ['Laranja Solar', '#E59B3A', 'bg-laranja-solar'],
-              ['Verde Claro', '#A8C7A1', 'bg-verde-claro'],
+              ["Verde Floresta", "#3F6B4B", "bg-verde-floresta"],
+              ["Laranja Solar", "#E59B3A", "bg-laranja-solar"],
+              ["Verde Claro", "#A8C7A1", "bg-verde-claro"],
             ].map(([name, hex, color]) => (
               <article
                 className="rounded-md border border-verde-floresta/15 bg-white/40 p-4 sm:p-5"
@@ -41,7 +46,7 @@ const Home = () => {
         </section>
       </main>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

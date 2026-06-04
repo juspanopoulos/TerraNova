@@ -6,11 +6,11 @@ export default function Climate() {
     >
       <div
         className={[
-          'relative z-10 mx-auto grid w-full max-w-6xl -translate-y-6 items-center gap-12 px-6',
-          'md:grid-cols-[0.9fr_1.1fr]',
-          'lg:grid-cols-[0.9fr_1.1fr]',
-          'xl:grid-cols-[0.9fr_1.1fr]',
-        ].join(' ')}
+          "relative z-10 mx-auto grid w-full max-w-6xl -translate-y-6 items-center gap-12 px-6",
+          "md:grid-cols-[0.9fr_1.1fr]",
+          "lg:grid-cols-[0.9fr_1.1fr]",
+          "xl:grid-cols-[0.9fr_1.1fr]",
+        ].join(" ")}
       >
         <div className="max-w-xl">
           <p className="mb-4 font-space text-sm font-bold uppercase tracking-[0.28em] text-solar">
@@ -26,5 +26,5 @@ export default function Climate() {
         </div>
       </div>
     </section>
-  )
+  );
 }
