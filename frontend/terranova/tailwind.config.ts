@@ -21,13 +21,15 @@ export default {
         forest: "#3F6B4B",
         solar: "#E59B3A",
         "soft-black": "#2A2A2A",
+        surface: {
+          night: "#1A130D",
+          muted: "#F4F6F4",
+          forest: "#3F6B4B",
+          charcoal: "#2A2F2C",
+        },
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        space: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-      },
-      boxShadow: {
-        aqua: "0 18px 40px rgba(90, 175, 168, 0.22)",
       },
     },
   },

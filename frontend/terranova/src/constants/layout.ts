@@ -20,14 +20,56 @@ export const pageMain = [contentShell, containerPx, containerPyPage].join(' ')
 
 export const homeMain = [contentShell, containerPx, containerPyMain].join(' ')
 
+/** Grid padrão das seções da Home: 2 colunas, título | conteúdo */
+export const sectionPy = 'py-20 md:py-24 lg:py-24 xl:py-24'
+
+export const sectionGridBase = [
+  'mx-auto grid w-full max-w-6xl items-center gap-12',
+  containerPx,
+].join(' ')
+
 export const eyebrow =
-  'text-xs font-semibold uppercase tracking-wide text-laranja-solar sm:text-sm'
+  'mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-laranja-solar'
+
+export const eyebrowOnDark =
+  'mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-laranja-solar'
+
+export const eyebrowMuted =
+  'mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-verde-claro'
+
+/** Títulos das seções — escala próxima ao layout original */
+export const titleOnDark =
+  'text-3xl font-bold leading-tight text-bege-natural sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl'
+
+export const titleOnLight =
+  'text-3xl font-bold leading-tight text-preto-suave sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl'
+
+export const copyOnDark =
+  'text-base leading-8 text-bege-natural/70 sm:text-lg'
+
+export const copyOnLight =
+  'text-base leading-8 text-preto-suave/70 sm:text-lg'
+
+export const copyAsideOnDark =
+  'ml-auto max-w-md border-l border-bege-natural/20 pl-6 text-base leading-8 text-bege-natural/70 sm:pl-8 sm:text-lg md:pl-10'
 
 export const headingPage =
-  'mt-3 max-w-3xl text-3xl font-bold leading-tight text-verde-floresta xs:text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl'
+  'mt-3 max-w-3xl text-3xl font-bold leading-tight text-verde-floresta sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl'
 
 export const bodyLead =
   'mt-4 text-base leading-7 text-preto-suave/75 sm:mt-6 sm:text-lg sm:leading-8'
+
+export const card =
+  'rounded-lg border border-verde-floresta/10 bg-white p-4 sm:p-5 md:p-6'
+
+export const cardOnDark =
+  'rounded-lg border border-bege-natural/15 bg-bege-natural/10 p-5 sm:p-6'
+
+export const panel =
+  'rounded-lg border border-verde-floresta/10 bg-white'
+
+export const panelOnDark =
+  'rounded-lg border border-bege-natural/15 bg-bege-natural/5'
 
 export const gridCards =
   'grid gap-4 sm:grid-cols-1 sm:gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-6 xl:grid-cols-3 xl:gap-6'

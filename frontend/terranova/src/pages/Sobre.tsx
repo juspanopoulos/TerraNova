@@ -5,7 +5,7 @@ import {
   containerPyPage,
   eyebrow,
   headingPage,
-} from '@/constants/layout'
+} from "@/constants/layout";
 
 const Sobre = () => {
   return (
@@ -22,7 +22,7 @@ const Sobre = () => {
         </p>
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default Sobre
+export default Sobre;

@@ -1,26 +1,27 @@
 import {
+  card,
   contentShell,
   containerPx,
   containerPyPage,
   eyebrow,
   gridCards,
   headingPage,
-} from '@/constants/layout'
+} from "@/constants/layout";
 
 const team = [
   {
-    name: 'Ana Verde',
-    role: 'Direcao de projeto',
+    name: "Ana Verde",
+    role: "Direcao de projeto",
   },
   {
-    name: 'Bruno Sol',
-    role: 'Estrategia e conteudo',
+    name: "Bruno Sol",
+    role: "Estrategia e conteudo",
   },
   {
-    name: 'Clara Raiz',
-    role: 'Experiencia e comunidade',
+    name: "Clara Raiz",
+    role: "Experiencia e comunidade",
   },
-]
+];
 
 const Equipe = () => {
   return (
@@ -32,20 +33,17 @@ const Equipe = () => {
         </h1>
         <div className={`mt-8 sm:mt-10 ${gridCards}`}>
           {team.map((person) => (
-            <article
-              className="rounded-md border border-verde-floresta/15 bg-white/40 p-4 sm:p-5"
-              key={person.name}
-            >
-              <div className="mb-4 grid size-12 place-items-center rounded-full bg-verde-claro text-sm font-bold text-verde-floresta sm:mb-5 sm:size-14 sm:text-base">
+            <article className={card} key={person.name}>
+              <div className="mb-4 grid size-12 place-items-center rounded-lg bg-verde-claro/60 text-sm font-semibold text-verde-floresta sm:mb-5 sm:size-14 sm:text-base">
                 {person.name
-                  .split(' ')
+                  .split(" ")
                   .map((part) => part[0])
-                  .join('')}
+                  .join("")}
               </div>
               <h2 className="text-lg font-semibold text-verde-floresta sm:text-xl">
                 {person.name}
               </h2>
-              <p className="mt-2 text-xs text-preto-suave/70 sm:text-sm">
+              <p className="mt-2 text-xs text-preto-suave/65 sm:text-sm">
                 {person.role}
               </p>
             </article>
@@ -53,7 +51,7 @@ const Equipe = () => {
         </div>
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default Equipe
+export default Equipe;

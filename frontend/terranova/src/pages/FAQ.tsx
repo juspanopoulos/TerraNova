@@ -1,28 +1,29 @@
 import {
+  card,
   contentShell,
   containerPx,
   containerPyPage,
   eyebrow,
   headingPage,
-} from '@/constants/layout'
+} from "@/constants/layout";
 
 const questions = [
   {
-    question: 'O que ja esta configurado no frontend?',
+    question: "O que ja esta configurado no frontend?",
     answer:
-      'React, Vite, Tailwind, rotas, alias de importacao, Inter, GSAP e Lenis.',
+      "React, Vite, Tailwind, rotas, alias de importacao, Inter, GSAP e Lenis.",
   },
   {
-    question: 'Onde ficam as paginas do projeto?',
+    question: "Onde ficam as paginas do projeto?",
     answer:
-      'As paginas ficam em src/pages e sao conectadas em src/routes/AppRoutes.tsx.',
+      "As paginas ficam em src/pages e sao conectadas em src/routes/AppRoutes.tsx.",
   },
   {
-    question: 'Como reaproveitar estrutura comum?',
+    question: "Como reaproveitar estrutura comum?",
     answer:
-      'Use o BaseLayout em src/layouts para manter Navbar e Footer nas paginas.',
+      "Use o BaseLayout em src/layouts para manter Navbar e Footer nas paginas.",
   },
-]
+];
 
 const FAQ = () => {
   return (
@@ -34,14 +35,11 @@ const FAQ = () => {
         </h1>
         <div className="mt-8 grid gap-3 sm:mt-10 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-6">
           {questions.map((item) => (
-            <article
-              className="rounded-md border border-verde-floresta/15 bg-white/40 p-4 sm:p-5 md:p-6"
-              key={item.question}
-            >
+            <article className={card} key={item.question}>
               <h2 className="text-base font-semibold text-verde-floresta sm:text-lg md:text-xl">
                 {item.question}
               </h2>
-              <p className="mt-2 text-sm leading-6 text-preto-suave/75 sm:text-base sm:leading-7">
+              <p className="mt-2 text-sm leading-6 text-preto-suave/70 sm:text-base sm:leading-7">
                 {item.answer}
               </p>
             </article>
@@ -49,7 +47,7 @@ const FAQ = () => {
         </div>
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default FAQ
+export default FAQ;
