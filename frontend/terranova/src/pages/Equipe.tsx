@@ -1,3 +1,12 @@
+import {
+  contentShell,
+  containerPx,
+  containerPyPage,
+  eyebrow,
+  gridCards,
+  headingPage,
+} from '@/constants/layout'
+
 const team = [
   {
     name: 'Ana Verde',
@@ -15,30 +24,30 @@ const team = [
 
 const Equipe = () => {
   return (
-    <main className="px-6 py-16 xs:px-4 md:px-8 lg:px-12 xl:px-16">
-      <section className="mx-auto w-full max-w-6xl">
-        <p className="text-sm font-semibold uppercase text-laranja-solar">
-          Equipe
-        </p>
-        <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight text-verde-floresta xs:text-3xl md:text-5xl">
+    <main className={`${containerPx} ${containerPyPage}`}>
+      <section className={contentShell}>
+        <p className={eyebrow}>Equipe</p>
+        <h1 className={headingPage}>
           Pessoas diferentes trabalhando por uma mesma paisagem.
         </h1>
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className={`mt-8 sm:mt-10 ${gridCards}`}>
           {team.map((person) => (
             <article
-              className="rounded-md border border-verde-floresta/15 bg-white/40 p-5"
+              className="rounded-md border border-verde-floresta/15 bg-white/40 p-4 sm:p-5"
               key={person.name}
             >
-              <div className="mb-5 grid size-14 place-items-center rounded-full bg-verde-claro font-bold text-verde-floresta">
+              <div className="mb-4 grid size-12 place-items-center rounded-full bg-verde-claro text-sm font-bold text-verde-floresta sm:mb-5 sm:size-14 sm:text-base">
                 {person.name
                   .split(' ')
                   .map((part) => part[0])
                   .join('')}
               </div>
-              <h2 className="text-xl font-semibold text-verde-floresta">
+              <h2 className="text-lg font-semibold text-verde-floresta sm:text-xl">
                 {person.name}
               </h2>
-              <p className="mt-2 text-sm text-preto-suave/70">{person.role}</p>
+              <p className="mt-2 text-xs text-preto-suave/70 sm:text-sm">
+                {person.role}
+              </p>
             </article>
           ))}
         </div>

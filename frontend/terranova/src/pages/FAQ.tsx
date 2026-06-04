@@ -1,3 +1,11 @@
+import {
+  contentShell,
+  containerPx,
+  containerPyPage,
+  eyebrow,
+  headingPage,
+} from '@/constants/layout'
+
 const questions = [
   {
     question: 'O que ja esta configurado no frontend?',
@@ -12,30 +20,28 @@ const questions = [
   {
     question: 'Como reaproveitar estrutura comum?',
     answer:
-      'Use o BaseLayout em src/layouts para manter Header e Footer nas paginas.',
+      'Use o BaseLayout em src/layouts para manter Navbar e Footer nas paginas.',
   },
 ]
 
 const FAQ = () => {
   return (
-    <main className="px-6 py-16 xs:px-4 md:px-8 lg:px-12 xl:px-16">
-      <section className="mx-auto w-full max-w-6xl">
-        <p className="text-sm font-semibold uppercase text-laranja-solar">
-          FAQ
-        </p>
-        <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight text-verde-floresta xs:text-3xl md:text-5xl">
+    <main className={`${containerPx} ${containerPyPage}`}>
+      <section className={contentShell}>
+        <p className={eyebrow}>FAQ</p>
+        <h1 className={headingPage}>
           Perguntas frequentes sobre a base do projeto.
         </h1>
-        <div className="mt-10 grid gap-4">
+        <div className="mt-8 grid gap-3 sm:mt-10 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-6">
           {questions.map((item) => (
             <article
-              className="rounded-md border border-verde-floresta/15 bg-white/40 p-5"
+              className="rounded-md border border-verde-floresta/15 bg-white/40 p-4 sm:p-5 md:p-6"
               key={item.question}
             >
-              <h2 className="text-lg font-semibold text-verde-floresta">
+              <h2 className="text-base font-semibold text-verde-floresta sm:text-lg md:text-xl">
                 {item.question}
               </h2>
-              <p className="mt-2 leading-7 text-preto-suave/75">
+              <p className="mt-2 text-sm leading-6 text-preto-suave/75 sm:text-base sm:leading-7">
                 {item.answer}
               </p>
             </article>
