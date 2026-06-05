@@ -24,6 +24,11 @@ import {
 } from "@/lib/dashboard/companyFields";
 import { fetchDashboardData } from "@/lib/dashboard/loadDashboardData";
 import {
+  clearAuthSession,
+  loadStoredAuthSession,
+  saveAuthSession,
+} from "@/lib/dashboard/authSession";
+import {
   loadStoredPreferences,
   saveStoredPreferences,
 } from "@/lib/dashboard/preferences";
@@ -106,7 +111,7 @@ const DashboardContext = createContext<DashboardContextValue | null>(null);
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
   const initialPreferences = useMemo(() => loadStoredPreferences(), []);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => loadStoredAuthSession());
   const [authMode, setAuthModeState] = useState<AuthMode>("login");
   const [registerCredentials, setRegisterCredentials] = useState<RegisterCredentials | null>(
     null,
@@ -183,6 +188,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(() => {
+    saveAuthSession();
     setIsAuthenticated(true);
   }, []);
 
@@ -201,12 +207,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setCompany(companyProfileFromRegister(registerCredentials, draft));
       setRegisterCredentials(null);
       setAuthModeState("login");
+      saveAuthSession();
       setIsAuthenticated(true);
     },
     [registerCredentials],
   );
 
   const logout = useCallback(() => {
+    clearAuthSession();
     setIsAuthenticated(false);
     setLoadStatus("idle");
     setLoadError(null);
