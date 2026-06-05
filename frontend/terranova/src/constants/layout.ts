@@ -14,8 +14,8 @@ export const containerPx =
   'px-4 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16'
 
 /** Linha divisoria de ponta a ponta da viewport */
-export const pageDividerFull =
-  'relative left-1/2 w-screen max-w-none -translate-x-1/2 border-b border-verde-floresta/12'
+/**export const pageDividerFull =
+  'relative left-1/2 w-screen max-w-none -translate-x-1/2 border-b border-verde-floresta/12'*/
 
 /** Espaco acima do breadcrumb e abaixo do subtitulo (antes da divisoria) */
 export const pageHeaderEdgeGap =
