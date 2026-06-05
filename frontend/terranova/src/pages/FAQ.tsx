@@ -1,11 +1,13 @@
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import {
   card,
   contentShell,
   containerPx,
   containerPyPage,
-  eyebrow,
+  bodyLead,
   headingPage,
 } from "@/constants/layout";
+import { ROUTES } from "@/constants/routes";
 
 const questions = [
   {
@@ -29,10 +31,16 @@ const FAQ = () => {
   return (
     <main className={`${containerPx} ${containerPyPage}`}>
       <section className={contentShell}>
-        <p className={eyebrow}>FAQ</p>
-        <h1 className={headingPage}>
+        <PageBreadcrumb
+          items={[
+            { label: "Inicio", to: ROUTES.home },
+            { label: "FAQ" },
+          ]}
+        />
+        <h1 className={headingPage}>FAQ</h1>
+        <p className={bodyLead}>
           Perguntas frequentes sobre a base do projeto.
-        </h1>
+        </p>
         <div className="mt-8 grid gap-3 sm:mt-10 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-6">
           {questions.map((item) => (
             <article className={card} key={item.question}>
