@@ -11,19 +11,21 @@ type BaseLayoutProps = {
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
   const { pathname } = useLocation();
   const isHome = pathname === ROUTES.home;
-  const isPlataforma = pathname === ROUTES.plataforma;
+  const isPlataforma = pathname.startsWith("/plataforma");
   const hideSiteChrome = isHome || isPlataforma;
 
   return (
     <div
       className={
         isPlataforma
-          ? "h-[100dvh] overflow-hidden bg-bege-natural font-sans text-preto-suave"
+          ? "flex h-dvh flex-col overflow-hidden bg-bege-natural font-sans text-preto-suave"
           : "min-h-screen overflow-x-hidden bg-bege-natural font-sans text-preto-suave"
       }
     >
       {!hideSiteChrome && <Navbar />}
-      {children}
+      <div className={isPlataforma ? "flex min-h-0 flex-1 flex-col overflow-hidden" : undefined}>
+        {children}
+      </div>
       {!hideSiteChrome && <Footer />}
     </div>
   );

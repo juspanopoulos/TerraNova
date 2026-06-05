@@ -1,13 +1,14 @@
 import type { Config } from "tailwindcss";
 
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
       xs: { max: "480px" },
-      sm: { min: "481px", max: "767px" },
-      md: { min: "768px", max: "991px" },
-      lg: { min: "992px", max: "1299px" },
+      sm: "481px",
+      md: "768px",
+      lg: "992px",
       xl: "1300px",
     },
     extend: {
