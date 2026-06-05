@@ -1,0 +1,10 @@
+[
+    {
+        "id_area": 1,
+        "temperatura": 16.86,
+        "umidade": 88.81,
+        "precipitacao": 1.26,
+        "indice_uv": 0.0,
+        "fonte_api": "NASA"
+    }
+]

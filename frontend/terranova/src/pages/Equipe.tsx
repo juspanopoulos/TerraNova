@@ -1,50 +1,65 @@
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import {
+  card,
+  contentShell,
+  containerPx,
+  containerPyPage,
+  bodyLead,
+  gridCards,
+  headingPage,
+} from "@/constants/layout";
+import { ROUTES } from "@/constants/routes";
+
 const team = [
   {
-    name: 'Ana Verde',
-    role: 'Direcao de projeto',
+    name: "Ana Verde",
+    role: "Direcao de projeto",
   },
   {
-    name: 'Bruno Sol',
-    role: 'Estrategia e conteudo',
+    name: "Bruno Sol",
+    role: "Estrategia e conteudo",
   },
   {
-    name: 'Clara Raiz',
-    role: 'Experiencia e comunidade',
+    name: "Clara Raiz",
+    role: "Experiencia e comunidade",
   },
-]
+];
 
 const Equipe = () => {
   return (
-    <main className="px-6 py-16 xs:px-4 md:px-8 lg:px-12 xl:px-16">
-      <section className="mx-auto w-full max-w-6xl">
-        <p className="text-sm font-semibold uppercase text-laranja-solar">
-          Equipe
-        </p>
-        <h1 className="mt-3 max-w-3xl text-4xl font-bold leading-tight text-verde-floresta xs:text-3xl md:text-5xl">
+    <main className={`${containerPx} ${containerPyPage}`}>
+      <section className={contentShell}>
+        <PageBreadcrumb
+          items={[
+            { label: "Inicio", to: ROUTES.home },
+            { label: "Equipe" },
+          ]}
+        />
+        <h1 className={headingPage}>Equipe</h1>
+        <p className={bodyLead}>
           Pessoas diferentes trabalhando por uma mesma paisagem.
-        </h1>
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        </p>
+        <div className={`mt-8 sm:mt-10 ${gridCards}`}>
           {team.map((person) => (
-            <article
-              className="rounded-md border border-verde-floresta/15 bg-white/40 p-5"
-              key={person.name}
-            >
-              <div className="mb-5 grid size-14 place-items-center rounded-full bg-verde-claro font-bold text-verde-floresta">
+            <article className={card} key={person.name}>
+              <div className="mb-4 grid size-12 place-items-center rounded-lg bg-verde-claro/60 text-sm font-semibold text-verde-floresta sm:mb-5 sm:size-14 sm:text-base">
                 {person.name
-                  .split(' ')
+                  .split(" ")
                   .map((part) => part[0])
-                  .join('')}
+                  .join("")}
               </div>
-              <h2 className="text-xl font-semibold text-verde-floresta">
+              <h2 className="text-lg font-semibold text-verde-floresta sm:text-xl">
                 {person.name}
               </h2>
-              <p className="mt-2 text-sm text-preto-suave/70">{person.role}</p>
+              <p className="mt-2 text-xs text-preto-suave/65 sm:text-sm">
+                {person.role}
+              </p>
             </article>
           ))}
         </div>
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default Equipe
+export default Equipe;
