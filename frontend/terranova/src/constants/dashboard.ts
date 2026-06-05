@@ -156,8 +156,10 @@ export const levelAccent: Record<
   },
 };
 
-export const contentPad =
-  "px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16";
+/** Largura máxima do conteúdo do dashboard (área principal, sem sidebar). */
+export const dashboardContentShell = "mx-auto w-full max-w-none";
+
+export const contentPad = "px-4 sm:px-5 md:px-6 lg:px-8";
 
 export const DASHBOARD_ROUTES = {
   root: "/plataforma",

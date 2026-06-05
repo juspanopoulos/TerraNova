@@ -14,6 +14,7 @@ import { PageToolbar } from "@/components/dashboard/ui";
 import {
   breadcrumbsFromPath,
   contentPad,
+  dashboardContentShell,
   pathToViewId,
   resolvePageTimeFilter,
   shellBg,
@@ -133,7 +134,7 @@ function DashboardShell() {
         className={`flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden overscroll-y-contain ${shellBg}`}
         role="main"
       >
-        <div className={`mx-auto w-full max-w-7xl py-6 sm:py-8 ${contentPad}`}>
+        <div className={`${dashboardContentShell} py-5 sm:py-7 ${contentPad}`}>
           {isAssistant ? (
             <AssistantChatProvider farmName={company.farmName || "sua fazenda"}>
               {mainContent}
