@@ -71,9 +71,11 @@ export function DonutChart({
       <button
         key={seg.id}
         type="button"
+        onMouseDown={(e) => e.preventDefault()}
         onClick={() => onSelect(selectedId === seg.id ? null : seg.id)}
         className={[
           btnClick,
+          "outline-none focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde-floresta/40",
           legendLayout === "horizontal"
             ? "flex flex-col items-center gap-1 rounded-lg px-2 py-1.5 text-center"
             : "flex w-full items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-sm",
@@ -105,11 +107,16 @@ export function DonutChart({
         ].join(" ")}
       >
         <div
-          className="relative shrink-0"
+          className="relative shrink-0 select-none"
           style={{ width: size, height: size }}
           data-chart-root
         >
-          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+          <svg
+            width={size}
+            height={size}
+            viewBox={`0 0 ${size} ${size}`}
+            className="-rotate-90 outline-none [&_*]:outline-none"
+          >
             <circle
               cx={cx}
               cy={cx}
@@ -135,22 +142,15 @@ export function DonutChart({
                   strokeWidth={strokeWidth}
                   strokeDasharray={`${dash} ${circumference - dash}`}
                   strokeDashoffset={-offset}
-                  className={`${btnClick} transition-opacity duration-200 ease-out`}
+                  className="cursor-pointer transition-opacity duration-200 ease-out"
                   style={{
                     opacity: dimmed ? 0.38 : active ? 1 : 0.82,
                   }}
                   onMouseMove={(e) => handleSegmentHover(seg.id, e)}
                   onMouseLeave={() => setHovered(null)}
+                  onMouseDown={(e) => e.preventDefault()}
                   onClick={() => onSelect(selectedId === seg.id ? null : seg.id)}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${seg.label}: ${((seg.value / total) * 100).toFixed(0)}%`}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      onSelect(selectedId === seg.id ? null : seg.id);
-                    }
-                  }}
+                  aria-hidden
                 />
               );
             })}
