@@ -4,6 +4,8 @@ import { btnClick, textFaint, textMuted, textPrimary } from "@/constants/dashboa
 import { useAssistantChat } from "@/context/AssistantChatContext";
 import { SUGGESTED_PROMPTS, type ChatMessage } from "@/lib/dashboard/assistantChat";
 
+const CHAT_WIDTH = "mx-auto w-full max-w-2xl";
+
 function ChatBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
 
@@ -37,17 +39,12 @@ function ChatBubble({ message }: { message: ChatMessage }) {
 
 function ChatEmptyState({ onSelectPrompt }: { onSelectPrompt: (prompt: string) => void }) {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-4 py-8 sm:px-6">
-      <span
-        className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-verde-floresta text-bege-natural"
-        aria-hidden
-      >
-        <Bot className="size-7" />
-      </span>
-      <h2 className={`text-center text-xl font-bold tracking-tight sm:text-2xl ${textPrimary}`}>
+    <div className="flex flex-col items-center px-4 pt-2 pb-8 text-center sm:px-6 sm:pt-4">
+      <Bot className="mb-4 size-12 text-laranja-solar sm:mb-5 sm:size-14" aria-hidden />
+      <h2 className={`text-xl font-bold tracking-tight sm:text-2xl ${textPrimary}`}>
         Como posso te ajudar hoje?
       </h2>
-      <p className={`mt-2 max-w-md text-center text-sm ${textMuted}`}>
+      <p className={`mt-2 max-w-md text-sm sm:text-base ${textMuted}`}>
         Pergunte sobre clima, solo, irrigação, alertas e colheitas.
       </p>
       <div className="mt-8 flex w-full max-w-lg flex-col gap-2.5">
@@ -56,7 +53,7 @@ function ChatEmptyState({ onSelectPrompt }: { onSelectPrompt: (prompt: string) =
             key={prompt}
             type="button"
             onClick={() => onSelectPrompt(prompt)}
-            className={`${btnClick} w-full rounded-full border border-[var(--db-border)] bg-[var(--db-surface)] px-5 py-3 text-left text-sm font-medium text-[var(--db-text)] hover:border-verde-floresta/30 hover:text-verde-floresta`}
+            className={`${btnClick} w-full rounded-full border border-[var(--db-border)] bg-[var(--db-surface)] px-5 py-3 text-left text-sm font-medium text-[var(--db-text)] shadow-sm hover:border-verde-floresta/30 hover:text-verde-floresta`}
           >
             {prompt}
           </button>
@@ -95,35 +92,37 @@ export function AssistenteView() {
   };
 
   return (
-    <div className="flex min-h-[min(24rem,60vh)] flex-col">
-      {isEmpty ? (
-        <ChatEmptyState onSelectPrompt={sendMessage} />
-      ) : (
-        <div
-          ref={scrollRef}
-          className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto py-4 sm:py-6"
-          role="log"
-          aria-live="polite"
-        >
-          {messages.map((message) => (
-            <ChatBubble key={message.id} message={message} />
-          ))}
-          {isTyping && (
-            <div className="flex gap-3">
-              <span className="flex size-8 items-center justify-center rounded-full bg-verde-floresta text-bege-natural">
-                <Bot className="size-4" aria-hidden />
-              </span>
-              <div className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-[var(--db-nested-bg)] px-4 py-2.5">
-                <Loader2 className="size-4 animate-spin text-verde-floresta" aria-hidden />
-                <span className={`text-sm ${textMuted}`}>Digitando…</span>
+    <div className={`flex flex-col ${isEmpty ? "" : "min-h-[calc(100dvh-14rem)] sm:min-h-[calc(100dvh-13rem)]"}`}>
+      <div className={`flex flex-col ${isEmpty ? "" : "min-h-0 flex-1"} ${CHAT_WIDTH}`}>
+        {isEmpty ? (
+          <ChatEmptyState onSelectPrompt={sendMessage} />
+        ) : (
+          <div
+            ref={scrollRef}
+            className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pt-2 pb-4 sm:pt-3 sm:pb-6"
+            role="log"
+            aria-live="polite"
+          >
+            {messages.map((message) => (
+              <ChatBubble key={message.id} message={message} />
+            ))}
+            {isTyping && (
+              <div className="flex gap-3">
+                <span className="flex size-8 items-center justify-center rounded-full bg-verde-floresta text-bege-natural">
+                  <Bot className="size-4" aria-hidden />
+                </span>
+                <div className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-[var(--db-nested-bg)] px-4 py-2.5">
+                  <Loader2 className="size-4 animate-spin text-verde-floresta" aria-hidden />
+                  <span className={`text-sm ${textMuted}`}>Digitando…</span>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
 
-      <div className="shrink-0 pt-2 pb-1 sm:pt-3">
-        <div className="mx-auto flex max-w-2xl items-end gap-2 rounded-full border border-[var(--db-border)] bg-[var(--db-surface)] px-2 py-1.5 sm:px-3">
+      <div className={`shrink-0 pb-1 ${isEmpty ? "mt-6 sm:mt-8" : "pt-2 sm:pt-3"} ${CHAT_WIDTH}`}>
+        <div className="flex items-end gap-2 rounded-full border border-[var(--db-border)] bg-[var(--db-surface)] px-2 py-1.5 shadow-sm sm:px-3">
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
@@ -131,7 +130,7 @@ export function AssistenteView() {
             rows={1}
             placeholder="Pergunte sobre clima, solo, irrigação ou alertas…"
             disabled={isTyping}
-            className="max-h-28 min-h-10 flex-1 resize-none bg-transparent px-3 py-2 text-sm text-[var(--db-text)] outline-none rounded-2xl placeholder:text-[var(--db-text-faint)] disabled:opacity-60"
+            className="max-h-28 min-h-10 flex-1 resize-none rounded-2xl bg-transparent px-3 py-2 text-sm text-[var(--db-text)] outline-none placeholder:text-[var(--db-text-faint)] disabled:opacity-60"
             aria-label="Mensagem"
           />
           <button

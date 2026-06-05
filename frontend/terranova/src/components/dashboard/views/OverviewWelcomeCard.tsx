@@ -1,15 +1,31 @@
-import { AlertTriangle, Droplets, MapPin, Sprout } from "lucide-react";
+import {
+  AlertTriangle,
+  Bell,
+  CloudRain,
+  Droplets,
+  Gauge,
+  Leaf,
+  MapPin,
+  Sprout,
+  Thermometer,
+  Wind,
+} from "lucide-react";
 import logoColorido from "@/assets/logos/logo-colorido.png";
 import { DashboardCard } from "@/components/dashboard/ui";
-import { cardInset, gridCols2, gridCols4, labelMuted, LOGO_SRC, textFaint, textMuted, textPrimary } from "@/constants/dashboard";
+import { cardInset, gridCols4, labelMuted, LOGO_SRC, textFaint, textMuted, textPrimary } from "@/constants/dashboard";
 import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
 import { useDashboard } from "@/context/DashboardContext";
 import { formatTodayPt, getGreeting } from "@/lib/dashboard/loadDashboardData";
 
 export function OverviewWelcomeCard() {
-  const { company, climate, water } = useDashboard();
-  const criticalAlerts = MOCK_DASHBOARD_DATA.alerts.filter((a) => a.level === "critical").length;
+  const { company, climate, water, soil } = useDashboard();
+  const alerts = MOCK_DASHBOARD_DATA.alerts;
+  const criticalAlerts = alerts.filter((a) => a.level === "critical").length;
+  const warningAlerts = alerts.filter((a) => a.level === "warning").length;
   const cropCount = MOCK_DASHBOARD_DATA.crops.length;
+  const avgMaturity = Math.round(
+    MOCK_DASHBOARD_DATA.crops.reduce((sum, c) => sum + c.maturity, 0) / MOCK_DASHBOARD_DATA.crops.length,
+  );
   const greeting = getGreeting();
 
   return (
@@ -58,18 +74,14 @@ export function OverviewWelcomeCard() {
           {criticalAlerts === 1 ? "alerta crítico" : "alertas críticos"} ativos.
         </p>
 
-        <div className={gridCols4}>
+        <div className={`${gridCols4} lg:col-span-2`}>
           <div className={cardInset}>
             <p className={labelMuted}>Área total</p>
-            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
-              {company.totalAreaHa} ha
-            </p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{company.totalAreaHa} ha</p>
           </div>
           <div className={cardInset}>
             <p className={labelMuted}>Setores ativos</p>
-            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
-              {company.activeSectors}
-            </p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{company.activeSectors}</p>
           </div>
           <div className={cardInset}>
             <p className={labelMuted}>Culturas</p>
@@ -79,26 +91,72 @@ export function OverviewWelcomeCard() {
             </p>
           </div>
           <div className={cardInset}>
+            <p className={labelMuted}>Maturidade média</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <Gauge className="size-4 text-verde-floresta" aria-hidden />
+              {avgMaturity}%
+            </p>
+          </div>
+          <div className={cardInset}>
+            <p className={labelMuted}>Temperatura</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <Thermometer className="size-4 text-laranja-solar" aria-hidden />
+              {climate.temperature.toFixed(1)}°C
+            </p>
+          </div>
+          <div className={cardInset}>
+            <p className={labelMuted}>Umidade do ar</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <CloudRain className="size-4 text-verde-floresta" aria-hidden />
+              {Math.round(climate.humidity)}%
+            </p>
+          </div>
+          <div className={cardInset}>
+            <p className={labelMuted}>Umidade do solo</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <Leaf className="size-4 text-verde-floresta" aria-hidden />
+              {Math.round(soil.moisture)}%
+            </p>
+          </div>
+          <div className={cardInset}>
+            <p className={labelMuted}>Vento</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <Wind className="size-4 text-verde-claro" aria-hidden />
+              {climate.wind.toFixed(1)} km/h
+            </p>
+          </div>
+          <div className={cardInset}>
+            <p className={labelMuted}>Consumo hídrico hoje</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <Droplets className="size-4 text-verde-floresta" aria-hidden />
+              {water.consumptionLiters.toLocaleString("pt-BR")} L
+            </p>
+          </div>
+          <div className={cardInset}>
+            <p className={labelMuted}>Eficiência hídrica</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <Droplets className="size-4 text-verde-claro" aria-hidden />
+              {water.efficiency}%
+            </p>
+          </div>
+          <div className={cardInset}>
+            <p className={labelMuted}>Economia acumulada</p>
+            <p className="mt-1 text-lg font-bold text-verde-claro sm:text-xl">
+              {water.savingsLiters.toLocaleString("pt-BR")} L
+            </p>
+          </div>
+          <div className={cardInset}>
             <p className={labelMuted}>Alertas críticos</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <AlertTriangle className="size-4 text-laranja-solar" aria-hidden />
               {criticalAlerts}
             </p>
           </div>
-        </div>
-
-        <div className={`${gridCols2} lg:col-span-2`}>
           <div className={cardInset}>
-            <p className={labelMuted}>Consumo hídrico hoje</p>
-            <p className={`mt-1 flex items-center gap-1.5 text-base font-bold sm:text-lg ${textPrimary}`}>
-              <Droplets className="size-4 text-verde-floresta" aria-hidden />
-              {water.consumptionLiters.toLocaleString("pt-BR")} L
-            </p>
-          </div>
-          <div className={cardInset}>
-            <p className={labelMuted}>Economia acumulada</p>
-            <p className="mt-1 text-base font-bold text-verde-claro sm:text-lg">
-              {water.savingsLiters.toLocaleString("pt-BR")} L
+            <p className={labelMuted}>Alertas moderados</p>
+            <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              <Bell className="size-4 text-amber-500" aria-hidden />
+              {warningAlerts}
             </p>
           </div>
         </div>

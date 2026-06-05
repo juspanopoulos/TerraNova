@@ -2,6 +2,7 @@ import {
   Bell,
   Bot,
   Building2,
+  NotebookPen,
   Calendar,
   CalendarDays,
   CalendarRange,
@@ -101,6 +102,7 @@ export const PAGE_TITLES: Record<ViewId, string> = {
   growth: "Previsão de Colheitas",
   water: "Consumo Hídrico",
   assistant: "Assistente TerraNova",
+  notes: "Anotações",
   settings: "Configurações",
 };
 
@@ -124,6 +126,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "soil", label: "Controle do Solo", icon: Leaf },
   { id: "growth", label: "Previsão de Colheitas", icon: Sprout },
   { id: "water", label: "Consumo Hídrico", icon: Droplets },
+  { id: "notes", label: "Anotações", icon: NotebookPen },
 ];
 
 export const levelLabel: Record<AlertLevel, string> = {
@@ -174,6 +177,7 @@ export const DASHBOARD_ROUTES = {
   colheitas: "/plataforma/colheitas",
   agua: "/plataforma/agua",
   assistente: "/plataforma/assistente",
+  anotacoes: "/plataforma/anotacoes",
   configuracoes: "/plataforma/configuracoes",
   configuracoesGeral: "/plataforma/configuracoes/geral",
   configuracoesEmpresa: "/plataforma/configuracoes/empresa",
@@ -214,6 +218,7 @@ export function showsPagePeriodFilter(view: ViewId): boolean {
     view !== "overview" &&
     view !== "alerts" &&
     view !== "assistant" &&
+    view !== "notes" &&
     view !== "settings"
   );
 }
@@ -237,6 +242,7 @@ export const VIEW_ROUTE_BY_ID: Record<ViewId, string> = {
   growth: DASHBOARD_ROUTES.colheitas,
   water: DASHBOARD_ROUTES.agua,
   assistant: DASHBOARD_ROUTES.assistente,
+  notes: DASHBOARD_ROUTES.anotacoes,
   settings: DASHBOARD_ROUTES.configuracoesGeral,
 };
 
@@ -262,6 +268,7 @@ export function isSettingsPath(pathname: string): boolean {
 export function pathToViewId(pathname: string): ViewId {
   if (isSettingsPath(pathname)) return "settings";
   if (pathname.startsWith(DASHBOARD_ROUTES.assistente)) return "assistant";
+  if (pathname.startsWith(DASHBOARD_ROUTES.anotacoes)) return "notes";
   if (pathname.startsWith(DASHBOARD_ROUTES.alertas)) return "alerts";
   if (pathname.startsWith(DASHBOARD_ROUTES.clima)) return "climate";
   if (pathname.startsWith(DASHBOARD_ROUTES.solo)) return "soil";
