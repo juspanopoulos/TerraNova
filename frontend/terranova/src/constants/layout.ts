@@ -74,6 +74,9 @@ export const panelOnDark =
 export const gridCards =
   'grid gap-4 sm:grid-cols-1 sm:gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-6 xl:grid-cols-3 xl:gap-6'
 
+export const siteHeaderSpacer =
+  'h-16 sm:h-[4.25rem] md:h-[4.75rem] lg:h-20'
+
 export const headerInner = [
   'mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between',
   'gap-3 px-4 py-3',
@@ -94,11 +97,10 @@ export const headerNavLinkBase =
   'rounded-md px-2.5 py-2 text-sm font-semibold transition sm:px-3 sm:py-2 sm:text-sm md:text-base md:px-3.5 md:py-2.5 lg:text-base lg:px-4 lg:py-2.5 xl:text-base xl:px-4 xl:py-2.5'
 
 export const footerInner = [
-  'mx-auto flex w-full max-w-6xl flex-wrap items-start justify-between',
-  'gap-6 px-4 py-8',
-  'xs:flex-col xs:items-start xs:gap-5',
-  'sm:px-6 sm:py-10',
-  'md:flex-row md:items-center md:px-8',
-  'lg:px-12 lg:py-12',
-  'xl:px-16 xl:py-12',
+  contentShell,
+  containerPx,
+  'py-10 sm:py-12 md:py-14',
 ].join(' ')
+
+export const footerLink =
+  'text-sm font-medium text-bege-natural/70 no-underline transition-colors hover:text-laranja-solar sm:text-base'

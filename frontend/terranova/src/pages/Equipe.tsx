@@ -1,12 +1,14 @@
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import {
   card,
   contentShell,
   containerPx,
   containerPyPage,
-  eyebrow,
+  bodyLead,
   gridCards,
   headingPage,
 } from "@/constants/layout";
+import { ROUTES } from "@/constants/routes";
 
 const team = [
   {
@@ -27,10 +29,16 @@ const Equipe = () => {
   return (
     <main className={`${containerPx} ${containerPyPage}`}>
       <section className={contentShell}>
-        <p className={eyebrow}>Equipe</p>
-        <h1 className={headingPage}>
+        <PageBreadcrumb
+          items={[
+            { label: "Inicio", to: ROUTES.home },
+            { label: "Equipe" },
+          ]}
+        />
+        <h1 className={headingPage}>Equipe</h1>
+        <p className={bodyLead}>
           Pessoas diferentes trabalhando por uma mesma paisagem.
-        </h1>
+        </p>
         <div className={`mt-8 sm:mt-10 ${gridCards}`}>
           {team.map((person) => (
             <article className={card} key={person.name}>
