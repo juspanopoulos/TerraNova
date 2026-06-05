@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
+import { siteHeaderSpacer } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";
 
 type BaseLayoutProps = {
@@ -19,11 +20,22 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
       className={
         isPlataforma
           ? "flex h-dvh flex-col overflow-hidden bg-bege-natural font-sans text-preto-suave"
-          : "min-h-screen overflow-x-hidden bg-bege-natural font-sans text-preto-suave"
+          : "flex min-h-screen flex-col overflow-x-hidden bg-bege-natural font-sans text-preto-suave"
       }
     >
-      {!hideSiteChrome && <Navbar />}
-      <div className={isPlataforma ? "flex min-h-0 flex-1 flex-col overflow-hidden" : undefined}>
+      {!hideSiteChrome && (
+        <>
+          <Navbar />
+          <div className={siteHeaderSpacer} aria-hidden />
+        </>
+      )}
+      <div
+        className={
+          isPlataforma
+            ? "flex min-h-0 flex-1 flex-col overflow-hidden"
+            : "flex flex-1 flex-col"
+        }
+      >
         {children}
       </div>
       {!hideSiteChrome && <Footer />}
