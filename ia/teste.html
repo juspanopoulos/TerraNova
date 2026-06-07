@@ -1,232 +1,204 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>TerraNova IA - Teste</title>
 
-<title>Teste Modelos IA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
 
-<style>
+        section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
 
-body{
-    font-family: Arial, sans-serif;
-    max-width: 900px;
-    margin: 30px auto;
-    padding: 20px;
-}
+        h2 {
+            margin-top: 0;
+        }
 
-.card{
-    border:1px solid #ddd;
-    border-radius:10px;
-    padding:20px;
-    margin-bottom:20px;
-}
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
 
-h1,h2{
-    text-align:center;
-}
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
 
-label{
-    display:block;
-    margin-top:10px;
-}
-
-input,select{
-    width:100%;
-    padding:8px;
-    margin-top:5px;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    cursor:pointer;
-}
-
-.resultado{
-    margin-top:15px;
-    padding:15px;
-    background:#f5f5f5;
-    border-radius:8px;
-    white-space:pre-wrap;
-}
-
-</style>
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            overflow: auto;
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>Teste dos Modelos</h1>
+<h1>TerraNova IA - Testes</h1>
 
-<button onclick="testarApi()">
-Testar API
-</button>
+<!-- ML1 -->
 
-<div id="statusApi" class="resultado">
-Aguardando...
-</div>
+<section>
 
-<div class="card">
+    <h2>ML1 - Produtividade</h2>
 
-<h2>Modelo 1</h2>
+    <select id="region">
+        <option>North</option>
+        <option>South</option>
+        <option>East</option>
+        <option>West</option>
+    </select>
 
-<label>Region</label>
-<input id="region" value="North">
+    <select id="soil_type">
+        <option>Clay</option>
+        <option>Loam</option>
+        <option>Peaty</option>
+        <option>Sandy</option>
+        <option>Silt</option>
+    </select>
 
-<label>Soil Type</label>
-<select id="soil_type">
-    <option>Clay</option>
-    <option selected>Loamy</option>
-    <option>Sandy</option>
-</select>
+    <select id="crop">
+        <option>Rice</option>
+        <option>Wheat</option>
+        <option>Maize</option>
+        <option>Cotton</option>
+        <option>Soybean</option>
+    </select>
 
-<label>Crop</label>
-<select id="crop">
-    <option selected value="1">Rice</option>
-    <option>Maize</option>
-    <option>Wheat</option>
-    <option>Cotton</option>
-</select>
+    <select id="weather_condition">
+        <option>Sunny</option>
+        <option>Rainy</option>
+    </select>
 
-<label>Rainfall (mm)</label>
-<input id="rainfall" type="number" value="120">
+    <input type="number" id="rainfall_mm" placeholder="Rainfall mm" value="1200">
 
-<label>Temperature</label>
-<input id="temperature" type="number" value="28">
+    <input type="number" id="temperature_celsius" placeholder="Temperatura" value="28">
 
-<label>Fertilizer Used</label>
-<select id="fertilizer">
-    <option value="1">Sim</option>
-    <option value="0">Não</option>
-</select>
+    <input type="number" id="fertilizer_used" value="1">
 
-<label>Irrigation Used</label>
-<select id="irrigation">
-    <option value="1">Sim</option>
-    <option value="0">Não</option>
-</select>
+    <input type="number" id="irrigation_used" value="1">
 
-<label>Weather Condition</label>
-<select id="weather">
-    <option>Sunny</option>
-    <option>Cloudy</option>
-    <option>Rainy</option>
-</select>
+    <input type="number" id="days_to_harvest" value="120">
 
-<label>Days To Harvest</label>
-<input id="days" type="number" value="120">
+    <button onclick="testarML1()">
+        Testar ML1
+    </button>
 
-<button onclick="preverModelo1()">
-Executar Modelo 1
-</button>
+    <pre id="resultado_ml1"></pre>
 
-<div id="resultadoM1" class="resultado">
-Aguardando...
-</div>
+</section>
 
-</div>
+<!-- ML2 -->
 
-<div class="card">
+<section>
 
-<h2>Modelo 2</h2>
+    <h2>ML2 - Irrigação</h2>
 
-<label>Latitude</label>
-<input id="latitude" value="-23.5505">
+    <input type="number" step="any"
+           id="latitude"
+           value="-23.5505">
 
-<label>Longitude</label>
-<input id="longitude" value="-46.6333">
+    <input type="number" step="any"
+           id="longitude"
+           value="-46.6333">
 
-<label>Soil Type</label>
-<select id="soil_type2">
-    <option>Clay</option>
-    <option selected>Loamy</option>
-    <option>Sandy</option>
-</select>
+    <select id="soil_type2">
+        <option>Clay</option>
+        <option>Loam</option>
+        <option>Sandy</option>
+        <option>Silt</option>
+        <option>Peaty</option>
+        <option>Chalky</option>
+    </select>
 
-<label>Soil Moisture</label>
-<input id="soil_moisture" value="45">
+    <input type="number"
+           id="soil_moisture"
+           value="45">
 
-<label>Crop Type</label>
-<select id="crop_type">
-    <option selected>Rice</option>
-    <option>Maize</option>
-    <option>Wheat</option>
-</select>
+    <select id="crop_type">
+        <option>Rice</option>
+        <option>Wheat</option>
+        <option>Maize</option>
+        <option>Cotton</option>
+    </select>
 
-<label>Growth Stage</label>
-<select id="crop_growth_stage">
-    <option>Seedling</option>
-    <option selected>Vegetative</option>
-    <option>Flowering</option>
-</select>
+    <select id="crop_growth_stage">
+        <option>Germination</option>
+        <option>Vegetative</option>
+        <option>Flowering</option>
+        <option>Maturity</option>
+    </select>
 
-<label>Irrigation Type</label>
-<select id="irrigation_type">
-    <option selected>Drip</option>
-    <option>Sprinkler</option>
-</select>
+    <select id="irrigation_type">
+        <option>Drip</option>
+        <option>Sprinkler</option>
+        <option>Surface</option>
+    </select>
 
-<label>Field Area</label>
-<input id="field_area" value="5">
+    <input type="number"
+           id="field_area_hectare"
+           value="10">
 
-<label>Mulching Used</label>
-<select id="mulching">
-    <option value="1">Sim</option>
-    <option value="0">Não</option>
-</select>
+    <select id="mulching_used">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+    </select>
 
-<label>Previous Irrigation</label>
-<input id="previous_irrigation" value="10">
+    <input type="number"
+           id="previous_irrigation_mm"
+           value="30">
 
-<label>Current Water Usage</label>
-<input id="current_water_usage" value="8">
+    <input type="number"
+           id="current_water_usage"
+           value="8">
 
-<button onclick="preverModelo2()">
-Executar Modelo 2
-</button>
+    <button onclick="testarML2()">
+        Testar ML2
+    </button>
 
-<div id="resultadoM2" class="resultado">
-Aguardando...
-</div>
+    <pre id="resultado_ml2"></pre>
 
-</div>
+</section>
+
+<!-- CHAT -->
+
+<section>
+
+    <h2>GAIA Chat</h2>
+
+    <textarea id="pergunta"
+              rows="4"
+              placeholder="Digite sua pergunta"></textarea>
+
+    <textarea id="contexto"
+              rows="6"
+              placeholder="Contexto opcional"></textarea>
+
+    <button onclick="testarChat()">
+        Enviar
+    </button>
+
+    <pre id="resultado_chat"></pre>
+
+</section>
 
 <script>
 
-async function testarApi(){
+const API = "http://localhost:5000";
 
-    try{
-
-        const response = await fetch(
-            "http://localhost:5000/api/funcionando",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    teste:true
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        document.getElementById("statusApi").innerHTML =
-            JSON.stringify(data,null,2);
-
-    }catch(err){
-
-        document.getElementById("statusApi").innerHTML =
-            err.message;
-
-    }
-}
-
-async function preverModelo1(){
+async function testarML1() {
 
     const payload = {
 
@@ -239,52 +211,45 @@ async function preverModelo1(){
         crop:
             document.getElementById("crop").value,
 
+        weather_condition:
+            document.getElementById("weather_condition").value,
+
         rainfall_mm:
-            Number(document.getElementById("rainfall").value),
+            Number(document.getElementById("rainfall_mm").value),
 
         temperature_celsius:
-            Number(document.getElementById("temperature").value),
+            Number(document.getElementById("temperature_celsius").value),
 
         fertilizer_used:
-            Number(document.getElementById("fertilizer").value),
+            Number(document.getElementById("fertilizer_used").value),
 
         irrigation_used:
-            Number(document.getElementById("irrigation").value),
-
-        weather_condition:
-            document.getElementById("weather").value,
+            Number(document.getElementById("irrigation_used").value),
 
         days_to_harvest:
-            Number(document.getElementById("days").value)
+            Number(document.getElementById("days_to_harvest").value)
     };
 
-    try{
+    const response = await fetch(
+        `${API}/modelo1/predict`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(payload)
+        }
+    );
 
-        const response = await fetch(
-            "http://localhost:5000/modelo1/predict",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(payload)
-            }
-        );
+    const data = await response.json();
 
-        const data = await response.json();
-
-        document.getElementById("resultadoM1").innerHTML =
-            JSON.stringify(data,null,2);
-
-    }catch(err){
-
-        document.getElementById("resultadoM1").innerHTML =
-            err.message;
-
-    }
+    document.getElementById(
+        "resultado_ml1"
+    ).textContent =
+        JSON.stringify(data, null, 2);
 }
 
-async function preverModelo2(){
+async function testarML2() {
 
     const payload = {
 
@@ -310,46 +275,68 @@ async function preverModelo2(){
             document.getElementById("irrigation_type").value,
 
         field_area_hectare:
-            Number(document.getElementById("field_area").value),
+            Number(document.getElementById("field_area_hectare").value),
 
         mulching_used:
-            Number(document.getElementById("mulching").value),
+            document.getElementById("mulching_used").value,
 
         previous_irrigation_mm:
-            Number(document.getElementById("previous_irrigation").value),
+            Number(document.getElementById("previous_irrigation_mm").value),
 
         current_water_usage:
             Number(document.getElementById("current_water_usage").value)
     };
 
-    try{
+    const response = await fetch(
+        `${API}/modelo2/predict`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(payload)
+        }
+    );
 
-        const response = await fetch(
-            "http://localhost:5000/modelo2/predict",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(payload)
-            }
-        );
+    const data = await response.json();
 
-        const data = await response.json();
+    document.getElementById(
+        "resultado_ml2"
+    ).textContent =
+        JSON.stringify(data, null, 2);
+}
 
-        document.getElementById("resultadoM2").innerHTML =
-            JSON.stringify(data,null,2);
+async function testarChat() {
 
-    }catch(err){
+    const payload = {
 
-        document.getElementById("resultadoM2").innerHTML =
-            err.message;
+        pergunta:
+            document.getElementById("pergunta").value,
 
-    }
+        contexto:
+            document.getElementById("contexto").value
+    };
+
+    const response = await fetch(
+        `${API}/chat`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(payload)
+        }
+    );
+
+    const data = await response.json();
+
+    document.getElementById(
+        "resultado_chat"
+    ).textContent =
+        JSON.stringify(data, null, 2);
 }
 
 </script>
 
 </body>
 </html>
-```
