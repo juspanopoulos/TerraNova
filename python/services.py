@@ -1,3 +1,5 @@
+import json
+
 def processar_e_inserir_dados(dados_json, conexao):
     if not conexao or not dados_json:
         return False
@@ -132,5 +134,32 @@ def gerar_relatorio_recomendacoes(conexao):
     except Exception as e:
         print(f"\n[ERRO] Falha ao gerar o relatório: {e}")
         return []
+    finally:
+        cursor.close()
+
+def registrar_predicao_ia(conexao, id_area, tipo_modelo, produtividade_estimada):
+    if not conexao: return False
+    
+    cursor = conexao.cursor()
+    try:
+        entrada_dict = {"features": ["temperatura", "umidade", "chuva", "qualidade_solo"], "area_alvo": id_area}
+        saida_dict = {"confidence_score": 0.92, "predicted_yield_tons": produtividade_estimada, "margin_error": 2.5}
+        
+        # Converte os dicionários Python para Strings JSON
+        entrada_json = json.dumps(entrada_dict)
+        saida_json = json.dumps(saida_dict)
+        
+        # Inserção respeitando a constraint de CHECK (PRODUTIVIDADE ou IRRIGACAO)
+        cursor.execute("""
+            INSERT INTO TN_PREDICAO_IA 
+            (id_area, ds_tipo_modelo, ds_nome_modelo, ds_versao_modelo, ds_entrada_json, ds_saida_json, nr_produtividade_prevista, ds_status) 
+            VALUES (:1, :2, 'RandomForest_Agro', 'v1.2', :3, :4, :5, 'SUCESSO')
+        """, (id_area, tipo_modelo, entrada_json, saida_json, produtividade_estimada))
+        
+        conexao.commit()
+        return True
+    except Exception as e:
+        print(f"\n[ERRO] Falha ao registrar predição de IA: {e}")
+        return False
     finally:
         cursor.close()
