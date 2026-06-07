@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import logoColorido from '@/assets/logos/logo-colorido.png'
@@ -15,72 +15,149 @@ import styles from './HomeNavbar.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const HOME_NAVBAR_ID = 'home-navbar'
+const HOME_NAVBAR_PIN_HOST_ID = 'home-navbar-pin-host'
+const HOME_NAVBAR_PIN_ID = 'home-navbar-pin'
+
 const navShell = [
   contentShell,
   containerPx,
   'flex min-h-16 items-center sm:min-h-[4.25rem] md:min-h-[4.75rem] lg:min-h-20',
 ].join(' ')
 
-const linkClassName = ({ isActive }: { isActive: boolean }) =>
-  [
-    headerNavLinkBase,
-    isActive ? styles.linkActive : styles.link,
-  ].join(' ')
+const PIN_INLINE_PROPS = [
+  'position',
+  'top',
+  'left',
+  'right',
+  'bottom',
+  'width',
+  'max-width',
+  'transform',
+  'translate',
+  'rotate',
+  'scale',
+  'pointer-events',
+  'z-index',
+  'min-height',
+] as const
 
-const accordionLinkClassName = ({ isActive }: { isActive: boolean }) =>
-  [
-    styles.accordionLink,
-    isActive ? styles.accordionLinkActive : '',
-  ].join(' ')
+function isNavActive(pathname: string, to: string) {
+  if (to === ROUTES.home) return pathname === ROUTES.home
+  if (to === ROUTES.plataforma) {
+    return pathname === ROUTES.plataforma || pathname.startsWith(`${ROUTES.plataforma}/`)
+  }
+  return pathname === to
+}
+
+function clearInlineStyles(element: HTMLElement) {
+  for (const prop of PIN_INLINE_PROPS) {
+    element.style.removeProperty(prop)
+  }
+}
+
+function releaseHomeNavbarFromPinSpacer() {
+  document.querySelectorAll<HTMLElement>('.pin-spacer').forEach((spacer) => {
+    const pinHost = spacer.querySelector<HTMLElement>(`#${HOME_NAVBAR_PIN_HOST_ID}`)
+    if (!pinHost) return
+
+    spacer.replaceWith(pinHost)
+    clearInlineStyles(pinHost)
+
+    const header = pinHost.querySelector<HTMLElement>(`#${HOME_NAVBAR_ID}`)
+    if (header) clearInlineStyles(header)
+  })
+}
+
+function destroyHomeNavbarPin() {
+  ScrollTrigger.getById(HOME_NAVBAR_PIN_ID)?.kill(true)
+  releaseHomeNavbarFromPinSpacer()
+}
+
+function applyPinLayerStyles(pinHost: HTMLElement) {
+  const header = pinHost.querySelector<HTMLElement>(`#${HOME_NAVBAR_ID}`)
+  if (header) {
+    header.style.pointerEvents = 'auto'
+    header.style.zIndex = '100'
+  }
+
+  const pinSpacer = pinHost.parentElement
+  if (!pinSpacer?.classList.contains('pin-spacer')) return
+
+  pinSpacer.style.pointerEvents = 'none'
+  pinSpacer.style.zIndex = '100'
+  pinSpacer.style.backgroundColor = '#1a130d'
+  pinSpacer.style.minHeight = `${pinHost.offsetHeight}px`
+}
+
+function syncHomeNavbarPin(pinHost: HTMLElement) {
+  applyPinLayerStyles(pinHost)
+  ScrollTrigger.getById(HOME_NAVBAR_PIN_ID)?.refresh()
+}
 
 export const HomeNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false)
-  const headerRef = useRef<HTMLElement>(null)
+  const pinHostRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setMenuOpen(false)
   }, [pathname])
 
-  useEffect(() => {
-    const header = headerRef.current
-    if (!header) return
+  const closeMenu = useCallback(() => setMenuOpen(false), [])
+
+  const goTo = useCallback(
+    (to: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault()
+      closeMenu()
+      navigate(to)
+    },
+    [closeMenu, navigate],
+  )
+
+  useLayoutEffect(() => {
+    const pinHost = pinHostRef.current
+    if (!pinHost) return
+
+    destroyHomeNavbarPin()
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
-        trigger: header,
+        id: HOME_NAVBAR_PIN_ID,
+        trigger: pinHost,
         start: 'top top',
         endTrigger: document.querySelector('.site-root') ?? document.body,
         end: 'bottom bottom',
         pin: true,
         pinSpacing: false,
-        invalidateOnRefresh: true,
-        onToggle: (self) => {
-          const spacer = self.pin
-          if (!spacer) return
-          spacer.style.minHeight = self.isActive
-            ? `${header.offsetHeight}px`
-            : ''
+        fastScrollEnd: true,
+        onRefresh: () => {
+          applyPinLayerStyles(pinHost)
         },
       })
+    }, pinHost)
+
+    const initFrame = requestAnimationFrame(() => {
+      applyPinLayerStyles(pinHost)
     })
 
-    return () => ctx.revert()
+    return () => {
+      cancelAnimationFrame(initFrame)
+      ctx.revert()
+      destroyHomeNavbarPin()
+    }
   }, [])
 
   useEffect(() => {
-    const header = headerRef.current
-    ScrollTrigger.refresh()
+    const pinHost = pinHostRef.current
+    if (!pinHost) return
 
-    if (!header) return
+    const frame = requestAnimationFrame(() => {
+      syncHomeNavbarPin(pinHost)
+    })
 
-    const trigger = ScrollTrigger.getAll().find(
-      (instance) => instance.trigger === header,
-    )
-
-    if (trigger?.isActive && trigger.pin) {
-      trigger.pin.style.minHeight = `${header.offsetHeight}px`
-    }
+    return () => cancelAnimationFrame(frame)
   }, [menuOpen])
 
   useEffect(() => {
@@ -92,13 +169,11 @@ export const HomeNavbar = () => {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
-  const closeMenu = () => setMenuOpen(false)
-
   const logoLink = (
-    <NavLink
+    <a
+      href={ROUTES.home}
       className={`inline-flex shrink-0 items-center transition-opacity hover:opacity-85 ${styles.logo}`}
-      to={ROUTES.home}
-      onClick={closeMenu}
+      onClick={goTo(ROUTES.home)}
     >
       <img
         src={logoColorido}
@@ -108,64 +183,84 @@ export const HomeNavbar = () => {
         height={64}
         decoding="async"
       />
-    </NavLink>
+    </a>
   )
 
   return (
-    <header ref={headerRef} className={`${styles.header} border-b`}>
-      <div className={`${navShell} ${styles.shell}`}>
-        <div className={styles.mobileBar}>
-          {logoLink}
-          <button
-            type="button"
-            className={[
-              styles.menuButton,
-              menuOpen ? styles.menuButtonOpen : '',
-            ].join(' ')}
-            aria-expanded={menuOpen}
-            aria-controls="home-mobile-nav"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            Menu
-          </button>
+    <div
+      ref={pinHostRef}
+      id={HOME_NAVBAR_PIN_HOST_ID}
+      className={styles.pinHost}
+    >
+      <header id={HOME_NAVBAR_ID} className={styles.header}>
+        <div className={`${navShell} ${styles.shell}`}>
+          <div className={styles.mobileBar}>
+            {logoLink}
+            <button
+              type="button"
+              className={[
+                styles.menuButton,
+                menuOpen ? styles.menuButtonOpen : '',
+              ].join(' ')}
+              aria-expanded={menuOpen}
+              aria-controls="home-mobile-nav"
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              Menu
+            </button>
+          </div>
+
+          <div className={styles.desktopRow}>
+            {logoLink}
+            <nav aria-label="Navegacao principal" className={`${headerNav} ${styles.nav}`}>
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.to}
+                  href={link.to}
+                  className={[
+                    headerNavLinkBase,
+                    styles.navLink,
+                    isNavActive(pathname, link.to) ? styles.linkActive : styles.link,
+                  ].join(' ')}
+                  onClick={goTo(link.to)}
+                  aria-current={isNavActive(pathname, link.to) ? 'page' : undefined}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
 
-        <div className={styles.desktopRow}>
-          {logoLink}
-          <nav aria-label="Navegacao principal" className={headerNav}>
-            {NAV_LINKS.map((link) => (
-              <NavLink className={linkClassName} key={link.to} to={link.to}>
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
+        <div
+          className={[
+            styles.mobileAccordion,
+            menuOpen ? styles.mobileAccordionOpen : '',
+          ].join(' ')}
+          id="home-mobile-nav"
+          aria-hidden={!menuOpen}
+        >
+          <div className={styles.mobileAccordionInner}>
+            <nav aria-label="Navegacao mobile" className={styles.accordionNav}>
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.to}
+                  href={link.to}
+                  className={[
+                    styles.accordionLink,
+                    isNavActive(pathname, link.to) ? styles.accordionLinkActive : '',
+                  ].join(' ')}
+                  onClick={goTo(link.to)}
+                  tabIndex={menuOpen ? 0 : -1}
+                  aria-current={isNavActive(pathname, link.to) ? 'page' : undefined}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
         </div>
-      </div>
-
-      <div
-        className={[
-          styles.mobileAccordion,
-          menuOpen ? styles.mobileAccordionOpen : '',
-        ].join(' ')}
-        id="home-mobile-nav"
-        aria-hidden={!menuOpen}
-      >
-        <div className={styles.mobileAccordionInner}>
-          <nav aria-label="Navegacao mobile" className={styles.accordionNav}>
-            {NAV_LINKS.map((link) => (
-              <NavLink
-                className={accordionLinkClassName}
-                key={link.to}
-                to={link.to}
-                onClick={closeMenu}
-                tabIndex={menuOpen ? 0 : -1}
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-      </div>
-    </header>
+      </header>
+    </div>
   )
 }

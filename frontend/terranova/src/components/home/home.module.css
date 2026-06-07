@@ -1,0 +1,208 @@
+.overlayDark {
+  background: linear-gradient(
+    125deg,
+    rgba(26, 19, 13, 0.94) 0%,
+    rgba(26, 19, 13, 0.68) 50%,
+    rgba(63, 107, 75, 0.45) 100%
+  );
+}
+
+/* Mesma cor da navbar (--nav-surface: #1a130d) → bege da página (#efe4d2) */
+.overlayNavbarToPage {
+  background: linear-gradient(
+    to bottom,
+    #1a130d 0%,
+    #1a130d 16%,
+    rgba(26, 19, 13, 0.94) 32%,
+    rgba(26, 19, 13, 0.72) 50%,
+    rgba(26, 19, 13, 0.38) 68%,
+    rgba(26, 19, 13, 0.12) 82%,
+    rgba(239, 228, 210, 0.45) 93%,
+    rgba(239, 228, 210, 0) 100%
+  );
+}
+
+.introBottomFade {
+  background: linear-gradient(
+    to top,
+    #efe4d2 0%,
+    rgba(239, 228, 210, 0.85) 35%,
+    transparent 100%
+  );
+}
+
+.climateTopFade {
+  background: linear-gradient(
+    to bottom,
+    #efe4d2 0%,
+    rgba(239, 228, 210, 0.85) 35%,
+    transparent 100%
+  );
+}
+
+/* Overlay bege sobre imagem de fundo — opacidade via --home-overlay-* na section */
+.growthOverlay {
+  background: linear-gradient(
+    180deg,
+    rgba(239, 228, 210, var(--home-overlay-start, 0.58)) 0%,
+    rgba(239, 228, 210, var(--home-overlay-mid, 0.42)) 45%,
+    rgba(239, 228, 210, var(--home-overlay-end, 0.52)) 100%
+  );
+}
+
+.growthImageStack img[data-growth-image]:not(:first-of-type) {
+  opacity: 0;
+}
+
+@media (max-width: 767px) {
+  .growthStepStack [data-growth-step] {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+  }
+
+  .growthStepStack [data-growth-step]:not(:first-of-type) {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+:global(.pin-spacer:has([data-growth-pin])) {
+  pointer-events: none !important;
+  background-color: #efe4d2;
+}
+
+.introPillarPanel {
+  box-shadow:
+    0 24px 64px rgba(26, 19, 13, 0.35),
+    0 0 0 1px rgba(239, 228, 210, 0.1);
+}
+
+.overlayForest {
+  background: linear-gradient(
+    160deg,
+    rgba(63, 107, 75, 0.92) 0%,
+    rgba(47, 82, 56, 0.78) 40%,
+    rgba(26, 19, 13, 0.88) 100%
+  );
+}
+
+.overlayWarm {
+  background: linear-gradient(
+    to top right,
+    rgba(26, 19, 13, 0.92) 0%,
+    rgba(42, 30, 22, 0.62) 50%,
+    rgba(229, 155, 58, 0.18) 100%
+  );
+}
+
+.overlayLight {
+  background: linear-gradient(
+    180deg,
+    rgba(239, 228, 210, 0.96) 0%,
+    rgba(239, 228, 210, 0.82) 100%
+  );
+}
+
+.overlayNight {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 19, 13, 0.88) 0%,
+    rgba(26, 19, 13, 0.94) 100%
+  );
+}
+
+.bgFixed {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+@media (max-width: 767px) {
+  .bgFixed {
+    background-attachment: scroll;
+  }
+}
+
+.cardShine {
+  position: relative;
+  overflow: hidden;
+}
+
+.cardShine::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    transparent 45%
+  );
+  pointer-events: none;
+}
+
+.pillarStripeClimate {
+  background: linear-gradient(180deg, #3f6b4b, #3f6b4b88);
+}
+
+.pillarStripeWater {
+  background: linear-gradient(180deg, #5b9bd5, #5b9bd588);
+}
+
+.pillarStripeAlerts {
+  background: linear-gradient(180deg, #e59b3a, #e59b3a88);
+}
+
+.alertStripeDry {
+  background: linear-gradient(90deg, #e59b3a, #e59b3a88);
+}
+
+.alertStripeRain {
+  background: linear-gradient(90deg, #5b9bd5, #5b9bd588);
+}
+
+.alertStripeHeat {
+  background: linear-gradient(90deg, #d4644a, #d4644a88);
+}
+
+.ctaPanel {
+  box-shadow:
+    0 32px 80px rgba(26, 19, 13, 0.18),
+    0 0 0 1px rgba(63, 107, 75, 0.1);
+}
+
+.ctaPatternBg {
+  background-color: #efe4d2;
+  background-repeat: repeat;
+  background-size: 420px auto;
+  background-position: center;
+}
+
+.meshGlow {
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 20%, rgba(229, 155, 58, 0.22), transparent),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(63, 107, 75, 0.28), transparent);
+}
+
+.statGlow {
+  text-shadow: 0 0 40px rgba(63, 107, 75, 0.35);
+}
+
+.imageFrame {
+  box-shadow:
+    0 24px 60px rgba(26, 19, 13, 0.35),
+    0 0 0 1px rgba(239, 228, 210, 0.08);
+}
+
+.cardLift {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardLift:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 28px 56px rgba(26, 19, 13, 0.22),
+    0 0 0 1px rgba(63, 107, 75, 0.12);
+}

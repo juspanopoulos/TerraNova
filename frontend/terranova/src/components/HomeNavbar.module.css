@@ -1,16 +1,40 @@
+:global(.pin-spacer:has(#home-navbar-pin-host)) {
+  pointer-events: none !important;
+  background-color: #1a130d;
+}
+
+.pinHost {
+  position: relative;
+  width: 100%;
+  background-color: #1a130d;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
 .header {
   --nav-surface: #1a130d;
 
   position: relative;
-  z-index: 20;
+  z-index: 100;
   width: 100%;
   background-color: var(--nav-surface);
-  border-top: none;
-  border-bottom-color: rgba(239, 228, 210, 0.08);
+  pointer-events: auto !important;
+  backface-visibility: hidden;
 }
 
 .shell {
   position: relative;
+}
+
+.nav {
+  position: relative;
+  z-index: 1;
+}
+
+.navLink {
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
 }
 
 .logo {
