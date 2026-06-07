@@ -1,7 +1,7 @@
 import time
 from db_conexao import conectar_oracle
 from geren_arquivos import importar_dados_satelite
-from services import processar_e_inserir_dados, buscar_alertas_ativos, consultar_historico_climatico, registrar_novo_plantio, gerar_relatorio_recomendacoes
+from services import processar_e_inserir_dados, buscar_alertas_ativos, consultar_historico_climatico, registrar_novo_plantio, gerar_relatorio_recomendacoes, registrar_predicao_ia
 from api_clima import coletar_dados_satelite
 
 def exibir_menu():
@@ -13,6 +13,7 @@ def exibir_menu():
     print("3. Registrar Novo Plantio (Vincular Área e Cultura)")
     print("4. Painel de Alertas Críticos Abertos")
     print("5. Gerar Relatório de Recomendações vs Alertas")
+    print("6. Simular Predição de IA (Machine Learning)")
     print("0. Sair do Sistema")
     print("="*55)
 
@@ -125,6 +126,35 @@ def main():
                     print("-" * 60)
             else:
                 print("\nNenhuma recomendação técnica pendente no momento. Lavouras seguras!")
+
+        elif opcao == '6':
+            print("\nIniciando Motor de Inteligência Artificial (Terra Nova AI)...")
+            time.sleep(1)
+            
+            try:
+                id_area = int(input("Digite o ID da Área para análise preditiva (ex: 1): "))
+                tipo_modelo = 'PRODUTIVIDADE'
+                
+                print("\n[Log] Coletando histórico climático e dados de solo do Oracle...")
+                time.sleep(1.5)
+                print(f"[Log] Processando modelo RandomForest_Agro (v1.2) para a Área {id_area}...")
+                time.sleep(1.5)
+                
+                # Simula o resultado de um cálculo complexo de IA para estimar a produtividade com base nos dados históricos e atuais
+                produtividade_estimada = 65.50 
+                
+                sucesso = registrar_predicao_ia(conexao, id_area, tipo_modelo, produtividade_estimada)
+                
+                if sucesso:
+                    print("\n" + "*"*60)
+                    print("                RESULTADO DA PREDIÇÃO (IA)")
+                    print("*"*60)
+                    print(f"✅ Produtividade Estimada: {produtividade_estimada} toneladas.")
+                    print("📊 Nível de Confiança do Modelo: 92%")
+                    print("💾 Logs gravados com sucesso nas colunas CLOB do Oracle.")
+                    print("*"*60)
+            except ValueError:
+                print("\n[ERRO] O ID da área deve ser um número inteiro.")
             
         elif opcao == '0':
             print("\nDesconectando do banco de dados...")
