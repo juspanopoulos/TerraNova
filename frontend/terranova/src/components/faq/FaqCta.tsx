@@ -6,7 +6,7 @@ import { faqCategoryTitle } from "@/components/faq/faqShared";
 
 export function FaqCta() {
   return (
-    <section className="mt-12 sm:mt-14">
+    <section data-faq-block className="mt-12 sm:mt-14">
       <div className="rounded-2xl bg-verde-floresta/10 px-6 py-8 sm:px-8 sm:py-10 md:flex md:items-center md:justify-between md:gap-8">
         <div className="max-w-xl">
           <h2 className={faqCategoryTitle}>Entre na plataforma</h2>
