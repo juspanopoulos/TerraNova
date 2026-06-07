@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="75D38631-A299-7616-16D2-064DA3DF18D8" containerWithKeyObject="7114E3CE-F575-3676-6E17-89FB5477495A" localFKIndex="EAC3B99C-D70F-3F5B-094F-40B5326B3F8E" name="fk_area_propriedade">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>6E211C4C-D925-45FF-CD64-61D61F184FE6</importedID>
+<referredTableLongName>TN_PROPRIEDADE</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>C50CABC6-CF0F-D6C1-EF16-9790CD3888E1</referredTableID>
+<keyObject>8E8CEA41-E6DA-6FD3-F67F-B43F69D0368E</keyObject>
+<referredKeyID>8E8CEA41-E6DA-6FD3-F67F-B43F69D0368E</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_propriedade</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

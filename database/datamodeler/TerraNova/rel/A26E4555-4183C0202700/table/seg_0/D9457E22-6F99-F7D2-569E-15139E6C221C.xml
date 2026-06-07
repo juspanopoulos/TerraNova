@@ -1,0 +1,185 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D9457E22-6F99-F7D2-569E-15139E6C221C" name="TN_IRRIGACAO">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>07B3F4CB-70BD-B289-C32C-0985ED0F8D73</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_irrigacao" id="07305863-1419-92B6-B22F-98E463E4D38F">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>78750B7B-DB16-D1B4-C436-5155725D37BE</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>82530E55-3869-75B7-C15C-47767AE7CB6E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementGenerateAlways>true</autoIncrementGenerateAlways>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="id_area" id="CC2A920E-863A-1E41-8FC7-DDF464B8CFB7">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>486E49F4-0A7B-57F5-C62E-8585CAF61B1E</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>82530E55-3869-75B7-C15C-47767AE7CB6E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="103181D8-F516-76AC-AD41-DD168309668F" referredColumn="BDF30A68-4180-AACB-5C8F-11C892338C9D"/>
+</associations>
+</Column>
+<Column name="dt_registro" id="58775A50-F903-ABF0-EC4B-EDCBCA68E1FB">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>4FCEC36B-DC74-DB42-5324-225C00E9CE98</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>4F2CBC66-D7BE-0C2E-65C0-0292C597009D</domain>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ds_tipo_irrigacao" id="0FF61106-6B31-CFDD-6CC9-C78ABE033135">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>951EFDFB-2F71-F6B8-7EA3-9B1259D2BA74</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>2FE727E4-6B8E-F932-2B43-E52B73E6F5B4</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nr_irrigacao_anterior_mm" id="9145DDB2-8EF6-EF5F-8089-1E1E69D349FE">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>A59A089E-FA4A-316E-4BFC-301080A683BD</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>154D9309-74D5-A460-94E3-7561695F168B</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nr_consumo_atual_mm" id="544D1B57-C8F3-7D0A-7341-850102DD8441">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>5103CC1A-66CF-39FF-7A04-93AC520AB7CA</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>154D9309-74D5-A460-94E3-7561695F168B</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nr_area_campo_hectare" id="62982579-400C-E4DF-2E85-7C9E3D69603C">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>D659B1A1-6DB7-3911-EC20-B00D685E988C</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>AE2ED87B-8DE9-E9D4-5137-1CFC803209B6</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ds_usou_cobertura_solo" id="8F3F7362-31F7-A542-A443-46EFFC598A7E">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>B04C1D07-A1F3-6BFB-7049-00FE0B4DE91F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>92344C81-7745-BF9E-99CB-3C25B90702CD</domain>
+<defaultValue>&apos;NAO&apos;</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ds_origem" id="5C7F50B4-B359-AE6F-50EA-E9379FE56EC8">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>8515BDC8-F3ED-9A1C-B395-9145EEC5E699</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>17A04080-A2AE-0AA6-586B-D1FFEB2F029C</domain>
+<defaultValue>&apos;MANUAL&apos;</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="AFCA0376-608A-5DCE-2AA5-E9BCA6A3C14A" name="TN_IRRIGACAO_PK">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>7B8CA58F-2502-B467-C55D-7D47AF3DB906</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="07305863-1419-92B6-B22F-98E463E4D38F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B689E8FF-29A9-DC16-2CD2-C255CBF4C119" name="fk_irrigacao_area">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CC2A920E-863A-1E41-8FC7-DDF464B8CFB7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="ck_ds_tipo_irrigacao" directorySegmentName="seg_0" id="25571465-308B-371E-39CB-0CDF4A989AD9">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>FD6994B2-EE0F-302E-FA22-BDD5BCD9179B</importedID>
+<rule><![CDATA[ds_tipo_irrigacao IN ('GOTEJAMENTO', 'ASPERSAO', 'SULCO', 'PIVO', 'MANUAL', 'OUTRO')]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="ck_ds_cobertura_solo" directorySegmentName="seg_0" id="5EDD57D7-805A-EF7E-E0D3-CE863406D651">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>0BFD7D93-F998-6DCD-B913-D94D0EE84E14</importedID>
+<rule><![CDATA[ds_usou_cobertura_solo IN ('SIM', 'NAO')]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="ck_ds_origem_irrigacao" directorySegmentName="seg_0" id="42ADC2D6-ADC2-DF49-3B30-E3822F750025">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>D619721D-E49D-8632-3076-B9890D07EE4E</importedID>
+<rule><![CDATA[ds_origem IN ('MANUAL', 'SENSOR', 'IA')]]></rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>
