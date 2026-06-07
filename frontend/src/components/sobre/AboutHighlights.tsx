@@ -13,7 +13,7 @@ import {
   aboutSectionTitle,
   aboutSoftPanel,
   aboutSoftPanelInner,
-} from "@/components/sobre/aboutShared";
+} from "@/constants/tokens/about";
 
 export function AboutHighlights() {
   return (

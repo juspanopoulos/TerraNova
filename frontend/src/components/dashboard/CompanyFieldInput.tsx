@@ -4,7 +4,7 @@ import {
   authInputClass,
   authInputErrorClass,
   authLabelClass,
-} from "@/components/dashboard/authFormStyles";
+} from "@/constants/tokens/authForm";
 import { BRAZIL_UFS } from "@/lib/dashboard/brazilStates";
 import type { CompanyFieldConfig } from "@/lib/dashboard/companyFields";
 import { formatCompanyField } from "@/lib/dashboard/inputMasks";

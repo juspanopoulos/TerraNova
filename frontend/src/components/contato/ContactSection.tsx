@@ -8,7 +8,7 @@ import {
   contactGridGap,
   contactLabel,
   contactSectionTitle,
-} from "@/components/contato/contactShared";
+} from "@/constants/tokens/contact";
 import { contactChannels, contactCopy } from "@/data/contato";
 import { containerPx, contentShell, copyOnLight } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";

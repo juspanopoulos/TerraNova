@@ -6,25 +6,11 @@ import {
   type PageFilters,
 } from "@/components/dashboard/FilterSlideover";
 import type { TimeFilter, ViewId } from "@/types/dashboard";
+import { formatIsoDate, formatMonthLabel } from "@/utils/format/date";
+import { clamp } from "@/utils/number";
 
-const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-];
-
-export function clamp(n: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, n));
-}
-
-export function formatIsoDate(iso: string) {
-  const [y, m, d] = iso.split("-").map(Number);
-  return `${String(d).padStart(2, "0")}/${String(m).padStart(2, "0")}/${y}`;
-}
-
-export function formatMonthLabel(yyyyMm: string) {
-  const [y, m] = yyyyMm.split("-").map(Number);
-  return `${MONTH_NAMES[m - 1]} ${y}`;
-}
+export { clamp } from "@/utils/number";
+export { formatIsoDate, formatMonthLabel } from "@/utils/format/date";
 
 function waterVariationFactor(timeFilter: TimeFilter, filters: PageFilters) {
   if (timeFilter === "monthly" && filters.selectedMonth !== DEFAULT_MONTH) {

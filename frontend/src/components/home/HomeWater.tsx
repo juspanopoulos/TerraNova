@@ -1,5 +1,5 @@
 import irrigacaoImg from '@/assets/images/home/irrigacao.jpeg'
-import { aboutGridGap } from '@/components/sobre/aboutShared'
+import { aboutGridGap } from '@/constants/tokens/about'
 import {
   homeCaptionAside,
   homeHeroTitle,
@@ -10,8 +10,8 @@ import {
   homeStatDetail,
   homeStatLabel,
   homeStatsPanel,
-} from '@/components/home/homeShared'
-import styles from '@/components/home/home.module.css'
+} from '@/constants/tokens/home'
+import styles from '@/styles/modules/home.module.css'
 import { pageHeroEyebrow } from '@/constants/layout'
 import { waterCopy, waterStats } from '@/data/home/content'
 

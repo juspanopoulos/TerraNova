@@ -11,7 +11,7 @@ import {
   contactPanel,
   contactSectionTitle,
   contactTextarea,
-} from "@/components/contato/contactShared";
+} from "@/constants/tokens/contact";
 import { contactCopy } from "@/data/contato";
 
 type ContactFormValues = {

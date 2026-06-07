@@ -8,6 +8,8 @@
 
 @config '../../tailwind.config.ts';
 
+/* CSS modules da aplicacao ficam em ./modules/ e sao importados pelos componentes. */
+
 @layer base {
   :root {
     font-family: Inter, ui-sans-serif, system-ui, sans-serif;

@@ -8,7 +8,7 @@ import {
   faqQuestionRowIdle,
   faqQuestionRowOpen,
   faqQuestionTrigger,
-} from "@/components/faq/faqShared";
+} from "@/constants/tokens/faq";
 
 type FaqQuestionRowProps = {
   id: string;

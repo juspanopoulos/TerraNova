@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import logoColorido from '@/assets/logos/logo-colorido.png'
 import { containerPx, contentShell, headerLogo, headerNav } from '@/constants/layout'
 import { NAV_LINKS, ROUTES } from '@/constants/routes'
-import styles from './HomeNavbar.module.css'
+import styles from '@/styles/modules/home-navbar.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 

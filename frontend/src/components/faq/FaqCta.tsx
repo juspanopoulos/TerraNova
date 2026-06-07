@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { copyOnLight } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";
-import { faqCategoryTitle } from "@/components/faq/faqShared";
+import { faqCategoryTitle } from "@/constants/tokens/faq";
 
 export function FaqCta() {
   return (

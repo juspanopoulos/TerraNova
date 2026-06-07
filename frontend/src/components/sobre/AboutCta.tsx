@@ -5,7 +5,7 @@ import {
   aboutEyebrow,
   aboutGridGap,
   aboutSectionTitle,
-} from "@/components/sobre/aboutShared";
+} from "@/constants/tokens/about";
 import { containerPx, contentShell, copyOnLight } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";
 

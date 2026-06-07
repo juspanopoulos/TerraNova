@@ -13,8 +13,8 @@ import {
   homeSectionPadTop,
   homeShell,
   homeStatDetail,
-} from '@/components/home/homeShared'
-import styles from '@/components/home/home.module.css'
+} from '@/constants/tokens/home'
+import styles from '@/styles/modules/home.module.css'
 import { pageHeroEyebrow } from '@/constants/layout'
 import { homeModules, platformCopy, type HomeModule } from '@/data/home/content'
 import { ROUTES } from '@/constants/routes'

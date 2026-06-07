@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthBrandHeader } from "@/components/dashboard/AuthBrandHeader";
 import { CompanyFieldsGrid } from "@/components/dashboard/CompanyFieldInput";
-import { authLinkClass } from "@/components/dashboard/authFormStyles";
+import { authLinkClass } from "@/constants/tokens/authForm";
 import { btnClick } from "@/constants/dashboard";
 import { ROUTES } from "@/constants/routes";
 import { COMPANY_FIELDS, updateCompanyField } from "@/lib/dashboard/companyFields";

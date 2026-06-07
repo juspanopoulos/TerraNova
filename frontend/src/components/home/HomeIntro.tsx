@@ -1,5 +1,5 @@
 import farmImg from '@/assets/hero/farm.jpeg'
-import { aboutCardGrid } from '@/components/sobre/aboutShared'
+import { aboutCardGrid } from '@/constants/tokens/about'
 import {
   homeHeaderBodyGap,
   homeHeaderTitleGap,
@@ -9,8 +9,8 @@ import {
   homeSectionBlockGap,
   homeSectionPad,
   homeShell,
-} from '@/components/home/homeShared'
-import styles from '@/components/home/home.module.css'
+} from '@/constants/tokens/home'
+import styles from '@/styles/modules/home.module.css'
 import { copyOnLight, pageHeroEyebrow } from '@/constants/layout'
 import { homeManifesto } from '@/data/home/content'
 

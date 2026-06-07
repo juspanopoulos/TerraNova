@@ -1,5 +1,5 @@
 import { copyOnLight } from "@/constants/layout";
-import { aboutEyebrow, aboutSectionTitle } from "@/components/sobre/aboutShared";
+import { aboutEyebrow, aboutSectionTitle } from "@/constants/tokens/about";
 
 type AboutSectionHeadingProps = {
   eyebrow: string;

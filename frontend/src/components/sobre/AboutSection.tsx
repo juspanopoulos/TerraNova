@@ -9,7 +9,7 @@ import {
   aboutHeroContentGap,
   aboutPageStack,
   aboutSectionEndPad,
-} from "@/components/sobre/aboutShared";
+} from "@/constants/tokens/about";
 import {
   contentShell,
   containerPx,

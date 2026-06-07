@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { faqCategories } from "@/data/faq";
 import { PageHero } from "@/components/PageHero";
 import { FaqExplorer } from "@/components/faq/FaqExplorer";
-import { faqContentGap } from "@/components/faq/faqShared";
+import { faqContentGap } from "@/constants/tokens/faq";
 import { FaqSearch } from "@/components/faq/FaqSearch";
 import {
   contentShell,

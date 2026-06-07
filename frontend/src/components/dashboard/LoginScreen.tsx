@@ -8,7 +8,7 @@ import {
   authInputErrorClass,
   authLabelClass,
   authLinkClass,
-} from "@/components/dashboard/authFormStyles";
+} from "@/constants/tokens/authForm";
 import { btnClick } from "@/constants/dashboard";
 import { ROUTES } from "@/constants/routes";
 import {

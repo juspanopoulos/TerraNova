@@ -24,16 +24,7 @@ export const SUGGESTED_PROMPTS = [
 const STORAGE_KEY = "terranova-assistant-conversations";
 const ACTIVE_KEY = "terranova-assistant-active-id";
 
-export function formatChatTime(date: Date) {
-  return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-}
-
-export function formatConversationDate(timestamp: number) {
-  return new Date(timestamp).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-  });
-}
+export { formatChatTime, formatConversationDate } from "@/utils/format/date";
 
 export function createConversation(): Conversation {
   const now = Date.now();

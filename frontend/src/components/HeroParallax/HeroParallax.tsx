@@ -4,7 +4,7 @@ import sproutImg from '@/assets/hero/background3.png'
 import soilImg from '@/assets/hero/background4.png'
 import leavesImg from '@/assets/hero/background5.png'
 import { useParallaxScroll } from '@/hooks/useParallaxScroll'
-import styles from './HeroParallax.module.css'
+import styles from '@/styles/modules/hero-parallax.module.css'
 
 const HERO_LAYERS = [
   { id: 'backdrop', yPercent: 70 },

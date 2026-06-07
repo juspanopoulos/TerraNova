@@ -17,7 +17,7 @@ import {
   faqSidebarBtnIdle,
   faqSidebarLabel,
   faqSidebarMeta,
-} from "@/components/faq/faqShared";
+} from "@/constants/tokens/faq";
 
 type FaqExplorerProps = {
   query: string;

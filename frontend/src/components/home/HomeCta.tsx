@@ -11,8 +11,8 @@ import {
   homeSectionPadBottom,
   homeSectionPadTopCompact,
   homeShell,
-} from '@/components/home/homeShared'
-import styles from '@/components/home/home.module.css'
+} from '@/constants/tokens/home'
+import styles from '@/styles/modules/home.module.css'
 import { pageHeroEyebrow } from '@/constants/layout'
 import { homeCtaCopy, homeCtaLinks } from '@/data/home/content'
 

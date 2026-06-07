@@ -1,5 +1,5 @@
 import logoColorido from "@/assets/logos/logo-colorido.png";
-import { aboutSoftPanel } from "@/components/sobre/aboutShared";
+import { aboutSoftPanel } from "@/constants/tokens/about";
 import { copyOnLight } from "@/constants/layout";
 
 const introPoints = [

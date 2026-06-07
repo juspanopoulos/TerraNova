@@ -1,5 +1,5 @@
 import alertsBgImg from '@/assets/images/home/chuva-fazenda.jpg'
-import { aboutGridGap } from '@/components/sobre/aboutShared'
+import { aboutGridGap } from '@/constants/tokens/about'
 import {
   homeHeaderBodyGap,
   homeHeaderTitleGap,
@@ -8,8 +8,8 @@ import {
   homeSectionBlockGap,
   homeSectionPad,
   homeShell,
-} from '@/components/home/homeShared'
-import styles from '@/components/home/home.module.css'
+} from '@/constants/tokens/home'
+import styles from '@/styles/modules/home.module.css'
 import { copyOnLight, pageHeroEyebrow } from '@/constants/layout'
 import { alertsCopy, homeAlerts } from '@/data/home/content'
 

@@ -3,7 +3,7 @@ import { ImageIcon } from "lucide-react";
 import type { PlatformModule } from "@/data/sobre/platform";
 import { platformModules } from "@/data/sobre/platform";
 import { AboutSectionHeading } from "@/components/sobre/AboutSectionHeading";
-import { aboutCard, aboutContentGap } from "@/components/sobre/aboutShared";
+import { aboutCard, aboutContentGap } from "@/constants/tokens/about";
 import { copyOnLight } from "@/constants/layout";
 
 function ModuleDetailPanel({ module }: { module: PlatformModule }) {

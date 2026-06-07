@@ -7,8 +7,8 @@ import {
   aboutEyebrow,
   aboutSoftPanel,
   aboutSoftPanelInner,
-} from "@/components/sobre/aboutShared";
-import { sitemapContentGap, sitemapSectionsStack } from "@/components/mapa-do-site/sitemapShared";
+} from "@/constants/tokens/about";
+import { sitemapContentGap, sitemapSectionsStack } from "@/constants/tokens/sitemap";
 import { PageHero } from "@/components/PageHero";
 import { containerPx, contentShell, copyOnLight } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";

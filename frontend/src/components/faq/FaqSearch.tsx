@@ -1,5 +1,5 @@
 import { Search, X } from "lucide-react";
-import { faqSearchInput } from "@/components/faq/faqShared";
+import { faqSearchInput } from "@/constants/tokens/faq";
 
 type FaqSearchProps = {
   query: string;

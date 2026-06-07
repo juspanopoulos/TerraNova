@@ -7,7 +7,7 @@ import { HomeGrowth } from '@/components/home/HomeGrowth'
 import { HomeIntro } from '@/components/home/HomeIntro'
 import { HomePlatform } from '@/components/home/HomePlatform'
 import { HomeWater } from '@/components/home/HomeWater'
-import { homePageStack } from '@/components/home/homeShared'
+import { homePageStack } from '@/constants/tokens/home'
 import { useHomeSectionAnimation } from '@/hooks/useHomeSectionAnimation'
 
 export function HomeSection() {

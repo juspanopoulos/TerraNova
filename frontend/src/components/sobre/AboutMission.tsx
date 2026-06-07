@@ -5,7 +5,7 @@ import {
   aboutCardGrid,
   aboutContentGap,
   aboutSectionPad,
-} from "@/components/sobre/aboutShared";
+} from "@/constants/tokens/about";
 import { containerPx, contentShell } from "@/constants/layout";
 
 export function AboutMission() {

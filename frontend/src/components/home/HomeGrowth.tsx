@@ -4,7 +4,7 @@ import {
   aboutCard,
   aboutCardGrid,
   aboutCardInner,
-} from '@/components/sobre/aboutShared'
+} from '@/constants/tokens/about'
 import {
   homeGrowthOverlayOpacity,
   homeHeaderBodyGap,
@@ -13,8 +13,8 @@ import {
   homeLeadDark,
   homeSectionBlockGap,
   homeShell,
-} from '@/components/home/homeShared'
-import styles from '@/components/home/home.module.css'
+} from '@/constants/tokens/home'
+import styles from '@/styles/modules/home.module.css'
 import { copyOnLight, pageHeroEyebrow } from '@/constants/layout'
 import { growthCopy, growthStages } from '@/data/home/content'
 import { useGrowthScrollAnimation } from '@/hooks/useGrowthScrollAnimation'
