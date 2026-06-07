@@ -45,9 +45,9 @@ export const sectionTitle = "text-lg font-bold text-[var(--db-text)] sm:text-xl"
 export const inputField =
   "w-full rounded-lg border border-[var(--db-border)] bg-[var(--db-surface)] px-3 py-2 text-sm text-[var(--db-text)] outline-none placeholder:text-[var(--db-text-faint)] focus:border-verde-floresta/40 focus:ring-2 focus:ring-verde-floresta/15";
 export const btnSecondary =
-  "inline-flex items-center gap-2 rounded-lg border border-[var(--db-border)] bg-[var(--db-surface)] px-3 py-2 text-sm font-semibold text-[var(--db-text)] hover:bg-[var(--db-hover)]";
+  "inline-flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--db-border)] bg-[var(--db-surface)] px-3 py-2 text-sm font-semibold text-[var(--db-text)] hover:bg-[var(--db-hover)]";
 export const btnSecondaryMuted =
-  "inline-flex items-center gap-2 rounded-lg border border-[var(--db-border)] bg-transparent px-3 py-2 text-sm font-semibold text-[var(--db-text-muted)] hover:bg-[var(--db-hover)]";
+  "inline-flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--db-border)] bg-transparent px-3 py-2 text-sm font-semibold text-[var(--db-text-muted)] hover:bg-[var(--db-hover)]";
 export const btnDisabled =
   "w-full rounded-lg border border-[var(--db-border)] px-3 py-2 text-sm font-semibold text-[var(--db-text-faint)]";
 export const badgeMuted =

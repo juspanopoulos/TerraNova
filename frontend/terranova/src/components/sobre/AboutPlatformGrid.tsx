@@ -92,7 +92,7 @@ export function AboutPlatformGrid() {
                   }
                   onClick={() => setSelectedId(module.id)}
                   className={[
-                    "flex w-full items-center gap-3 rounded-lg border-l-2 px-3 py-3 text-left transition-colors sm:px-4 sm:py-3.5",
+                    "flex w-full cursor-pointer items-center gap-3 rounded-lg border-l-2 px-3 py-3 text-left transition-colors sm:px-4 sm:py-3.5",
                     isActive
                       ? "border-l-laranja-solar bg-verde-floresta/10 text-verde-floresta shadow-sm shadow-verde-floresta/5"
                       : "border-l-transparent text-preto-suave/80 hover:border-l-verde-floresta/20 hover:bg-verde-floresta/4 hover:text-verde-floresta",

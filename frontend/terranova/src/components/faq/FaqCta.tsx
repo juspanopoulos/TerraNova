@@ -18,7 +18,7 @@ export function FaqCta() {
 
         <Link
           to={ROUTES.plataforma}
-          className="mt-6 inline-flex w-fit shrink-0 items-center gap-2 rounded-lg bg-verde-floresta px-5 py-3 text-sm font-semibold text-bege-natural no-underline transition-colors hover:bg-verde-floresta/90 sm:px-6 sm:py-3.5 sm:text-base md:mt-0"
+          className="mt-6 inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-lg bg-verde-floresta px-5 py-3 text-sm font-semibold text-bege-natural no-underline transition-colors hover:bg-verde-floresta/90 sm:px-6 sm:py-3.5 sm:text-base md:mt-0"
         >
           Ir para a plataforma
           <ArrowRight className="size-4" aria-hidden />

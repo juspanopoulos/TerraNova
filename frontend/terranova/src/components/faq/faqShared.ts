@@ -12,7 +12,7 @@ export const faqExplorerShell = "w-full";
 export const faqContentGap = "mt-12 sm:mt-14 md:mt-16";
 
 export const faqSidebarBtn =
-  "group flex w-full items-center gap-3.5 rounded-r-lg border-l-2 py-3 pl-3.5 pr-2 text-left transition-colors duration-200";
+  "group flex w-full cursor-pointer items-center gap-3.5 rounded-r-lg border-l-2 py-3 pl-3.5 pr-2 text-left transition-colors duration-200";
 
 export const faqSidebarBtnActive =
   "border-laranja-solar bg-laranja-solar/10 text-laranja-solar";
@@ -21,7 +21,7 @@ export const faqSidebarBtnIdle =
   "border-transparent text-preto-suave/80 hover:border-laranja-solar/50 hover:bg-laranja-solar/10 hover:text-laranja-solar";
 
 export const faqMobileChip =
-  "inline-flex shrink-0 items-center rounded-full px-4 py-2.5 text-sm font-semibold transition";
+  "inline-flex shrink-0 cursor-pointer items-center rounded-full px-4 py-2.5 text-sm font-semibold transition";
 
 export const faqMobileChipActive =
   "bg-verde-floresta text-bege-natural";

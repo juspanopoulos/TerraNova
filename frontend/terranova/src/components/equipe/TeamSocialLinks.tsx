@@ -7,10 +7,10 @@ type TeamSocialLinksProps = {
 };
 
 const iconButtonLight =
-  "inline-flex size-9 items-center justify-center rounded-lg border border-verde-floresta/15 bg-verde-floresta/8 text-verde-floresta transition-colors hover:border-verde-floresta/25 hover:bg-verde-floresta/14";
+  "inline-flex size-9 cursor-pointer items-center justify-center rounded-lg border border-verde-floresta/15 bg-verde-floresta/8 text-verde-floresta transition-colors hover:border-verde-floresta/25 hover:bg-verde-floresta/14";
 
 const iconButtonDark =
-  "inline-flex size-9 items-center justify-center rounded-lg border border-bege-natural/20 bg-bege-natural/10 text-bege-natural transition-colors hover:border-bege-natural/35 hover:bg-bege-natural/20";
+  "inline-flex size-9 cursor-pointer items-center justify-center rounded-lg border border-bege-natural/20 bg-bege-natural/10 text-bege-natural transition-colors hover:border-bege-natural/35 hover:bg-bege-natural/20";
 
 function LinkedinIcon() {
   return (

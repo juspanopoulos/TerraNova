@@ -12,7 +12,7 @@ const navShell = [
 ].join(" ");
 
 const navLinkBase =
-  "rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3 sm:py-2 sm:text-sm";
+  "cursor-pointer rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3 sm:py-2 sm:text-sm";
 
 const desktopLinkClassName = ({ isActive }: { isActive: boolean }) =>
   [
@@ -24,7 +24,7 @@ const desktopLinkClassName = ({ isActive }: { isActive: boolean }) =>
 
 const mobileLinkClassName = ({ isActive }: { isActive: boolean }) =>
   [
-    "block rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors",
+    "block cursor-pointer rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors",
     isActive
       ? "bg-verde-floresta text-bege-natural"
       : "text-preto-suave/85 hover:bg-verde-claro/45 hover:text-verde-floresta",
@@ -109,7 +109,7 @@ export const Navbar = () => {
             {logoLink}
             <button
               type="button"
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-verde-floresta/15 text-verde-floresta transition-colors hover:bg-verde-claro/45"
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-lg border border-verde-floresta/15 text-verde-floresta transition-colors hover:bg-verde-claro/45"
               aria-expanded={menuOpen}
               aria-controls="site-mobile-nav"
               aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
@@ -131,7 +131,7 @@ export const Navbar = () => {
       <button
         type="button"
         className={[
-          "fixed inset-0 z-30 bg-preto-suave/40 transition-opacity duration-300 md:hidden",
+          "fixed inset-0 z-30 cursor-pointer bg-preto-suave/40 transition-opacity duration-300 md:hidden",
           menuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",
@@ -157,7 +157,7 @@ export const Navbar = () => {
           </span>
           <button
             type="button"
-            className="inline-flex size-8 items-center justify-center rounded-lg text-verde-floresta transition-colors hover:bg-verde-claro/45"
+            className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-verde-floresta transition-colors hover:bg-verde-claro/45"
             aria-label="Fechar menu"
             tabIndex={menuOpen ? 0 : -1}
             onClick={closeMenu}

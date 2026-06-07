@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { ROUTES, SMOOTH_SCROLL_ROUTES } from "@/constants/routes";
+import { ROUTES, isSmoothScrollRoute } from "@/constants/routes";
 import { BaseLayout } from "@/layouts";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -31,10 +31,7 @@ function SiteSmoothScroll() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const enabled = SMOOTH_SCROLL_ROUTES.includes(
-      pathname as (typeof SMOOTH_SCROLL_ROUTES)[number],
-    );
-    if (!enabled) return;
+    if (!isSmoothScrollRoute(pathname)) return;
     return setupSmoothScroll();
   }, [pathname]);
 
