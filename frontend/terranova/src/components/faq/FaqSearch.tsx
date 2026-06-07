@@ -11,13 +11,13 @@ export function FaqSearch({ query, onQueryChange, resultCount }: FaqSearchProps)
   const hasQuery = query.trim().length > 0;
 
   return (
-    <div className="w-full shrink-0 lg:max-w-md xl:max-w-lg">
+    <div className="w-full min-w-0 shrink-0 lg:max-w-md xl:max-w-lg">
       <label htmlFor="faq-search" className="sr-only">
         Buscar pergunta no FAQ
       </label>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-4 top-1/2 size-[1.125rem] -translate-y-1/2 text-preto-suave/45"
+          className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-preto-suave/45 sm:left-4 sm:size-[1.125rem]"
           aria-hidden
         />
         <input
@@ -52,7 +52,7 @@ export function FaqSearch({ query, onQueryChange, resultCount }: FaqSearchProps)
         aria-atomic="true"
       >
         <div className="overflow-hidden">
-          <p className="text-sm font-medium text-bege-natural">
+          <p className="text-xs font-medium text-bege-natural sm:text-sm">
             {resultCount} {resultCount === 1 ? "resultado" : "resultados"}
           </p>
         </div>

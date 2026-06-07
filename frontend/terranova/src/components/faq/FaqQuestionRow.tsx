@@ -1,11 +1,13 @@
 import { Minus, Plus } from "lucide-react";
 import { copyOnLight } from "@/constants/layout";
 import {
+  faqQuestionAnswerGrid,
   faqQuestionNumber,
   faqQuestionNumberActive,
   faqQuestionRow,
   faqQuestionRowIdle,
   faqQuestionRowOpen,
+  faqQuestionTrigger,
 } from "@/components/faq/faqShared";
 
 type FaqQuestionRowProps = {
@@ -41,10 +43,10 @@ export function FaqQuestionRow({
           aria-expanded={isOpen}
           aria-controls={`faq-panel-${id}`}
           onClick={onToggle}
-          className="grid w-full cursor-pointer grid-cols-[3rem_1fr] items-start gap-3 py-4 text-left sm:grid-cols-[3.5rem_1fr] sm:gap-4 sm:py-5"
+          className={faqQuestionTrigger}
         >
           <span
-            className={`${faqQuestionNumber} pt-1 transition-colors duration-200 ${
+            className={`${faqQuestionNumber} pt-0.5 transition-colors duration-200 sm:pt-1 ${
               isOpen
                 ? faqQuestionNumberActive
                 : "group-hover:text-verde-floresta"
@@ -54,7 +56,7 @@ export function FaqQuestionRow({
             {paddedIndex}
           </span>
 
-          <span className="flex min-w-0 items-start gap-3 sm:gap-4">
+          <span className="flex min-w-0 items-start gap-2 sm:gap-3 md:gap-4">
             <span className="min-w-0 flex-1 pt-0.5">
               {categoryLabel ? (
                 <span className="mb-1.5 block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-laranja-solar">
@@ -62,7 +64,7 @@ export function FaqQuestionRow({
                 </span>
               ) : null}
               <span
-                className={`block text-base font-semibold leading-snug tracking-[-0.012em] transition-colors duration-200 sm:text-lg ${
+                className={`block break-words text-[0.9375rem] font-semibold leading-snug tracking-[-0.012em] transition-colors duration-200 sm:text-base md:text-lg ${
                   isOpen
                     ? "text-verde-floresta"
                     : "text-preto-suave group-hover:text-verde-floresta"
@@ -73,7 +75,7 @@ export function FaqQuestionRow({
             </span>
 
             <span
-              className={`mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full transition-colors duration-200 ${
+              className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full transition-colors duration-200 sm:size-9 ${
                 isOpen
                   ? "bg-verde-floresta/15 text-verde-floresta"
                   : "text-verde-floresta/80 group-hover:bg-verde-floresta/15 group-hover:text-verde-floresta"
@@ -95,9 +97,11 @@ export function FaqQuestionRow({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="grid grid-cols-[3rem_1fr] gap-3 pb-5 sm:grid-cols-[3.5rem_1fr] sm:gap-4 sm:pb-6">
+          <div className={faqQuestionAnswerGrid}>
             <div aria-hidden />
-            <p className={`${copyOnLight} max-w-2xl text-sm sm:text-base`}>{answer}</p>
+            <p className={`${copyOnLight} max-w-2xl break-words text-sm sm:text-base`}>
+              {answer}
+            </p>
           </div>
         </div>
       </div>

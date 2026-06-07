@@ -1,25 +1,20 @@
-import Climate from "@/components/Climate";
-import Growth from "@/components/Growth";
-import Alerts from "@/components/Alerts";
-import SmartMap from "@/components/SmartMap";
-import Water from "@/components/Water";
-import { HomeNavbar } from "@/components/HomeNavbar";
-import { HeroParallax } from "@/components/HeroParallax";
+import { useLocation } from 'react-router-dom'
+import { HomeSection } from '@/components/home/HomeSection'
+import { HomeNavbar } from '@/components/HomeNavbar'
+import { HeroParallax } from '@/components/HeroParallax'
 
 const Home = () => {
+  const { key: navigationKey } = useLocation()
+
   return (
-    <>
+    <div className="bg-bege-natural">
       <div className="bg-surface-night">
         <HeroParallax />
-        <HomeNavbar />
       </div>
-      <Climate />
-      <Growth />
-      <Water />
-      <Alerts />
-      <SmartMap />
-    </>
-  );
-};
+      <HomeNavbar key={navigationKey} />
+      <HomeSection />
+    </div>
+  )
+}
 
-export default Home;
+export default Home
