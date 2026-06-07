@@ -4,6 +4,7 @@ export const ROUTES = {
   equipe: "/equipe",
   faq: "/faq",
   contato: "/contato",
+  mapaDoSite: "/mapa-do-site",
   plataforma: "/plataforma",
   notFound: "*",
 } as const;
@@ -14,6 +15,7 @@ export const SMOOTH_SCROLL_ROUTES = [
   ROUTES.equipe,
   ROUTES.faq,
   ROUTES.contato,
+  ROUTES.mapaDoSite,
 ] as const;
 
 function isPlataformaPath(pathname: string) {
@@ -29,6 +31,7 @@ export function isKnownSiteRoute(pathname: string) {
   if (pathname === ROUTES.equipe) return true;
   if (pathname === ROUTES.faq) return true;
   if (pathname === ROUTES.contato) return true;
+  if (pathname === ROUTES.mapaDoSite) return true;
   if (pathname === "/platform") return true;
   if (isPlataformaPath(pathname)) return true;
   return false;
