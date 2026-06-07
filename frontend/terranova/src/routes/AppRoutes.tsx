@@ -9,6 +9,7 @@ import Contato from "@/pages/Contato";
 import Equipe from "@/pages/Equipe";
 import FAQ from "@/pages/FAQ";
 import Home from "@/pages/Home";
+import MapaDoSite from "@/pages/MapaDoSite";
 import NotFound from "@/pages/NotFound";
 import Sobre from "@/pages/Sobre";
 import AguaPage from "@/pages/plataforma/AguaPage";
@@ -50,6 +51,7 @@ export const AppRoutes = () => {
           <Route path={ROUTES.equipe} element={<Equipe />} />
           <Route path={ROUTES.faq} element={<FAQ />} />
           <Route path={ROUTES.contato} element={<Contato />} />
+          <Route path={ROUTES.mapaDoSite} element={<MapaDoSite />} />
           <Route path={ROUTES.plataforma} element={<DashboardLayout />}>
             <Route index element={<Navigate to="visao-geral" replace />} />
             <Route path="visao-geral" element={<VisaoGeralPage />} />

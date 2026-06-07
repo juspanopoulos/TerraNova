@@ -106,6 +106,16 @@ export const Footer = () => {
                     {link.label}
                   </Link>
                 ))}
+                <Link
+                  className={`${footerLink} min-w-0 justify-center rounded-lg px-1 py-2 md:justify-start sm:py-2.5`}
+                  to={ROUTES.mapaDoSite}
+                >
+                  <span
+                    className="hidden size-1 shrink-0 rounded-full bg-laranja-solar/0 transition-colors duration-200 group-hover:bg-laranja-solar md:block"
+                    aria-hidden
+                  />
+                  Mapa do site
+                </Link>
               </nav>
             </div>
 
