@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_area_cultura_cultura" directorySegmentName="seg_0" id="D4AB0B59-3654-922E-C25E-81CB61D13FD8">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>9EC7FA57-E88F-9864-AD28-441869E81201</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<sourcePk>144BEE0D-FDAE-C51D-8C42-81CC23F109FF</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>0645EB88-AD4C-A964-FE22-5C4F0126BA28</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>AD0EF786-5C29-7345-1845-3EBCDC8A126C</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>
