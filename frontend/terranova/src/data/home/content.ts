@@ -8,6 +8,7 @@ import {
   Flame,
   LayoutDashboard,
   Leaf,
+  NotebookPen,
   Sprout,
   Sun,
   Thermometer,
@@ -19,10 +20,10 @@ import trigoImg from '@/assets/images/home/trigo.jpg'
 import { ROUTES } from '@/constants/routes'
 
 export const homeManifesto = {
-  eyebrow: 'TerraNova',
+  eyebrow: 'Sistema Inteligente',
   title: 'Inteligência territorial para quem',
   titleAccent: 'vive o campo',
-  body: 'Clima, água, solo e alertas da sua propriedade — reunidos para você decidir com confiança, safra após safra.',
+  body: 'Clima, água, solo e alertas da sua propriedade reunidos para você decidir com confiança, safra após safra.',
   pillars: [
     {
       id: 'climate',
@@ -47,9 +48,10 @@ export const homeManifesto = {
 
 export const climateCopy = {
   eyebrow: 'Monitoramento climático',
-  title: 'O céu da sua propriedade, traduzido em números',
-  body: 'Sensores e previsões locais cruzados num painel claro — para você sair do portão sabendo o que esperar.',
-  imageCaption: 'Leituras do campo e previsão local no mesmo fluxo — sem adivinhar o que vem depois das nuvens.',
+  title: 'O céu em números',
+  body: 'Sensores e previsão local num painel claro.',
+  imageCaption:
+    'Leituras do campo e previsão local no mesmo fluxo — para você planejar o dia sem adivinhar o que vem depois das nuvens.',
 }
 
 export const climateStats: {
@@ -63,53 +65,53 @@ export const climateStats: {
     id: 'temp',
     label: 'Temperatura',
     value: '28°C',
-    detail: 'Média recente na estação mais próxima do talhão.',
+    detail: 'Média da estação do talhão.',
     icon: Thermometer,
   },
   {
     id: 'humidity',
     label: 'Umidade',
     value: '62%',
-    detail: 'Umidade relativa do ar, atualizada ao longo do dia.',
+    detail: 'Umidade relativa do ar.',
     icon: Droplets,
   },
   {
     id: 'wind',
     label: 'Vento',
     value: '14 km/h',
-    detail: 'Velocidade e direção para planejar pulverização e irrigação.',
+    detail: 'Velocidade e direção do vento.',
     icon: Wind,
   },
 ]
 
 export const growthCopy = {
-  eyebrow: 'Produtividade',
-  title: 'Safra boa começa com timing certo',
-  body: 'Histórico, clima e condições do solo apontam quando plantar, irrigar e colher — com dados, não achismo.',
+  eyebrow: 'Acompanhamento da safra',
+  title: 'Do plantio à colheita, fase por fase',
+  body: 'Acompanhe como a lavoura evolui no seu talhão e saiba o que fazer em cada etapa do ciclo.',
 }
 
 export const growthStages = [
   {
     id: 'sprout',
     phase: 'Germinação',
-    title: 'Janelas de manejo',
-    detail: 'Irrigação e plantio no momento em que o solo e o clima pedem ação.',
+    title: 'Plantio e irrigação',
+    detail: 'Veja se o solo e o tempo estão bons antes de plantar ou ligar a irrigação.',
     image: germinacaoImg,
     imageAlt: 'Brotos verdes germinando em recipiente de vidro',
   },
   {
     id: 'growth',
     phase: 'Desenvolvimento',
-    title: 'Histórico de safra',
-    detail: 'Compare ciclos passados com o atual e enxergue padrões no talhão.',
+    title: 'Lavoura crescendo',
+    detail: 'Compare esta safra com as anteriores e perceba o que mudou no campo.',
     image: germinacao2Img,
     imageAlt: 'Plantas jovens de milho em fileiras no campo ao amanhecer',
   },
   {
     id: 'harvest',
     phase: 'Colheita',
-    title: 'Maturação',
-    detail: 'Acompanhe o vigor da cultura e chegue na colheita com timing certo.',
+    title: 'Hora de colher',
+    detail: 'Acompanhe a maturação da cultura para não perder o momento certo da colheita.',
     image: trigoImg,
     imageAlt: 'Espigas de trigo maduro em campo dourado',
   },
@@ -117,10 +119,10 @@ export const growthStages = [
 
 export const waterCopy = {
   eyebrow: 'Gestão hídrica',
-  title: 'Água onde precisa, na medida certa',
-  body: 'Consumo por setor, metas de eficiência e alertas quando algo foge do padrão.',
+  title: 'Água na medida certa',
+  body: 'Consumo por setor e alertas quando algo foge do padrão.',
   imageCaption:
-    'Cada setor com leitura própria — você enxerga onde a água vai e onde dá para economizar.',
+    'Cada setor com leitura própria — você enxerga onde a água vai, onde dá para economizar e quando agir.',
 }
 
 export const waterStats = [
@@ -128,29 +130,29 @@ export const waterStats = [
     id: 'efficiency',
     label: 'Eficiência',
     value: '91%',
-    detail: 'Meta de uso hídrico atingida nos setores monitorados.',
+    detail: 'Meta hídrica nos setores monitorados.',
     icon: Droplets,
   },
   {
     id: 'saved',
     label: 'Economia',
     value: '32k L',
-    detail: 'Volume poupado em relação ao ciclo anterior.',
+    detail: 'Volume poupado no ciclo anterior.',
     icon: CloudRain,
   },
   {
     id: 'sectors',
     label: 'Setores',
     value: '4',
-    detail: 'Talhões e setores de irrigação com leitura individual.',
+    detail: 'Setores com leitura individual.',
     icon: Leaf,
   },
 ] as const
 
 export const alertsCopy = {
   eyebrow: 'Alertas ambientais',
-  title: 'Quando o campo pede atenção, você fica sabendo',
-  body: 'Seca, chuva em excesso ou calor intenso — avisos claros e priorizados para a sua propriedade.',
+  title: 'Aviso antes que vire problema',
+  body: 'Seca, chuva demais ou calor forte: você recebe o alerta e sabe o que olhar na propriedade.',
 }
 
 export type HomeAlert = {
@@ -165,21 +167,21 @@ export const homeAlerts: HomeAlert[] = [
   {
     id: 'drought',
     title: 'Período seco',
-    description: 'Umidade persistente abaixo do ideal — revise irrigação e manejo.',
+    description: 'O solo está seco há dias. Vale conferir a irrigação e o manejo da lavoura.',
     icon: Sun,
     stripeClass: 'alertStripeDry',
   },
   {
     id: 'flood',
     title: 'Excesso de chuva',
-    description: 'Risco de encharcamento ou saturação do solo em áreas críticas.',
+    description: 'Choveu além do esperado. Fique de olho em encharcamento nas partes baixas do talhão.',
     icon: CloudRain,
     stripeClass: 'alertStripeRain',
   },
   {
     id: 'heat',
     title: 'Calor intenso',
-    description: 'Picos de temperatura previstos — proteja culturas sensíveis.',
+    description: 'Temperatura alta prevista. Cuidado redobrado com culturas mais sensíveis ao calor.',
     icon: Flame,
     stripeClass: 'alertStripeHeat',
   },
@@ -187,7 +189,7 @@ export const homeAlerts: HomeAlert[] = [
 
 export const platformCopy = {
   eyebrow: 'A plataforma',
-  title: 'Ferramentas feitas para a rotina do produtor',
+  title: 'Ferramentas para produtores',
   body: 'Do panorama do dia às anotações de campo — tudo integrado num só fluxo.',
 }
 
@@ -196,47 +198,65 @@ export type HomeModule = {
   title: string
   description: string
   icon: LucideIcon
-  featured?: boolean
 }
 
+/** Mesma ordem e nomes do menu do dashboard (`NAV_ITEMS`). */
 export const homeModules: HomeModule[] = [
   {
     id: 'overview',
     title: 'Visão Geral',
-    description: 'Panorama completo da propriedade em um só painel.',
+    description:
+      'Abra o dia com um panorama completo da propriedade: clima atual, alertas ativos, leituras de solo e água, e o que pede atenção primeiro. Compare dia, semana, mês ou ano sem montar relatório na mão.',
     icon: LayoutDashboard,
-    featured: true,
   },
   {
-    id: 'climate',
-    title: 'Clima',
-    description: 'Temperatura, vento, umidade e previsão integrados.',
-    icon: Cloud,
-  },
-  {
-    id: 'water',
-    title: 'Água',
-    description: 'Consumo e eficiência hídrica por setor.',
-    icon: Droplets,
+    id: 'assistant',
+    title: 'Assistente TerraNova',
+    description:
+      'Converse com a plataforma para entender o que os números significam no campo. Tire dúvidas sobre clima, irrigação ou alertas e receba respostas diretas — como falar com quem conhece a sua propriedade.',
+    icon: Bot,
   },
   {
     id: 'alerts',
     title: 'Alertas',
-    description: 'Avisos priorizados por urgência e impacto.',
+    description:
+      'Receba avisos quando seca, calor forte ou chuva em excesso ameaçam a safra. Os alertas chegam priorizados por urgência para você saber o que olhar primeiro, antes que vire prejuízo no talhão.',
     icon: Bell,
   },
   {
+    id: 'climate',
+    title: 'Controle Climático',
+    description:
+      'Acompanhe temperatura, umidade, vento e previsão local num painel feito para o dia a dia no campo. Use as leituras para planejar irrigação, aplicação e trabalho com menos adivinhação.',
+    icon: Cloud,
+  },
+  {
+    id: 'soil',
+    title: 'Controle do Solo',
+    description:
+      'Monitore umidade e saúde do solo setor a setor. As leituras ajudam a decidir quando irrigar, onde o manejo precisa de atenção e como a terra responde ao clima da semana.',
+    icon: Leaf,
+  },
+  {
     id: 'growth',
-    title: 'Colheitas',
-    description: 'Janelas de maturação e colheita previstas.',
+    title: 'Previsão de Colheitas',
+    description:
+      'Veja em que ponto está a maturação das culturas e quando abre a janela de colheita. O módulo cruza dados atuais e histórico para você não perder o timing certo na propriedade.',
     icon: Sprout,
   },
   {
-    id: 'assistant',
-    title: 'Assistente',
-    description: 'Interpretação dos dados em linguagem simples.',
-    icon: Bot,
-    featured: true,
+    id: 'water',
+    title: 'Consumo Hídrico',
+    description:
+      'Enxergue consumo e eficiência hídrica por setor: onde a água vai, onde dá para economizar e quando algo foge do padrão. Metas e comparativos ficam visíveis para ajustar a irrigação.',
+    icon: Droplets,
+  },
+  {
+    id: 'notes',
+    title: 'Anotações',
+    description:
+      'Registre o que viu no campo, decisões tomadas e aprendizados da safra. O histórico fica organizado para consultar depois — na próxima rodada ou na safra que vem.',
+    icon: NotebookPen,
   },
 ]
 

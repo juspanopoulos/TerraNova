@@ -2,7 +2,16 @@ import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import leavesBgImg from '@/assets/hero/background5.png'
 import logoColorido from '@/assets/logos/logo-colorido.png'
-import { homeHeroTitle, homeLeadDark, homeShell } from '@/components/home/homeShared'
+import {
+  homeHeaderBodyGap,
+  homeHeaderTitleGap,
+  homeHeroTitle,
+  homeLeadDark,
+  homeSectionContentGap,
+  homeSectionPadBottom,
+  homeSectionPadTopCompact,
+  homeShell,
+} from '@/components/home/homeShared'
 import styles from '@/components/home/home.module.css'
 import { pageHeroEyebrow } from '@/constants/layout'
 import { homeCtaCopy, homeCtaLinks } from '@/data/home/content'
@@ -24,7 +33,9 @@ export function HomeCta() {
         aria-hidden
       />
 
-      <div className={`${homeShell} relative z-10 py-20 sm:py-24 md:py-28 lg:py-32`}>
+      <div
+        className={`${homeShell} relative z-10 ${homeSectionPadTopCompact} ${homeSectionPadBottom}`}
+      >
         <article
           data-home-item
           className={`${styles.ctaPanel} relative mx-auto max-w-2xl overflow-hidden rounded-3xl border border-verde-floresta/10 bg-bege-natural/95 p-8 text-center backdrop-blur-sm sm:p-10 md:p-12`}
@@ -47,15 +58,19 @@ export function HomeCta() {
             loading="lazy"
           />
 
-          <p className={`${pageHeroEyebrow} relative mt-6`}>Comece agora</p>
-          <h2 className={`${homeHeroTitle} relative mt-5 text-3xl text-preto-suave sm:text-4xl md:text-5xl`}>
+          <p className={`${pageHeroEyebrow} relative ${homeHeaderBodyGap}`}>
+            Comece agora
+          </p>
+          <h2
+            className={`${homeHeroTitle} relative ${homeHeaderTitleGap} text-3xl text-preto-suave sm:text-4xl md:text-5xl`}
+          >
             {homeCtaCopy.title}
           </h2>
-          <p className={`${homeLeadDark} relative mx-auto mt-5 max-w-md`}>
+          <p className={`${homeLeadDark} relative mx-auto ${homeHeaderBodyGap} max-w-md`}>
             {homeCtaCopy.body}
           </p>
 
-          <div className="relative mt-8 flex flex-col items-center gap-5 sm:mt-10">
+          <div className={`relative ${homeSectionContentGap} flex flex-col items-center gap-5`}>
             {homeCtaLinks
               .filter((link) => link.primary)
               .map((link) => (

@@ -4,12 +4,15 @@ import {
   aboutCard,
   aboutCardGrid,
   aboutCardInner,
-  aboutContentGap,
 } from '@/components/sobre/aboutShared'
 import {
   homeGrowthOverlayOpacity,
+  homeHeaderBodyGap,
+  homeHeaderTitleGap,
   homeHeroTitle,
   homeLeadDark,
+  homeSectionBlockGap,
+  homeSectionContentGap,
   homeShell,
 } from '@/components/home/homeShared'
 import styles from '@/components/home/home.module.css'
@@ -33,10 +36,6 @@ export function HomeGrowth() {
 
   return (
     <section data-section="growth" className="relative bg-bege-natural">
-      <div
-        className={`${styles.climateTopFade} pointer-events-none absolute inset-x-0 top-0 z-20 h-32 sm:h-40 md:h-48`}
-        aria-hidden
-      />
       <div ref={trackRef} className="relative" style={{ height: growthScrollLength }}>
         <div
           ref={contentRef}
@@ -58,30 +57,25 @@ export function HomeGrowth() {
           </div>
 
           <div className={`${styles.growthOverlay} absolute inset-0`} aria-hidden />
-          <div
-            className={`${styles.climateTopFade} pointer-events-none absolute inset-x-0 top-0 h-32 sm:h-40 md:h-48`}
-            aria-hidden
-          />
-          <div
-            className={`${styles.introBottomFade} pointer-events-none absolute inset-x-0 bottom-0 h-32 sm:h-40 md:h-48`}
-            aria-hidden
-          />
 
           <div className={`${homeShell} relative z-10 py-6 sm:py-8 md:py-12`}>
             <header className="max-w-3xl">
               <p className={pageHeroEyebrow} data-home-item>
                 {growthCopy.eyebrow}
               </p>
-              <h2 data-home-item className={`${homeHeroTitle} mt-5 text-preto-suave`}>
+              <h2
+                data-home-item
+                className={`${homeHeroTitle} ${homeHeaderTitleGap} text-preto-suave`}
+              >
                 {growthCopy.title}
               </h2>
-              <p data-home-item className={`${homeLeadDark} mt-6 max-w-xl`}>
+              <p data-home-item className={`${homeLeadDark} ${homeHeaderBodyGap} max-w-xl`}>
                 {growthCopy.body}
               </p>
             </header>
 
             <div
-              className="relative mt-6 min-h-18 max-w-3xl sm:mt-8 sm:min-h-20"
+              className={`relative ${homeSectionContentGap} min-h-18 max-w-3xl sm:min-h-20`}
               data-home-item
               aria-live="polite"
               aria-atomic
@@ -103,7 +97,7 @@ export function HomeGrowth() {
             </div>
 
             <ul
-              className={`${styles.growthStepStack} relative mt-6 min-h-44 sm:min-h-48 md:mt-10 md:min-h-0 ${aboutCardGrid} ${aboutContentGap}`}
+              className={`${styles.growthStepStack} relative ${homeSectionBlockGap} min-h-44 sm:min-h-48 md:min-h-0 ${aboutCardGrid}`}
               aria-label="Fases de crescimento"
             >
               {growthStages.map((stage, index) => {
@@ -133,7 +127,7 @@ export function HomeGrowth() {
             </ul>
 
             <div
-              className="relative mt-6 h-1 max-w-xs overflow-hidden rounded-full bg-verde-floresta/12 md:mt-8"
+              className={`relative ${homeSectionContentGap} h-1 w-full overflow-hidden rounded-full bg-verde-floresta/12`}
               aria-hidden
             >
               <div
@@ -144,10 +138,6 @@ export function HomeGrowth() {
           </div>
         </div>
       </div>
-      <div
-        className={`${styles.introBottomFade} pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 sm:h-40 md:h-48`}
-        aria-hidden
-      />
     </section>
   )
 }

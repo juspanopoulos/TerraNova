@@ -3,6 +3,37 @@ export const homePageStack = 'flex flex-col'
 export const homeShell =
   'mx-auto w-full max-w-6xl px-4 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16'
 
+/** Padding vertical uniforme em todas as seções da home */
+export const homeSectionPad =
+  'py-16 sm:py-20 md:py-24 lg:py-28 xl:py-32'
+
+export const homeSectionPadTop =
+  'pt-16 sm:pt-20 md:pt-24 lg:pt-28 xl:pt-32'
+
+export const homeSectionPadBottom =
+  'pb-16 sm:pb-20 md:pb-24 lg:pb-28 xl:pb-32'
+
+/** Metade do padding — junções entre seções vizinhas (ex.: Growth → Water) */
+export const homeSectionPadTopCompact =
+  'pt-8 sm:pt-10 md:pt-12 lg:pt-14 xl:pt-16'
+
+export const homeSectionPadBottomCompact =
+  'pb-8 sm:pb-10 md:pb-12 lg:pb-14 xl:pb-16'
+
+/** Espaço entre o cabeçalho da seção e o bloco principal abaixo */
+export const homeSectionBlockGap =
+  'mt-14 sm:mt-16 md:mt-20'
+
+/** Espaço entre blocos internos (ex.: painel → abas) */
+export const homeSectionContentGap =
+  'mt-8 sm:mt-10'
+
+/** Eyebrow → título */
+export const homeHeaderTitleGap = 'mt-5'
+
+/** Título → corpo ou legenda */
+export const homeHeaderBodyGap = 'mt-6'
+
 export const homeEyebrow =
   'text-xs font-bold uppercase tracking-[0.24em] text-laranja-solar'
 
@@ -23,7 +54,25 @@ export const homeLeadLight =
   'text-base leading-relaxed text-bege-natural/85 sm:text-lg sm:leading-[1.75]'
 
 export const homeLeadDark =
-  'text-base leading-relaxed text-preto-suave/75 sm:text-lg sm:leading-[1.75]'
+  'text-base leading-relaxed text-preto-suave/85 sm:text-lg sm:leading-[1.75]'
+
+export const homeCaptionAside =
+  'mt-6 max-w-xl text-base leading-relaxed text-preto-suave/85 sm:text-lg sm:leading-[1.75] lg:mt-0 lg:max-w-md lg:shrink-0 lg:border-l lg:border-laranja-solar/25 lg:pl-5'
+
+export const homeCaptionAsideLight =
+  'mt-6 max-w-xl text-base leading-relaxed text-bege-natural/85 sm:text-lg sm:leading-[1.75] lg:mt-0 lg:max-w-md lg:shrink-0 lg:border-l lg:border-laranja-solar/35 lg:pl-5'
+
+export const homeStatLabel =
+  'text-sm font-semibold text-preto-suave/80'
+
+export const homeStatDetail =
+  'mt-2 text-base leading-relaxed text-preto-suave/85'
+
+export const homePanelEyebrow =
+  'text-xs font-semibold uppercase tracking-[0.18em] text-laranja-solar'
+
+export const homeStatsPanel =
+  'relative overflow-hidden rounded-3xl border border-laranja-solar/12 bg-bege-natural p-6 shadow-sm shadow-laranja-solar/8 sm:p-8'
 
 export const homeImpactCard =
   'rounded-2xl border border-white/25 bg-bege-natural/96 p-6 shadow-2xl shadow-black/30 backdrop-blur-md sm:rounded-3xl sm:p-7'
@@ -66,15 +115,15 @@ export type HomeSectionOverlayOpacity = {
 }
 
 export const homeAlertsOverlayOpacity: HomeSectionOverlayOpacity = {
-  '--home-overlay-start': '0.42',
-  '--home-overlay-mid': '0.32',
-  '--home-overlay-end': '0.38',
+  '--home-overlay-start': '0.72',
+  '--home-overlay-mid': '0.64',
+  '--home-overlay-end': '0.68',
 }
 
 export const homeGrowthOverlayOpacity: HomeSectionOverlayOpacity = {
-  '--home-overlay-start': '0.58',
-  '--home-overlay-mid': '0.42',
-  '--home-overlay-end': '0.52',
+  '--home-overlay-start': '1.00',
+  '--home-overlay-mid': '0.82',
+  '--home-overlay-end': '1.00',
 }
 
 export const homePlatformOverlayOpacity: HomeSectionOverlayOpacity = {
