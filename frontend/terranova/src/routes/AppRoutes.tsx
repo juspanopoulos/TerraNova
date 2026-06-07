@@ -4,6 +4,7 @@ import { ROUTES } from "@/constants/routes";
 import { BaseLayout } from "@/layouts";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 import { setupSmoothScroll } from "@/lib/smoothScroll";
+import Contato from "@/pages/Contato";
 import Equipe from "@/pages/Equipe";
 import FAQ from "@/pages/FAQ";
 import Home from "@/pages/Home";
@@ -46,6 +47,7 @@ export const AppRoutes = () => {
           <Route path={ROUTES.sobre} element={<Sobre />} />
           <Route path={ROUTES.equipe} element={<Equipe />} />
           <Route path={ROUTES.faq} element={<FAQ />} />
+          <Route path={ROUTES.contato} element={<Contato />} />
           <Route path={ROUTES.plataforma} element={<DashboardLayout />}>
             <Route index element={<Navigate to="visao-geral" replace />} />
             <Route path="visao-geral" element={<VisaoGeralPage />} />
