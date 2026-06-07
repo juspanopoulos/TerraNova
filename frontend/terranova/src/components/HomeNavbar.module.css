@@ -3,157 +3,35 @@
   background-color: #1a130d;
 }
 
+:global(.pin-spacer:has(#home-navbar-pin-host[data-pinned='true'])) {
+  background-color: #efe4d2;
+}
+
 .pinHost {
   position: relative;
   width: 100%;
   background-color: #1a130d;
+  pointer-events: auto;
   backface-visibility: hidden;
   transform: translateZ(0);
 }
 
-.header {
-  --nav-surface: #1a130d;
+.pinHost[data-pinned='true'] {
+  background-color: #efe4d2;
+}
 
+.header {
   position: relative;
   z-index: 100;
   width: 100%;
-  background-color: var(--nav-surface);
   pointer-events: auto !important;
   backface-visibility: hidden;
 }
 
-.shell {
-  position: relative;
+.headerDark {
+  background-color: #1a130d;
 }
 
-.nav {
-  position: relative;
-  z-index: 1;
-}
-
-.navLink {
-  position: relative;
-  z-index: 1;
-  text-decoration: none;
-}
-
-.logo {
-  opacity: 1;
-}
-
-.link {
-  color: rgba(239, 228, 210, 0.88);
-}
-
-.link:hover {
-  color: #efe4d2;
-  background: rgba(239, 228, 210, 0.1);
-}
-
-.linkActive {
-  color: #efe4d2;
-  background: #3f6b4b;
-}
-
-.mobileBar {
-  display: none;
-}
-
-.desktopRow {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.menuButton {
-  border: none;
-  background: transparent;
-  padding: 0.4375rem 0.5625rem;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1;
-  color: rgba(239, 228, 210, 0.92);
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.menuButton:hover {
-  opacity: 0.75;
-}
-
-.menuButtonOpen {
-  opacity: 0.7;
-}
-
-.mobileAccordion {
-  display: none;
-}
-
-.mobileAccordionInner {
-  overflow: hidden;
-  min-height: 0;
-}
-
-.accordionNav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0 1rem 1rem;
-}
-
-.accordionLink {
-  display: block;
-  border-radius: 0.5rem;
-  padding: 0.9375rem 1rem;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 600;
-  color: rgba(239, 228, 210, 0.92);
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.accordionLink:hover {
-  background: rgba(239, 228, 210, 0.1);
-  color: #efe4d2;
-}
-
-.accordionLinkActive {
-  background: #3f6b4b;
-  color: #efe4d2;
-}
-
-@media (max-width: 767px) {
-  .shell {
-    justify-content: center;
-    flex-wrap: nowrap;
-    gap: 0;
-  }
-
-  .mobileBar {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    gap: 1.125rem;
-  }
-
-  .desktopRow {
-    display: none;
-  }
-
-  .mobileAccordion {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.28s ease;
-    border-top: 1px solid transparent;
-  }
-
-  .mobileAccordionOpen {
-    grid-template-rows: 1fr;
-    border-top-color: rgba(239, 228, 210, 0.1);
-  }
+.headerPinned {
+  background-color: #efe4d2;
 }
