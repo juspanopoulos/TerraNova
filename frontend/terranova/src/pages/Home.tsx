@@ -11,8 +11,8 @@ const Home = () => {
     <>
       <div className="bg-surface-night">
         <HeroParallax />
-        <HomeNavbar />
       </div>
+      <HomeNavbar />
       <Climate />
       <Growth />
       <Water />

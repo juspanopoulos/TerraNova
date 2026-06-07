@@ -20,6 +20,10 @@ export const setupSmoothScroll = () => {
   gsap.ticker.add(lenisRaf)
   gsap.ticker.lagSmoothing(0)
 
+  requestAnimationFrame(() => {
+    ScrollTrigger.refresh()
+  })
+
   return () => {
     gsap.ticker.remove(lenisRaf)
     lenis.destroy()

@@ -1,6 +1,9 @@
 .header {
   --nav-surface: #1a130d;
 
+  position: relative;
+  z-index: 20;
+  width: 100%;
   background-color: var(--nav-surface);
   border-top: none;
   border-bottom-color: rgba(239, 228, 210, 0.08);
@@ -104,8 +107,6 @@
     justify-content: center;
     flex-wrap: nowrap;
     gap: 0;
-    padding-top: 0.875rem;
-    padding-bottom: 0.875rem;
   }
 
   .mobileBar {
