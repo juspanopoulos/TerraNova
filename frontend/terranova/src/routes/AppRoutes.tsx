@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-route
 import { ROUTES } from "@/constants/routes";
 import { BaseLayout } from "@/layouts";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { setupSmoothScroll } from "@/lib/smoothScroll";
 import Contato from "@/pages/Contato";
 import Equipe from "@/pages/Equipe";
@@ -40,6 +41,7 @@ function SmoothScrollOnHome() {
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <SmoothScrollOnHome />
       <BaseLayout>
         <Routes>

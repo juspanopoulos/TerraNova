@@ -30,22 +30,6 @@ const mobileLinkClassName = ({ isActive }: { isActive: boolean }) =>
       : "text-preto-suave/85 hover:bg-verde-claro/45 hover:text-verde-floresta",
   ].join(" ");
 
-const ctaLinkClassName = ({ isActive }: { isActive: boolean }) =>
-  [
-    navLinkBase,
-    isActive
-      ? "bg-preto-suave text-bege-natural shadow-sm"
-      : "bg-verde-floresta text-bege-natural shadow-sm shadow-verde-floresta/25 hover:bg-preto-suave",
-  ].join(" ");
-
-const mobileCtaLinkClassName = ({ isActive }: { isActive: boolean }) =>
-  [
-    "block rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors",
-    isActive
-      ? "bg-preto-suave text-bege-natural"
-      : "bg-verde-floresta text-bege-natural hover:bg-preto-suave",
-  ].join(" ");
-
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
@@ -99,23 +83,18 @@ export const Navbar = () => {
   const renderLink = (
     link: (typeof NAV_LINKS)[number],
     className: typeof desktopLinkClassName,
-    ctaClassName: typeof ctaLinkClassName,
     tabIndex?: number,
-  ) => {
-    const isCta = link.to === ROUTES.plataforma;
-
-    return (
-      <NavLink
-        className={isCta ? ctaClassName : className}
-        key={link.to}
-        to={link.to}
-        onClick={closeMenu}
-        tabIndex={tabIndex}
-      >
-        {link.label}
-      </NavLink>
-    );
-  };
+  ) => (
+    <NavLink
+      className={className}
+      key={link.to}
+      to={link.to}
+      onClick={closeMenu}
+      tabIndex={tabIndex}
+    >
+      {link.label}
+    </NavLink>
+  );
 
   return (
     <>
@@ -143,9 +122,7 @@ export const Navbar = () => {
           <div className="hidden w-full items-center justify-between gap-6 md:flex">
             {logoLink}
             <nav aria-label="Navegacao principal" className={headerNav}>
-              {NAV_LINKS.map((link) =>
-                renderLink(link, desktopLinkClassName, ctaLinkClassName),
-              )}
+              {NAV_LINKS.map((link) => renderLink(link, desktopLinkClassName))}
             </nav>
           </div>
         </div>
@@ -194,12 +171,7 @@ export const Navbar = () => {
           className="flex flex-1 flex-col gap-1 overflow-y-auto p-4"
         >
           {NAV_LINKS.map((link) =>
-            renderLink(
-              link,
-              mobileLinkClassName,
-              mobileCtaLinkClassName,
-              menuOpen ? 0 : -1,
-            ),
+            renderLink(link, mobileLinkClassName, menuOpen ? 0 : -1),
           )}
         </nav>
       </aside>
