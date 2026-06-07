@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
+import { ROUTES, SMOOTH_SCROLL_ROUTES } from "@/constants/routes";
 import { BaseLayout } from "@/layouts";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -27,11 +27,14 @@ import VisaoGeralPage from "@/pages/plataforma/VisaoGeralPage";
 import VisaoMesPage from "@/pages/plataforma/VisaoMesPage";
 import VisaoSemanaPage from "@/pages/plataforma/VisaoSemanaPage";
 
-function SmoothScrollOnHome() {
+function SiteSmoothScroll() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname !== ROUTES.home) return;
+    const enabled = SMOOTH_SCROLL_ROUTES.includes(
+      pathname as (typeof SMOOTH_SCROLL_ROUTES)[number],
+    );
+    if (!enabled) return;
     return setupSmoothScroll();
   }, [pathname]);
 
@@ -42,7 +45,7 @@ export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <SmoothScrollOnHome />
+      <SiteSmoothScroll />
       <BaseLayout>
         <Routes>
           <Route path={ROUTES.home} element={<Home />} />

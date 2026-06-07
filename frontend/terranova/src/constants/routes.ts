@@ -7,6 +7,14 @@ export const ROUTES = {
   plataforma: "/plataforma",
 } as const;
 
+export const SMOOTH_SCROLL_ROUTES = [
+  ROUTES.home,
+  ROUTES.sobre,
+  ROUTES.equipe,
+  ROUTES.faq,
+  ROUTES.contato,
+] as const;
+
 export const NAV_LINKS = [
   { label: "Inicio", to: ROUTES.home },
   { label: "Sobre", to: ROUTES.sobre },
