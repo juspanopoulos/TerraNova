@@ -1,0 +1,98 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="TN_DADO_CLIMATICO" directorySegmentName="seg_0" id="C7F215F9-9DE8-591C-73A0-7F3C338DE499">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="nr_umidade" id="20C1B188-1CFA-D613-F6E1-748E87C24907">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ds_fonte_api" id="249D924E-0781-34EB-1D42-796E9A552178">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="nr_indice_uv" id="4A280C8A-DE37-4AAF-352F-DB309419EDE3">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="dt_coleta" id="4F9C27D4-53D9-19C6-89B4-C240C0F7F37B">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="nr_radiacao_solar" id="571BB476-C90F-DAE5-C717-C8C7DD55BF51">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id_dado" id="5FBD6E2B-CE85-56D4-AB4F-16292450D6B3">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="nr_precipitacao" id="B1BC3200-3198-4923-2D10-6994F03CA560">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="nr_temperatura" id="B61F57DF-784E-F818-46B8-461CDE7A1923">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id_area" id="DD9CDDF1-B2E4-F2C3-FDD8-12F2B73ADE5B">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="nr_velocidade_vento_kmh" id="FA4989ED-33C6-9CF5-A444-0549FBFC7333">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="dt_referencia" id="FC60E3AA-BEC1-96C3-3373-D2A232B2CE12">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="fk_dado_area" id="086F875B-95E2-A544-2AC9-F11E65CF7B57">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="TN_DADO_CLIMATICO_PK" id="00CBD8EB-BCAB-EEF9-711A-2C12CE5902C9">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.storage.oracle.TableCheckConstraintOracle">
+<TableCheckConstraint name="ck_nr_umidade" id="2789B48B-40DC-814F-BBFF-F7082A00880B">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="ck_ds_fonte_api" id="8E25A197-35A4-A1C4-FA6B-7B2188A76B50">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+</tableCheckConstraints>
+</TableProxyOraclev20c>

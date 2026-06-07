@@ -1,0 +1,130 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="435F01F3-2E82-AC90-829A-5C6F33EB5680" name="TN_EMPRESA">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>687E1959-74CC-9A0F-D6CA-21CC0F5E0B8A</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_empresa" id="44464E4C-D29B-1668-BAA3-9C39AA8483B9">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>B7080713-6597-E18E-EF90-12FB782EA54F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>82530E55-3869-75B7-C15C-47767AE7CB6E</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementGenerateAlways>true</autoIncrementGenerateAlways>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="nm_empresa" id="CD6FE6A7-0FEA-267F-B3D0-6882A604C20A">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>6C9943EA-180A-DA45-D94F-406EDF162520</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C0F3A21B-860F-8E1B-82FE-FF391CDE05EC</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nr_cnpj" id="862D661B-4544-4A4E-CEE6-CFDEDF349CA3">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>5C813694-2F9D-4C1B-4833-94C8F414577E</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>A805C46D-72D7-C1FD-CFB6-D0B8A556F15D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ds_email" id="6B74EF2F-ADA8-4EC6-580A-120567A1BA12">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>A4DE36B4-01BA-1C97-F06D-D995385AC431</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C0F3A21B-860F-8E1B-82FE-FF391CDE05EC</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nr_telefone" id="77AE2798-5610-6317-55E3-C17ACA6605E4">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>F2F6A9CA-D5D8-E991-58FC-264BA91FE0E3</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>17A04080-A2AE-0AA6-586B-D1FFEB2F029C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="dt_cadastro" id="937A7059-5F35-B431-FBCA-CE25B33AC27A">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>D671D457-C38D-BA8A-E773-4BCBA8A3393F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>4F2CBC66-D7BE-0C2E-65C0-0292C597009D</domain>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="9646C755-0864-A56F-A875-435291C70B4D" name="TN_EMPRESA_PK">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>D193106C-BFB6-541D-FA0E-835499DAD009</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="44464E4C-D29B-1668-BAA3-9C39AA8483B9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="609763C8-D380-9205-49B0-2A3240699A15" name="uq_nr_cnpj">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>750ACDCA-E043-CD90-6A32-443C24D19EE1</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="862D661B-4544-4A4E-CEE6-CFDEDF349CA3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D8546FB0-CF4B-8332-F6F4-30F731538F82" name="uq_ds_email_empresa">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>9484DCFC-EB4E-9787-45AE-3050B8497F29</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6B74EF2F-ADA8-4EC6-580A-120567A1BA12"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

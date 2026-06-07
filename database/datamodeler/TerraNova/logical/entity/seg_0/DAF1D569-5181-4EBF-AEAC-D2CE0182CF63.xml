@@ -1,0 +1,146 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="DAF1D569-5181-4EBF-AEAC-D2CE0182CF63" name="TN_EMPRESA">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>435F01F3-2E82-AC90-829A-5C6F33EB5680</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_empresa" id="D5886592-B90F-7EEB-2F6F-8A5A74D48F8D">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>44464E4C-D29B-1668-BAA3-9C39AA8483B9</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nm_empresa" id="205CF2BD-1659-89E9-1C2A-672D052716BD">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>CD6FE6A7-0FEA-267F-B3D0-6882A604C20A</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nr_cnpj" id="422F86A9-83A6-CE56-47DF-8B2BA35F8C27">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>862D661B-4544-4A4E-CEE6-CFDEDF349CA3</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>18</dataTypeSize>
+<ownDataTypeParameters>18,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ds_email" id="AA7C6EBA-D590-70DF-257B-E83454455E28">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>6B74EF2F-ADA8-4EC6-580A-120567A1BA12</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nr_telefone" id="56723AA9-4AC0-D94D-EC6E-D418A7AAD88B">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>77AE2798-5610-6317-55E3-C17ACA6605E4</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="dt_cadastro" id="2C7C77B6-229E-595E-AB41-3C0FB7A64605">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>937A7059-5F35-B431-FBCA-CE25B33AC27A</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="CFDA9B1E-2ADA-FEBA-9C7D-380206FCFEBB" name="TN_EMPRESA_PK">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>9646C755-0864-A56F-A875-435291C70B4D</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<newElementsIDs>D5886592-B90F-7EEB-2F6F-8A5A74D48F8D</newElementsIDs>
+<usedAttributes>
+<attributeRef>D5886592-B90F-7EEB-2F6F-8A5A74D48F8D</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="4CD8D245-FFD3-D430-6E0D-205E65F4D25F" name="uq_nr_cnpj">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>609763C8-D380-9205-49B0-2A3240699A15</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<newElementsIDs>422F86A9-83A6-CE56-47DF-8B2BA35F8C27</newElementsIDs>
+<usedAttributes>
+<attributeRef>422F86A9-83A6-CE56-47DF-8B2BA35F8C27</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="725BAC53-BABD-FA09-172B-1C0A6F2EE1B5" name="uq_ds_email_empresa">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>D8546FB0-CF4B-8332-F6F4-30F731538F82</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<newElementsIDs>AA7C6EBA-D590-70DF-257B-E83454455E28</newElementsIDs>
+<usedAttributes>
+<attributeRef>AA7C6EBA-D590-70DF-257B-E83454455E28</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

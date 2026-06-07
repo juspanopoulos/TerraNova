@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_recomendacao_area" directorySegmentName="seg_0" id="97A06958-FC28-70DA-7B22-62678FED7454">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>A072721E-4F31-E4A8-E21B-E72F5A7FEC69</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<sourcePk>B7189ED1-993C-C054-10B2-B27F099C1A95</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>1038159A-D56B-E416-56E5-BE70E7C9FE89</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>BF8F0946-8C79-7D6B-B82C-B8C8E910D8E6</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

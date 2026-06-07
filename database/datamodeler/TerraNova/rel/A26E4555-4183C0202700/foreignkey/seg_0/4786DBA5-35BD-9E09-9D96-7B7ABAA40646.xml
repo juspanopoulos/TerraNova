@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="4786DBA5-35BD-9E09-9D96-7B7ABAA40646" containerWithKeyObject="79AB7022-279D-1DBD-A4F4-F67B3963B2A3" localFKIndex="4287E890-CB4B-E962-F88A-7B3803E653BD" name="fk_area_cultura_area">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>BE2658AB-5CA4-1093-21B8-87BB276DDA34</importedID>
+<referredTableLongName>TN_AREA_MONITORADA</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>7114E3CE-F575-3676-6E17-89FB5477495A</referredTableID>
+<keyObject>7D9DEEE1-8398-454F-72AD-04557F1404DB</keyObject>
+<referredKeyID>7D9DEEE1-8398-454F-72AD-04557F1404DB</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_area</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

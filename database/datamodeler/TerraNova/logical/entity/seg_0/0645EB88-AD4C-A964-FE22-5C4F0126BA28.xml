@@ -1,0 +1,121 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="0645EB88-AD4C-A964-FE22-5C4F0126BA28" name="TN_CULTURA">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>B4E1073B-8CF8-6E46-E56A-6E095FD2CD9B</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_cultura" id="F1F72000-8911-1402-761E-D9F6F78F6C0D">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>73782CD1-F8CB-83B1-9C74-6AE9A58D8F4D</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nm_cultura" id="0C840DE1-6ED6-25E2-E8DE-F6A04D685E0D">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>FB97B418-A5BC-64A3-1A03-1A1B0E63375E</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ds_cultura" id="CD46EEC9-B847-A12D-A96B-03DBBD7F74D0">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>E1D64CE6-C2AC-119C-EAA4-C6C459EF5590</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>300</dataTypeSize>
+<ownDataTypeParameters>300,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nr_necessidade_hidrica_mm" id="E159DF4A-A9D5-FE54-278D-63690C6D2373">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>4371D427-1A48-2DC1-21DD-5D11E1196DCD</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,6,2</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ds_periodo_plantio" id="3FE8DF6A-3A6B-649C-8011-A66F27440E41">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>F9087928-4EF1-0101-AF8F-AC0811090F48</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="144BEE0D-FDAE-C51D-8C42-81CC23F109FF" name="TN_CULTURA_PK">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>1CC046D0-C08F-8134-4257-36478C7B1FC4</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<newElementsIDs>F1F72000-8911-1402-761E-D9F6F78F6C0D</newElementsIDs>
+<usedAttributes>
+<attributeRef>F1F72000-8911-1402-761E-D9F6F78F6C0D</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="1F9179B7-ECD3-28B5-066B-4D3C0DAA8C96" name="uq_nm_cultura">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>12C6798D-02E7-1AFC-73F7-737B4421F5CD</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<newElementsIDs>0C840DE1-6ED6-25E2-E8DE-F6A04D685E0D</newElementsIDs>
+<usedAttributes>
+<attributeRef>0C840DE1-6ED6-25E2-E8DE-F6A04D685E0D</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

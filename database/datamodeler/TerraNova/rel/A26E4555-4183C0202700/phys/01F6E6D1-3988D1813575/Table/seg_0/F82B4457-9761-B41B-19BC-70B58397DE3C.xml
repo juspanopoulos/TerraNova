@@ -1,0 +1,104 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="TN_USUARIO" directorySegmentName="seg_0" id="F82B4457-9761-B41B-19BC-70B58397DE3C">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="nr_cpf" id="327CCE4E-0B90-CD04-57E3-CA4FAE476AAD">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ds_status" id="4C7D5FEF-33C0-CC31-F863-69B186762BCF">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<defaultValue>&apos;ATIVO&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="ds_email" id="5A261ED6-84EE-7ACD-3602-6C79480DA239">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id_empresa" id="5B313B53-8DC2-4624-0F3C-EB3194786585">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="nm_usuario" id="957A94EA-1573-CC3F-B286-4FD839A48A3F">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="dt_ultimo_acesso" id="96AFA6D4-004C-DFCE-B669-B884982E2695">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ds_perfil" id="978CE499-162F-F455-418E-9CCFB28C984F">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<defaultValue>&apos;OPERADOR&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="ds_senha_hash" id="AD2EA66D-4B3C-74CD-EC48-2BCC9CAF5C82">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id_usuario" id="B8CFF2C6-F5A0-9799-1572-0D5BC663DDC6">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="dt_cadastro" id="C9CFA833-6EAE-0B4C-7E65-331E45EC5E56">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="fk_usuario_empresa" id="32B34695-745B-1089-9AED-1BC90F53998A">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="TN_USUARIO_PK" id="ADEEFBC8-BD14-F723-2D66-9E3BDC587DC2">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.storage.oracle.TableCheckConstraintOracle">
+<TableCheckConstraint name="ck_ds_perfil" id="0BCBA3B7-3BB9-44FB-B602-907B9F830DD1">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="ck_ds_status_usuario" id="B645FD96-BFA8-1447-5C20-320529A77A88">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+</tableCheckConstraints>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="uq_ds_email_usuario" id="109E4F04-47E0-7F23-B5A8-5C402F72F5E6">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev20c>
