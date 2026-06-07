@@ -9,42 +9,59 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { PageHeaderAccent } from "@/components/PageHeaderAccent";
 import { PageTitle } from "@/components/PageTitle";
 import {
+  aboutPageStack,
+  aboutPreCtaPad,
+  aboutSectionEndPad,
+} from "@/components/sobre/aboutShared";
+import {
   contentShell,
   containerPx,
-  containerPyPage,
+  pageHeaderEdgeGap,
 } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";
 import { useAboutSectionAnimation } from "@/hooks/useAboutSectionAnimation";
 
 export function AboutSection() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useAboutSectionAnimation({ sectionRef });
 
   return (
     <main>
       <PageHeaderAccent />
-      <div className={`${containerPx} ${containerPyPage}`}>
-        <section ref={sectionRef} className={contentShell}>
-          <PageBreadcrumb
-            items={[
-              { label: "Inicio", to: ROUTES.home },
-              { label: "Sobre" },
-            ]}
-          />
-          <PageTitle
-            icon={Leaf}
-            subtitle="Uma base digital para aproximar pessoas, territorio e boas ideias."
-          >
-            Sobre
-          </PageTitle>
+      <div className={`${containerPx} ${pageHeaderEdgeGap}`}>
+        <div ref={sectionRef}>
+          <div className={aboutPageStack}>
+            <div className={contentShell}>
+              <PageBreadcrumb
+                items={[
+                  { label: "Inicio", to: ROUTES.home },
+                  { label: "Sobre" },
+                ]}
+              />
+              <PageTitle
+                icon={Leaf}
+                subtitle="Uma base digital para aproximar pessoas, território e boas ideias."
+              >
+                Sobre
+              </PageTitle>
 
-          <AboutIntro />
-          <AboutMission />
-          <AboutPlatformGrid />
-          <AboutHighlights />
+              <AboutIntro />
+            </div>
+
+            <AboutMission />
+
+            <div className={`${contentShell} ${aboutSectionEndPad}`}>
+              <AboutPlatformGrid />
+            </div>
+
+            <div className={`${contentShell} ${aboutPreCtaPad}`}>
+              <AboutHighlights />
+            </div>
+          </div>
+
           <AboutCta />
-        </section>
+        </div>
       </div>
     </main>
   );

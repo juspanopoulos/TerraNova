@@ -8,13 +8,19 @@ import {
   Leaf,
   NotebookPen,
   Sprout,
+  Waypoints,
 } from "lucide-react";
+import decidirComCalmaImg from "@/assets/images/sobre/decidir-com-calma.jpg";
+import noSeuTempoImg from "@/assets/images/sobre/no-seu-tempo.jpg";
+import verOQueImportaImg from "@/assets/images/sobre/ver-o-que-importa.jpg";
 
 export type PlatformModule = {
   id: string;
   title: string;
   description: string;
   icon: LucideIcon;
+  /** Substituir pela captura do dashboard quando disponível */
+  previewImage?: string | null;
 };
 
 export const platformModules: PlatformModule[] = [
@@ -76,29 +82,104 @@ export const platformModules: PlatformModule[] = [
   },
 ];
 
-export const platformHighlights = [
+export const platformHighlights: {
+  value: string;
+  label: string;
+  detail: string;
+}[] = [
   {
     value: "4",
-    label: "Visoes temporais",
-    detail: "Dia, semana, mes e ano para ler o territorio em diferentes escalas.",
+    label: "Recortes de tempo",
+    detail: "Compare hoje, esta semana ou o mês passado sem montar relatório na mão.",
   },
   {
     value: "8+",
-    label: "Modulos integrados",
-    detail: "Clima, solo, agua, colheitas, alertas e assistente conectados entre si.",
+    label: "Ferramentas juntas",
+    detail: "Cultivo, água, alertas e anotações convivem na mesma tela — sem app extra.",
   },
   {
     value: "1",
-    label: "Painel central",
-    detail: "Tudo converge na visao geral para decisao rapida e contexto completo.",
+    label: "Porta de entrada",
+    detail: "Abra o dia pela visão geral e veja onde merece atenção primeiro.",
   },
-] as const;
+];
+
+export const howItWorksCopy = {
+  eyebrow: "Como funciona",
+  title: "O que muda no seu dia a dia",
+  description:
+    "Depois de entrar na plataforma, estes são os momentos que mais aparecem na rotina de quem cuida da propriedade.",
+};
+
+export type HowItWorksStep = {
+  id: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+};
+
+export const howItWorksSteps: HowItWorksStep[] = [
+  {
+    id: "collect",
+    title: "Chega atualizado",
+    description:
+      "Quando algo muda no campo, a plataforma reflete isso — você não precisa caçar informação.",
+    icon: Waypoints,
+  },
+  {
+    id: "unify",
+    title: "O urgente vem primeiro",
+    description:
+      "Alertas importantes ganham destaque. O restante fica disponível, sem poluir a tela.",
+    icon: Bell,
+  },
+  {
+    id: "read",
+    title: "Entenda num relance",
+    description:
+      "Gráficos e resumos pensados para quem tem pouco tempo entre uma tarefa e outra.",
+    icon: LayoutDashboard,
+  },
+  {
+    id: "decide",
+    title: "Anote e aprenda",
+    description:
+      "Registre o que fez e volte depois com mais segurança na próxima escolha.",
+    icon: NotebookPen,
+  },
+];
 
 export const missionCopy = {
   eyebrow: "Nossa proposta",
-  title: "Tecnologia que respeita o ritmo do territorio",
-  body: "A TerraNova traduz sinais do ambiente em informacao acionavel. Menos planilhas soltas, mais clareza para quem cuida da terra todos os dias.",
+  title: "Cuidar da terra pode ser mais leve",
+  body: "Queremos que você tenha o que importa em um só lugar, de um jeito claro e tranquilo — para viver o dia a dia na propriedade com mais calma e menos preocupação.",
 };
+
+export const missionPillars: {
+  id: string;
+  title: string;
+  image: string;
+  imageAlt: string;
+}[] = [
+  {
+    id: "territory",
+    title: "Ver o que importa",
+    image: verOQueImportaImg,
+    imageAlt: "Vista ampla de plantação verde",
+  },
+  {
+    id: "clarity",
+    title: "Decidir com calma",
+    image: decidirComCalmaImg,
+    imageAlt: "Campo dourado ao entardecer",
+  },
+  {
+    id: "rhythm",
+    title: "No seu tempo",
+    image: noSeuTempoImg,
+    imageAlt: "Paisagem rural tranquila",
+  },
+];
 
 export const introCopy = {
   paragraphs: [

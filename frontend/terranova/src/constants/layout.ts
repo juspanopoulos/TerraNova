@@ -21,6 +21,9 @@ export const containerPx =
 export const pageHeaderEdgeGap =
   'pt-9 sm:pt-11 md:pt-[3.75rem] lg:pt-[4.75rem] xl:pt-[4.75rem]'
 
+/** Espaco entre PageTitle e o conteudo da pagina */
+export const pageContentGap = 'mt-8 sm:mt-10'
+
 export const containerPyPage = [
   pageHeaderEdgeGap,
   'pb-10 sm:pb-12 md:pb-16 lg:pb-20 xl:pb-20',
