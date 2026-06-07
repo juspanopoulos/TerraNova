@@ -14,8 +14,8 @@ gsap.registerPlugin(ScrollTrigger)
 const HOME_NAVBAR_ID = 'home-navbar'
 const HOME_NAVBAR_PIN_HOST_ID = 'home-navbar-pin-host'
 const HOME_NAVBAR_PIN_ID = 'home-navbar-pin'
-const NAV_SURFACE_DARK = '#1a130d'
-const NAV_SURFACE_LIGHT = '#efe4d2'
+const HOME_NAVBAR_THEME_ID = 'home-navbar-theme'
+const NAV_THEME_SCROLL_RANGE = 112
 
 const navShell = [
   contentShell,
@@ -26,36 +26,14 @@ const navShell = [
 const navLinkBase =
   'cursor-pointer rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3 sm:py-2 sm:text-sm'
 
-const navbarDesktopLinkClassName = ({ isActive }: { isActive: boolean }) =>
-  [
-    navLinkBase,
-    isActive
-      ? 'bg-verde-floresta text-bege-natural shadow-sm shadow-verde-floresta/20'
-      : 'text-preto-suave/80 hover:bg-verde-claro/50 hover:text-verde-floresta',
-  ].join(' ')
+const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
+  [navLinkBase, styles.navLink, isActive ? styles.navLinkActive : ''].join(' ')
 
-const navbarMobileLinkClassName = ({ isActive }: { isActive: boolean }) =>
+const mobileLinkClassName = ({ isActive }: { isActive: boolean }) =>
   [
     'block cursor-pointer rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors',
-    isActive
-      ? 'bg-verde-floresta text-bege-natural'
-      : 'text-preto-suave/85 hover:bg-verde-claro/45 hover:text-verde-floresta',
-  ].join(' ')
-
-const darkDesktopLinkClassName = ({ isActive }: { isActive: boolean }) =>
-  [
-    navLinkBase,
-    isActive
-      ? 'bg-verde-floresta text-bege-natural shadow-sm shadow-verde-floresta/20'
-      : 'text-bege-natural/80 hover:bg-verde-claro/50 hover:text-bege-natural',
-  ].join(' ')
-
-const darkMobileLinkClassName = ({ isActive }: { isActive: boolean }) =>
-  [
-    'block cursor-pointer rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition-colors',
-    isActive
-      ? 'bg-verde-floresta text-bege-natural'
-      : 'text-bege-natural/85 hover:bg-verde-claro/45 hover:text-bege-natural',
+    styles.navLinkMobile,
+    isActive ? styles.navLinkActive : '',
   ].join(' ')
 
 const PIN_INLINE_PROPS = [
@@ -95,11 +73,13 @@ function releaseHomeNavbarFromPinSpacer() {
 }
 
 function destroyHomeNavbarPin() {
+  ScrollTrigger.getById(HOME_NAVBAR_THEME_ID)?.kill()
   ScrollTrigger.getById(HOME_NAVBAR_PIN_ID)?.kill(true)
   releaseHomeNavbarFromPinSpacer()
+  document.documentElement.style.removeProperty('--home-nav-theme')
 }
 
-function applyPinLayerStyles(pinHost: HTMLElement, pinned: boolean) {
+function applyPinLayerStyles(pinHost: HTMLElement) {
   const header = pinHost.querySelector<HTMLElement>(`#${HOME_NAVBAR_ID}`)
   if (header) {
     header.style.pointerEvents = 'auto'
@@ -111,27 +91,33 @@ function applyPinLayerStyles(pinHost: HTMLElement, pinned: boolean) {
 
   pinSpacer.style.pointerEvents = 'none'
   pinSpacer.style.zIndex = '100'
-  pinSpacer.style.backgroundColor = pinned ? NAV_SURFACE_LIGHT : NAV_SURFACE_DARK
   pinSpacer.style.minHeight = `${pinHost.offsetHeight}px`
 }
 
-function syncHomeNavbarPin(pinHost: HTMLElement, pinned: boolean) {
-  applyPinLayerStyles(pinHost, pinned)
-  ScrollTrigger.getById(HOME_NAVBAR_PIN_ID)?.refresh()
+function applyNavTheme(pinHost: HTMLElement, theme: number) {
+  const clamped = Math.min(1, Math.max(0, theme))
+  const value = clamped.toFixed(4)
+
+  document.documentElement.style.setProperty('--home-nav-theme', value)
+  pinHost.dataset.pinned = clamped >= 0.98 ? 'true' : 'false'
+
+  const pinSpacer = pinHost.parentElement
+  if (pinSpacer?.classList.contains('pin-spacer')) {
+    pinSpacer.dataset.pinned = pinHost.dataset.pinned
+  }
 }
 
-function isNavbarBeige(trigger: ScrollTrigger) {
-  return trigger.scroll() >= trigger.start
+function readNavThemeProgress() {
+  const themeTrigger = ScrollTrigger.getById(HOME_NAVBAR_THEME_ID)
+  if (themeTrigger) return themeTrigger.progress
+
+  return 0
 }
 
 export const HomeNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [isPinned, setIsPinned] = useState(false)
   const pinHostRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
-
-  const desktopLinkClassName = isPinned ? navbarDesktopLinkClassName : darkDesktopLinkClassName
-  const mobileLinkClassName = isPinned ? navbarMobileLinkClassName : darkMobileLinkClassName
 
   useEffect(() => {
     setMenuOpen(false)
@@ -165,6 +151,24 @@ export const HomeNavbar = () => {
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
+        id: HOME_NAVBAR_THEME_ID,
+        trigger: pinHost,
+        start: 'top top',
+        end: `+=${NAV_THEME_SCROLL_RANGE}`,
+        scrub: 0.65,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          applyNavTheme(pinHost, self.progress)
+        },
+        onRefresh: (self) => {
+          applyNavTheme(pinHost, self.progress)
+        },
+        onLeaveBack: () => {
+          applyNavTheme(pinHost, 0)
+        },
+      })
+
+      ScrollTrigger.create({
         id: HOME_NAVBAR_PIN_ID,
         trigger: pinHost,
         start: 'top top',
@@ -173,25 +177,16 @@ export const HomeNavbar = () => {
         pin: true,
         pinSpacing: false,
         fastScrollEnd: true,
-        onEnter: () => {
-          setIsPinned(true)
-        },
-        onLeaveBack: () => {
-          setIsPinned(false)
-        },
-        onRefresh: (self) => {
-          const beige = isNavbarBeige(self)
-          setIsPinned(beige)
-          applyPinLayerStyles(pinHost, beige)
+        onRefresh: () => {
+          applyNavTheme(pinHost, readNavThemeProgress())
+          applyPinLayerStyles(pinHost)
         },
       })
     }, pinHost)
 
     const initFrame = requestAnimationFrame(() => {
-      const trigger = ScrollTrigger.getById(HOME_NAVBAR_PIN_ID)
-      const beige = trigger ? isNavbarBeige(trigger) : false
-      setIsPinned(beige)
-      applyPinLayerStyles(pinHost, beige)
+      applyNavTheme(pinHost, readNavThemeProgress())
+      applyPinLayerStyles(pinHost)
     })
 
     return () => {
@@ -205,14 +200,16 @@ export const HomeNavbar = () => {
     const pinHost = pinHostRef.current
     if (!pinHost) return
 
-    pinHost.dataset.pinned = isPinned ? 'true' : 'false'
+    applyPinLayerStyles(pinHost)
+
+    if (!menuOpen) return
 
     const frame = requestAnimationFrame(() => {
-      syncHomeNavbarPin(pinHost, isPinned)
+      ScrollTrigger.getById(HOME_NAVBAR_PIN_ID)?.refresh()
     })
 
     return () => cancelAnimationFrame(frame)
-  }, [menuOpen, isPinned])
+  }, [menuOpen])
 
   const closeMenu = () => setMenuOpen(false)
 
@@ -233,7 +230,7 @@ export const HomeNavbar = () => {
       <span
         className={[
           'text-sm font-semibold tracking-tight sm:text-base',
-          isPinned ? 'text-verde-floresta' : 'text-bege-natural',
+          styles.brandName,
         ].join(' ')}
       >
         TerraNova
@@ -243,7 +240,7 @@ export const HomeNavbar = () => {
 
   const renderLink = (
     link: (typeof NAV_LINKS)[number],
-    className: typeof navbarDesktopLinkClassName,
+    className: typeof navLinkClassName,
     tabIndex?: number,
   ) => (
     <NavLink
@@ -277,7 +274,7 @@ export const HomeNavbar = () => {
         aria-hidden={!menuOpen}
         className={[
           'fixed top-0 right-0 z-120 flex h-dvh w-[min(17rem,82vw)] flex-col border-l border-verde-floresta/10 shadow-2xl shadow-preto-suave/20 transition-transform duration-300 ease-out md:hidden',
-          isPinned ? 'bg-bege-natural' : 'bg-surface-night',
+          styles.mobileDrawer,
           menuOpen ? 'translate-x-0' : 'translate-x-full',
         ].join(' ')}
       >
@@ -287,14 +284,17 @@ export const HomeNavbar = () => {
           <span
             className={[
               'text-xs font-semibold uppercase tracking-[0.16em]',
-              isPinned ? 'text-verde-floresta/70' : 'text-bege-natural/80',
+              styles.mobileDrawerLabel,
             ].join(' ')}
           >
             Menu
           </span>
           <button
             type="button"
-            className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-verde-floresta transition-colors hover:bg-verde-claro/45"
+            className={[
+              'inline-flex size-8 cursor-pointer items-center justify-center rounded-lg',
+              styles.drawerClose,
+            ].join(' ')}
             aria-label="Fechar menu"
             tabIndex={menuOpen ? 0 : -1}
             onClick={closeMenu}
@@ -320,28 +320,22 @@ export const HomeNavbar = () => {
       ref={pinHostRef}
       id={HOME_NAVBAR_PIN_HOST_ID}
       className={styles.pinHost}
-      data-pinned={isPinned ? 'true' : 'false'}
     >
       <header
         id={HOME_NAVBAR_ID}
-        className={[
-          styles.header,
-          'w-full border-b border-verde-floresta/10 md:border-b-0',
-          isPinned ? 'shadow-sm shadow-verde-floresta/5' : '',
-          isPinned ? styles.headerPinned : styles.headerDark,
-        ].join(' ')}
+        className={[styles.header, 'w-full'].join(' ')}
       >
-        <div
-          className="h-px bg-linear-to-r from-laranja-solar/70 via-verde-claro/50 to-verde-floresta/70 md:hidden"
-          aria-hidden
-        />
+        <div className={styles.headerAccentLine} aria-hidden />
 
         <div className={navShell}>
           <div className="flex w-full items-center justify-between gap-4 md:hidden">
             {logoLink}
             <button
               type="button"
-              className="relative z-1 inline-flex size-9 cursor-pointer items-center justify-center rounded-lg border border-verde-floresta/15 text-verde-floresta transition-colors hover:bg-verde-claro/45"
+              className={[
+                'relative z-1 inline-flex size-9 cursor-pointer items-center justify-center rounded-lg transition-colors',
+                styles.menuButton,
+              ].join(' ')}
               aria-expanded={menuOpen}
               aria-controls="home-mobile-nav"
               aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
@@ -354,7 +348,7 @@ export const HomeNavbar = () => {
           <div className="hidden w-full items-center justify-between gap-6 md:flex">
             {logoLink}
             <nav aria-label="Navegacao principal" className={headerNav}>
-              {NAV_LINKS.map((link) => renderLink(link, desktopLinkClassName))}
+              {NAV_LINKS.map((link) => renderLink(link, navLinkClassName))}
             </nav>
           </div>
         </div>

@@ -48,10 +48,10 @@ export const homeManifesto = {
 
 export const climateCopy = {
   eyebrow: 'Monitoramento climático',
-  title: 'O céu em números',
+  title: 'Leitura do Céu',
   body: 'Sensores e previsão local num painel claro.',
   imageCaption:
-    'Leituras do campo e previsão local no mesmo fluxo — para você planejar o dia sem adivinhar o que vem depois das nuvens.',
+    'Leituras do campo e previsão local no mesmo fluxo, para você planejar o dia sem adivinhar o que vem depois das nuvens.',
 }
 
 export const climateStats: {
@@ -119,10 +119,10 @@ export const growthStages = [
 
 export const waterCopy = {
   eyebrow: 'Gestão hídrica',
-  title: 'Água na medida certa',
+  title: 'A Rota da Água',
   body: 'Consumo por setor e alertas quando algo foge do padrão.',
   imageCaption:
-    'Cada setor com leitura própria — você enxerga onde a água vai, onde dá para economizar e quando agir.',
+    'Cada setor com leitura própria, você enxerga onde a água vai, onde dá para economizar e quando agir.',
 }
 
 export const waterStats = [

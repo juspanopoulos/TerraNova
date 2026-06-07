@@ -65,6 +65,77 @@
     opacity: 0;
     visibility: hidden;
   }
+
+  .growthMobileShell {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+    min-height: calc(100dvh - 4rem - 3rem);
+  }
+
+  .growthMobileFooter {
+    margin-top: auto;
+    flex-shrink: 0;
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .growthMobileFooter {
+    margin-top: 3rem;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+.growthPhaseNav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.growthPhasePill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgb(63 107 75 / 0.12);
+  border-radius: 0.75rem;
+  background-color: rgb(239 228 210 / 0.72);
+  padding: 0.75rem 0.375rem;
+  text-align: center;
+}
+
+.growthPhaseIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: rgb(63 107 75 / 0.1);
+  color: #3f6b4b;
+  width: 2rem;
+  height: 2rem;
+}
+
+.growthPhaseLabel {
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(63 107 75 / 0.85);
+}
+
+.growthScrollHint {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgb(42 42 42 / 0.55);
 }
 
 :global(.pin-spacer:has([data-growth-pin])) {

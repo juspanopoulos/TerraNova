@@ -12,7 +12,6 @@ import {
   homeHeroTitle,
   homeLeadDark,
   homeSectionBlockGap,
-  homeSectionContentGap,
   homeShell,
 } from '@/components/home/homeShared'
 import styles from '@/components/home/home.module.css'
@@ -58,7 +57,7 @@ export function HomeGrowth() {
 
           <div className={`${styles.growthOverlay} absolute inset-0`} aria-hidden />
 
-          <div className={`${homeShell} relative z-10 py-6 sm:py-8 md:py-12`}>
+          <div className={`${homeShell} ${styles.growthMobileShell} relative z-10 py-6 sm:py-8 md:py-12`}>
             <header className="max-w-3xl">
               <p className={pageHeroEyebrow} data-home-item>
                 {growthCopy.eyebrow}
@@ -74,30 +73,8 @@ export function HomeGrowth() {
               </p>
             </header>
 
-            <div
-              className={`relative ${homeSectionContentGap} min-h-18 max-w-3xl sm:min-h-20`}
-              data-home-item
-              aria-live="polite"
-              aria-atomic
-            >
-              {growthStages.map((stage) => (
-                <div
-                  key={`${stage.id}-caption`}
-                  data-growth-caption
-                  className="absolute inset-x-0 top-0 max-w-xl"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-laranja-solar">
-                    {stage.phase}
-                  </p>
-                  <p className="mt-2 text-2xl font-bold leading-snug text-verde-floresta sm:text-3xl md:text-2xl">
-                    {stage.title}
-                  </p>
-                </div>
-              ))}
-            </div>
-
             <ul
-              className={`${styles.growthStepStack} relative ${homeSectionBlockGap} min-h-44 sm:min-h-48 md:min-h-0 ${aboutCardGrid}`}
+              className={`${styles.growthStepStack} relative ${homeSectionBlockGap} min-h-52 sm:min-h-56 md:min-h-0 ${aboutCardGrid}`}
               aria-label="Fases de crescimento"
             >
               {growthStages.map((stage, index) => {
@@ -113,27 +90,55 @@ export function HomeGrowth() {
                       <span className="inline-flex size-10 items-center justify-center rounded-full bg-verde-floresta/10 text-verde-floresta ring-1 ring-verde-floresta/15 sm:size-11">
                         <Icon className="size-5" strokeWidth={2} aria-hidden />
                       </span>
-                      <p className="mt-4 hidden text-xs font-semibold uppercase tracking-[0.16em] text-laranja-solar md:block">
+                      <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-laranja-solar">
                         {stage.phase}
                       </p>
-                      <h3 className="mt-1 hidden text-base font-semibold text-verde-floresta sm:text-lg md:block">
+                      <h3 className="mt-1 text-base font-semibold text-verde-floresta sm:text-lg">
                         {stage.title}
                       </h3>
-                      <p className={`${copyOnLight} mt-4 text-sm md:mt-2`}>{stage.detail}</p>
+                      <p className={`${copyOnLight} mt-3 text-sm md:mt-2`}>{stage.detail}</p>
                     </article>
                   </li>
                 )
               })}
             </ul>
 
-            <div
-              className={`relative ${homeSectionContentGap} h-1 w-full overflow-hidden rounded-full bg-verde-floresta/12`}
-              aria-hidden
-            >
+            <div className={styles.growthMobileFooter}>
               <div
-                data-growth-progress
-                className="h-full w-full rounded-full bg-laranja-solar"
-              />
+                className="relative h-1 w-full shrink-0 overflow-hidden rounded-full bg-verde-floresta/12"
+                aria-hidden
+              >
+                <div
+                  data-growth-progress
+                  className="h-full w-full origin-left rounded-full bg-laranja-solar"
+                />
+              </div>
+
+              <nav
+                className={`${styles.growthPhaseNav} md:hidden`}
+                aria-label="Indicador de fases"
+              >
+                {growthStages.map((stage, index) => {
+                  const Icon = stageIcons[index] ?? Sprout
+
+                  return (
+                    <div
+                      key={`${stage.id}-pill`}
+                      data-growth-pill
+                      className={styles.growthPhasePill}
+                    >
+                      <span className={styles.growthPhaseIcon}>
+                        <Icon className="size-4" strokeWidth={2} aria-hidden />
+                      </span>
+                      <span className={styles.growthPhaseLabel}>{stage.phase}</span>
+                    </div>
+                  )
+                })}
+              </nav>
+
+              <p className={`${styles.growthScrollHint} md:hidden`}>
+                Role para avançar pelas fases
+              </p>
             </div>
           </div>
         </div>
