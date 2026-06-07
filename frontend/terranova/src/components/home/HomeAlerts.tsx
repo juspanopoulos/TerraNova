@@ -4,7 +4,6 @@ import {
   homeHeaderBodyGap,
   homeHeaderTitleGap,
   homeHeroTitle,
-  homeImpactCard,
   homeLeadLight,
   homeSectionBlockGap,
   homeSectionPad,
@@ -13,12 +12,6 @@ import {
 import styles from '@/components/home/home.module.css'
 import { copyOnLight, pageHeroEyebrow } from '@/constants/layout'
 import { alertsCopy, homeAlerts } from '@/data/home/content'
-
-const alertIconMap = {
-  alertStripeDry: styles.alertsDockIconDry,
-  alertStripeRain: styles.alertsDockIconRain,
-  alertStripeHeat: styles.alertsDockIconHeat,
-} as const
 
 export function HomeAlerts() {
   return (
@@ -42,7 +35,8 @@ export function HomeAlerts() {
               {alertsCopy.eyebrow}
             </p>
             <h2 data-home-item className={`${homeHeroTitle} ${homeHeaderTitleGap}`}>
-              {alertsCopy.title}
+              {alertsCopy.title}{' '}
+              <span className="text-laranja-solar">{alertsCopy.titleAccent}</span>
             </h2>
             <p data-home-item className={`${homeLeadLight} ${homeHeaderBodyGap} max-w-xl`}>
               {alertsCopy.body}
@@ -50,32 +44,23 @@ export function HomeAlerts() {
           </header>
 
           <ul
-            className={`${homeSectionBlockGap} flex flex-col gap-4 sm:gap-5 lg:col-span-7 lg:mt-0`}
+            className={`${homeSectionBlockGap} flex flex-col gap-4 lg:col-span-7 lg:mt-0`}
             aria-label="Tipos de alerta"
           >
             {homeAlerts.map((alert) => {
               const Icon = alert.icon
-              const iconTheme =
-                alertIconMap[alert.stripeClass as keyof typeof alertIconMap]
 
               return (
                 <li key={alert.id} data-home-item>
-                  <article
-                    className={`${homeImpactCard} flex gap-4 sm:min-h-[7.5rem] sm:gap-5`}
-                  >
-                    <span
-                      className={[
-                        'inline-flex size-10 shrink-0 items-center justify-center rounded-full sm:size-11',
-                        iconTheme,
-                      ].join(' ')}
-                    >
-                      <Icon className="size-5" strokeWidth={2.25} aria-hidden />
+                  <article className={styles.homeAlertCard}>
+                    <span className={styles.homeAlertIcon}>
+                      <Icon className="size-[1.125rem] sm:size-5" strokeWidth={2} aria-hidden />
                     </span>
                     <div className="min-w-0 flex-1">
                       <h3 className="text-base font-semibold text-verde-floresta sm:text-lg">
                         {alert.title}
                       </h3>
-                      <p className={`${copyOnLight} mt-2 text-sm`}>
+                      <p className={`${copyOnLight} mt-2 text-sm leading-relaxed`}>
                         {alert.description}
                       </p>
                     </div>

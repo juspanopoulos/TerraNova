@@ -17,6 +17,9 @@ import { pageHeroEyebrow } from '@/constants/layout'
 import { homeCtaCopy, homeCtaLinks } from '@/data/home/content'
 
 export function HomeCta() {
+  const primaryLink = homeCtaLinks.find((link) => link.primary)
+  const secondaryLinks = homeCtaLinks.filter((link) => !link.primary)
+
   return (
     <section
       data-section="cta"
@@ -71,31 +74,26 @@ export function HomeCta() {
           </p>
 
           <div className={`relative ${homeSectionContentGap} flex flex-col items-center gap-5`}>
-            {homeCtaLinks
-              .filter((link) => link.primary)
-              .map((link) => (
+            {primaryLink ? (
+              <Link
+                to={primaryLink.to}
+                className="inline-flex w-full max-w-sm cursor-pointer items-center justify-center gap-2 rounded-lg bg-verde-floresta px-5 py-3 text-sm font-semibold text-bege-natural no-underline shadow-sm shadow-verde-floresta/20 transition-colors hover:bg-verde-floresta/90 sm:w-auto sm:px-6 sm:py-3.5 sm:text-base"
+              >
+                {primaryLink.label}
+                <ArrowRight className="size-4" aria-hidden />
+              </Link>
+            ) : null}
+
+            <div className="flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center">
+              {secondaryLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="inline-flex w-full max-w-sm items-center justify-center gap-2.5 rounded-xl bg-laranja-solar px-8 py-4 text-base font-bold text-surface-night no-underline shadow-lg shadow-laranja-solar/30 transition-transform hover:scale-[1.02] sm:w-auto"
+                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-verde-floresta/20 bg-white/85 px-4 py-2.5 text-sm font-semibold text-preto-suave no-underline shadow-sm shadow-preto-suave/5 backdrop-blur-sm transition-colors hover:border-verde-floresta/35 hover:bg-white sm:w-auto sm:px-5 sm:py-3 sm:text-base"
                 >
                   {link.label}
-                  <ArrowRight className="size-4" aria-hidden />
                 </Link>
               ))}
-
-            <div className="flex w-full max-w-sm flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center">
-              {homeCtaLinks
-                .filter((link) => !link.primary)
-                .map((link) => (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    className="inline-flex w-full items-center justify-center rounded-xl border-2 border-verde-floresta/25 px-6 py-3.5 text-sm font-semibold text-verde-floresta no-underline transition-colors hover:border-verde-floresta/45 hover:bg-verde-floresta/8 sm:w-auto sm:px-7 sm:py-4 sm:text-base"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
             </div>
           </div>
         </article>

@@ -28,11 +28,13 @@ function PlatformModuleCard({ module }: { module: HomeModule }) {
         <p className={homePanelEyebrow}>Módulo</p>
 
         <div className="mt-4 flex items-start gap-4 sm:gap-5">
-          <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-laranja-solar/15 text-laranja-solar ring-1 ring-laranja-solar/25 sm:size-11">
-            <Icon className="size-5" strokeWidth={2.25} aria-hidden />
-          </span>
+          <Icon
+            className="size-5 shrink-0 text-laranja-solar sm:size-[1.375rem]"
+            strokeWidth={2.25}
+            aria-hidden
+          />
 
-          <div className="min-w-0 flex-1 pt-0.5">
+          <div className="min-w-0 flex-1">
             <h3 className="text-2xl font-bold tracking-[-0.025em] text-verde-floresta sm:text-3xl">
               {module.title}
             </h3>
@@ -44,7 +46,6 @@ function PlatformModuleCard({ module }: { module: HomeModule }) {
       </div>
 
       <div className="relative mx-auto flex size-44 items-center justify-center sm:size-52 lg:mx-0 lg:ml-auto">
-        <span className={styles.platformStageRing} aria-hidden />
         <Icon
           className={`${styles.platformStageIcon} size-20 sm:size-24`}
           strokeWidth={1.5}
