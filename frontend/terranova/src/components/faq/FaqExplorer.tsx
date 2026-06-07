@@ -84,7 +84,11 @@ export function FaqExplorer({ query }: FaqExplorerProps) {
   return (
     <div className={faqExplorerShell}>
       <div className="grid gap-10 md:grid-cols-[17rem_1fr] md:gap-12 xl:grid-cols-[19rem_1fr] xl:gap-14">
-        <aside className="md:sticky md:top-20 md:self-start" aria-label="Categorias do FAQ">
+        <aside
+          data-faq-block
+          className="md:sticky md:top-20 md:self-start"
+          aria-label="Categorias do FAQ"
+        >
           <p className={`${faqCategoryEyebrow} text-sm sm:text-[0.7rem]`}>Temas</p>
 
           <ul className="mt-5 space-y-1.5 max-md:hidden">
@@ -151,7 +155,10 @@ export function FaqExplorer({ query }: FaqExplorerProps) {
         </aside>
 
         <div className="min-w-0">
-          <header className="border-b border-verde-floresta/12 pb-6 sm:pb-8">
+          <header
+            data-faq-block
+            className="border-b border-verde-floresta/12 pb-6 sm:pb-8"
+          >
             {isSearching ? (
               <div>
                 <p className={faqCategoryEyebrow}>Busca</p>

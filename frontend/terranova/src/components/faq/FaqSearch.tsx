@@ -34,7 +34,7 @@ export function FaqSearch({ query, onQueryChange, resultCount }: FaqSearchProps)
           <button
             type="button"
             onClick={() => onQueryChange("")}
-            className="absolute right-3 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-preto-suave/50 transition-colors hover:bg-verde-floresta/10 hover:text-verde-floresta"
+            className="absolute right-3 top-1/2 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-preto-suave/50 transition-colors hover:bg-verde-floresta/10 hover:text-verde-floresta"
             aria-label="Limpar busca"
           >
             <X className="size-4" strokeWidth={2} aria-hidden />

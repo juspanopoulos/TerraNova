@@ -4,18 +4,18 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type FaqSectionRefs = {
+type ContactSectionRefs = {
   sectionRef: RefObject<HTMLElement | null>;
 };
 
-export const useFaqSectionAnimation = ({ sectionRef }: FaqSectionRefs) => {
+export const useContactSectionAnimation = ({ sectionRef }: ContactSectionRefs) => {
   useLayoutEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      const blocks = section.querySelectorAll<HTMLElement>("[data-faq-block]");
-      const items = section.querySelectorAll<HTMLElement>("[data-faq-item]");
+      const blocks = section.querySelectorAll<HTMLElement>("[data-contato-block]");
+      const items = section.querySelectorAll<HTMLElement>("[data-contato-item]");
 
       gsap.set([...blocks, ...items], { autoAlpha: 0, y: 20 });
 

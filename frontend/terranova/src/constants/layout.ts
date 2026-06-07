@@ -122,13 +122,13 @@ export const headerNav =
   'flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-2.5'
 
 export const headerNavLinkBase =
-  `rounded-md px-2.5 py-2 text-sm font-semibold transition sm:px-3 sm:py-2 sm:text-sm md:text-base md:px-3.5 md:py-2.5 lg:text-base lg:px-4 lg:py-2.5 xl:text-base xl:px-4 xl:py-2.5 ${siteTracking}`
+  `cursor-pointer rounded-md px-2.5 py-2 text-sm font-semibold transition sm:px-3 sm:py-2 sm:text-sm md:text-base md:px-3.5 md:py-2.5 lg:text-base lg:px-4 lg:py-2.5 xl:text-base xl:px-4 xl:py-2.5 ${siteTracking}`
 
 export const footerInner = [
   contentShell,
   containerPx,
-  'py-10 sm:py-12 md:py-14',
+  'py-14 sm:py-16 md:py-20',
 ].join(' ')
 
 export const footerLink =
-  `text-sm font-medium text-bege-natural/70 no-underline transition-colors hover:text-laranja-solar sm:text-base ${siteTracking}`
+  `cursor-pointer text-sm font-medium text-bege-natural/70 no-underline transition-colors hover:text-laranja-solar sm:text-base ${siteTracking}`

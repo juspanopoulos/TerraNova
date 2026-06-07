@@ -49,7 +49,7 @@ export function AboutCta() {
 
             <Link
               to={ROUTES.plataforma}
-              className="inline-flex w-fit items-center gap-2 rounded-lg bg-verde-floresta px-5 py-3 text-sm font-semibold text-bege-natural no-underline transition-colors hover:bg-verde-floresta/90 sm:px-6 sm:py-3.5 sm:text-base"
+              className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg bg-verde-floresta px-5 py-3 text-sm font-semibold text-bege-natural no-underline transition-colors hover:bg-verde-floresta/90 sm:px-6 sm:py-3.5 sm:text-base"
             >
               Ir para a plataforma
               <ArrowRight className="size-4" aria-hidden />

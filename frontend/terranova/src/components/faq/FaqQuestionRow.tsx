@@ -41,7 +41,7 @@ export function FaqQuestionRow({
           aria-expanded={isOpen}
           aria-controls={`faq-panel-${id}`}
           onClick={onToggle}
-          className="grid w-full grid-cols-[3rem_1fr] items-start gap-3 py-4 text-left sm:grid-cols-[3.5rem_1fr] sm:gap-4 sm:py-5"
+          className="grid w-full cursor-pointer grid-cols-[3rem_1fr] items-start gap-3 py-4 text-left sm:grid-cols-[3.5rem_1fr] sm:gap-4 sm:py-5"
         >
           <span
             className={`${faqQuestionNumber} pt-1 transition-colors duration-200 ${
