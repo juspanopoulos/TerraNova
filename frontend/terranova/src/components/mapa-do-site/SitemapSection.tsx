@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
@@ -12,8 +13,13 @@ import { PageHero } from "@/components/PageHero";
 import { containerPx, contentShell, copyOnLight } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";
 import { sitemapSections } from "@/data/mapaDoSite";
+import { useSitemapSectionAnimation } from "@/hooks/useSitemapSectionAnimation";
 
 export function SitemapSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useSitemapSectionAnimation({ sectionRef });
+
   return (
     <main className="bg-bege-natural">
       <PageHero
@@ -29,12 +35,12 @@ export function SitemapSection() {
       <div
         className={`${contentShell} ${containerPx} pb-10 sm:pb-12 md:pb-16 lg:pb-20 xl:pb-20`}
       >
-        <section className={`${sitemapContentGap} ${sitemapSectionsStack}`}>
+        <section ref={sectionRef} className={`${sitemapContentGap} ${sitemapSectionsStack}`}>
           {sitemapSections.map((section) => {
             const SectionIcon = section.icon;
 
             return (
-              <article key={section.id}>
+              <article key={section.id} data-sitemap-block>
                 <header className="max-w-2xl">
                   <p className={aboutEyebrow}>{section.eyebrow}</p>
                   <div className="mt-2 flex items-start gap-3 sm:mt-3">
@@ -59,7 +65,7 @@ export function SitemapSection() {
                     const LinkIcon = link.icon;
 
                     return (
-                      <li key={link.to}>
+                      <li key={link.to} data-sitemap-item>
                         <Link
                           to={link.to}
                           className={`${aboutSoftPanel} ${aboutSoftPanelInner} group relative block h-full no-underline outline-none transition-[box-shadow,ring-color] duration-200 hover:shadow-md hover:shadow-verde-floresta/8 hover:ring-verde-floresta/20 focus-visible:ring-2 focus-visible:ring-verde-floresta/35`}

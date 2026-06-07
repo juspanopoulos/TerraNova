@@ -6,10 +6,12 @@ import { FaqQuestionRow } from "@/components/faq/FaqQuestionRow";
 import {
   faqCategoryEyebrow,
   faqCategoryTitle,
+  faqExplorerGrid,
   faqExplorerShell,
   faqMobileChip,
   faqMobileChipActive,
   faqMobileChipIdle,
+  faqMobileChipWrap,
   faqSidebarBtn,
   faqSidebarBtnActive,
   faqSidebarBtnIdle,
@@ -81,17 +83,22 @@ export function FaqExplorer({ query }: FaqExplorerProps) {
 
   const ActiveIcon = activeCategory.icon;
 
+  const selectCategory = (categoryId: string) => {
+    setActiveCategoryId(categoryId);
+    setOpenId(null);
+  };
+
   return (
     <div className={faqExplorerShell}>
-      <div className="grid gap-10 md:grid-cols-[17rem_1fr] md:gap-12 xl:grid-cols-[19rem_1fr] xl:gap-14">
+      <div className={faqExplorerGrid}>
         <aside
           data-faq-block
-          className="md:sticky md:top-20 md:self-start"
+          className="hidden min-w-0 lg:block lg:sticky lg:top-20 lg:self-start"
           aria-label="Categorias do FAQ"
         >
-          <p className={`${faqCategoryEyebrow} text-sm sm:text-[0.7rem]`}>Temas</p>
+          <p className={faqCategoryEyebrow}>Temas</p>
 
-          <ul className="mt-5 space-y-1.5 max-md:hidden">
+          <ul className="mt-5 space-y-1.5">
             {faqCategories.map((category) => {
               const Icon = category.icon;
               const isActive = !isSearching && category.id === activeCategoryId;
@@ -100,10 +107,7 @@ export function FaqExplorer({ query }: FaqExplorerProps) {
                 <li key={category.id}>
                   <button
                     type="button"
-                    onClick={() => {
-                      setActiveCategoryId(category.id);
-                      setOpenId(null);
-                    }}
+                    onClick={() => selectCategory(category.id)}
                     className={`${faqSidebarBtn} ${
                       isActive ? faqSidebarBtnActive : faqSidebarBtnIdle
                     }`}
@@ -129,51 +133,30 @@ export function FaqExplorer({ query }: FaqExplorerProps) {
               );
             })}
           </ul>
-
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1 md:hidden">
-            {faqCategories.map((category) => {
-              const isActive = !isSearching && category.id === activeCategoryId;
-
-              return (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => {
-                    setActiveCategoryId(category.id);
-                    setOpenId(null);
-                  }}
-                  className={`${faqMobileChip} ${
-                    isActive ? faqMobileChipActive : faqMobileChipIdle
-                  }`}
-                  aria-current={isActive ? "true" : undefined}
-                >
-                  {category.label}
-                </button>
-              );
-            })}
-          </div>
         </aside>
 
         <div className="min-w-0">
           <header
             data-faq-block
-            className="border-b border-verde-floresta/12 pb-6 sm:pb-8"
+            className="border-b border-verde-floresta/12 pb-5 sm:pb-6 md:pb-8"
           >
             {isSearching ? (
-              <div>
+              <div className="min-w-0">
                 <p className={faqCategoryEyebrow}>Busca</p>
-                <h2 className={`${faqCategoryTitle} mt-2`}>
+                <h2 className={`${faqCategoryTitle} mt-2 break-words`}>
                   Resultados para &ldquo;{trimmedQuery}&rdquo;
                 </h2>
               </div>
             ) : (
-              <div className="flex items-start gap-4">
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-laranja-solar/15 text-laranja-solar sm:size-14">
-                  <ActiveIcon className="size-6 sm:size-7" strokeWidth={1.75} />
+              <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:gap-4">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-laranja-solar/15 text-laranja-solar sm:size-12 md:size-14">
+                  <ActiveIcon className="size-5 sm:size-6 md:size-7" strokeWidth={1.75} />
                 </div>
-                <div>
-                  <h2 className={faqCategoryTitle}>{activeCategory.label}</h2>
-                  <p className="mt-2 max-w-xl text-base leading-relaxed text-preto-suave/75">
+                <div className="min-w-0">
+                  <h2 className={`${faqCategoryTitle} break-words`}>
+                    {activeCategory.label}
+                  </h2>
+                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-preto-suave/75 sm:text-base">
                     {activeCategory.description}
                   </p>
                 </div>
@@ -181,15 +164,43 @@ export function FaqExplorer({ query }: FaqExplorerProps) {
             )}
           </header>
 
-          <div data-faq-block className="mt-6 space-y-1.5 sm:mt-8">
+          {!isSearching ? (
+            <nav
+              className="border-b border-verde-floresta/12 py-5 sm:py-6 lg:hidden"
+              aria-label="Categorias do FAQ"
+            >
+              <p className={faqCategoryEyebrow}>Temas</p>
+              <div className={`${faqMobileChipWrap} mt-3`}>
+                {faqCategories.map((category) => {
+                  const isActive = category.id === activeCategoryId;
+
+                  return (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => selectCategory(category.id)}
+                      className={`${faqMobileChip} ${
+                        isActive ? faqMobileChipActive : faqMobileChipIdle
+                      }`}
+                      aria-current={isActive ? "true" : undefined}
+                    >
+                      {category.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </nav>
+          ) : null}
+
+          <div data-faq-block className="mt-5 space-y-1 sm:mt-6 sm:space-y-1.5 md:mt-8">
             {visibleQuestions.length === 0 ? (
-              <div className="flex flex-col items-center py-16 text-center sm:py-20">
+              <div className="flex flex-col items-center px-2 py-12 text-center sm:py-16 md:py-20">
                 <MessageCircleQuestion
-                  className="size-10 text-verde-floresta/30"
+                  className="size-9 text-verde-floresta/30 sm:size-10"
                   strokeWidth={1.5}
                   aria-hidden
                 />
-                <p className="mt-4 text-lg font-semibold text-preto-suave">
+                <p className="mt-4 text-base font-semibold text-preto-suave sm:text-lg">
                   Nenhuma pergunta encontrada
                 </p>
                 <p className="mt-2 max-w-sm text-sm text-preto-suave/60">
