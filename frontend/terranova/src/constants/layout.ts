@@ -3,41 +3,13 @@
  * xs ≤480 | sm 481–767 | md 768–991 | lg 992–1299 | xl ≥1300
  *
  * Em ranges (md/lg/sm), repita em xl quando o estilo deve continuar acima de 1299px.
- *
- * Tipografia do site institucional (home + paginas publicas). Nao usar no dashboard.
  */
-const siteTracking = 'tracking-[-0.012em]'
-const siteHeadingTracking = 'tracking-[-0.018em]'
-const siteCopyLeading = 'leading-[1.62] sm:leading-[1.68]'
 
 export const containerPx =
   'px-4 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16'
 
-/** Linha divisoria de ponta a ponta da viewport */
-/**export const pageDividerFull =
-  'relative left-1/2 w-screen max-w-none -translate-x-1/2 border-b border-verde-floresta/12'*/
-
-/** Espaco acima do breadcrumb e abaixo do subtitulo (antes da divisoria) */
-export const pageHeaderEdgeGap =
-  'pt-9 sm:pt-11 md:pt-[3.75rem] lg:pt-[4.75rem] xl:pt-[4.75rem]'
-
-/** Espaco entre PageTitle e o conteudo da pagina */
-export const pageContentGap = 'mt-8 sm:mt-10'
-
-/** Hero escuro das paginas institucionais */
-export const pageHeroEyebrow =
-  'text-xs font-semibold uppercase tracking-[0.24em] text-laranja-solar'
-
-export const pageHeroTitle =
-  'text-3xl font-bold leading-[1.1] tracking-[-0.022em] text-bege-natural sm:text-4xl md:text-5xl lg:text-[3.25rem]'
-
-export const pageHeroSubtitle =
-  'mt-4 max-w-xl text-base font-medium leading-relaxed text-bege-natural sm:text-lg'
-
-export const containerPyPage = [
-  pageHeaderEdgeGap,
-  'pb-10 sm:pb-12 md:pb-16 lg:pb-20 xl:pb-20',
-].join(' ')
+export const containerPyPage =
+  'py-10 sm:py-12 md:py-16 lg:py-20 xl:py-20'
 
 export const containerPyMain =
   'py-8 sm:py-10 md:py-12 lg:py-14 xl:py-16'
@@ -67,25 +39,25 @@ export const eyebrowMuted =
 
 /** Títulos das seções — escala próxima ao layout original */
 export const titleOnDark =
-  `text-3xl font-bold leading-tight text-bege-natural sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl ${siteHeadingTracking}`
+  'text-3xl font-bold leading-tight text-bege-natural sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl'
 
 export const titleOnLight =
-  `text-3xl font-bold leading-tight text-preto-suave sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl ${siteHeadingTracking}`
+  'text-3xl font-bold leading-tight text-preto-suave sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl'
 
 export const copyOnDark =
-  `text-base text-bege-natural/70 sm:text-lg ${siteCopyLeading} ${siteTracking}`
+  'text-base leading-8 text-bege-natural/70 sm:text-lg'
 
 export const copyOnLight =
-  `text-base text-preto-suave/70 sm:text-lg ${siteCopyLeading} ${siteTracking}`
+  'text-base leading-8 text-preto-suave/70 sm:text-lg'
 
 export const copyAsideOnDark =
-  `ml-auto max-w-md border-l border-bege-natural/20 pl-6 text-base text-bege-natural/70 sm:pl-8 sm:text-lg md:pl-10 ${siteCopyLeading} ${siteTracking}`
+  'ml-auto max-w-md border-l border-bege-natural/20 pl-6 text-base leading-8 text-bege-natural/70 sm:pl-8 sm:text-lg md:pl-10'
 
 export const headingPage =
-  `mt-3 max-w-3xl text-3xl font-bold leading-tight text-verde-floresta sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl ${siteHeadingTracking}`
+  'mt-3 max-w-3xl text-3xl font-bold leading-tight text-verde-floresta sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl'
 
 export const bodyLead =
-  `mt-4 text-base text-preto-suave/75 sm:mt-6 sm:text-lg ${siteCopyLeading} ${siteTracking}`
+  'mt-4 text-base leading-7 text-preto-suave/75 sm:mt-6 sm:text-lg sm:leading-8'
 
 export const card =
   'rounded-lg border border-verde-floresta/10 bg-white p-4 sm:p-5 md:p-6'
@@ -122,7 +94,7 @@ export const headerNav =
   'flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-2.5'
 
 export const headerNavLinkBase =
-  `rounded-md px-2.5 py-2 text-sm font-semibold transition sm:px-3 sm:py-2 sm:text-sm md:text-base md:px-3.5 md:py-2.5 lg:text-base lg:px-4 lg:py-2.5 xl:text-base xl:px-4 xl:py-2.5 ${siteTracking}`
+  'rounded-md px-2.5 py-2 text-sm font-semibold transition sm:px-3 sm:py-2 sm:text-sm md:text-base md:px-3.5 md:py-2.5 lg:text-base lg:px-4 lg:py-2.5 xl:text-base xl:px-4 xl:py-2.5'
 
 export const footerInner = [
   contentShell,
@@ -131,4 +103,4 @@ export const footerInner = [
 ].join(' ')
 
 export const footerLink =
-  `text-sm font-medium text-bege-natural/70 no-underline transition-colors hover:text-laranja-solar sm:text-base ${siteTracking}`
+  'text-sm font-medium text-bege-natural/70 no-underline transition-colors hover:text-laranja-solar sm:text-base'

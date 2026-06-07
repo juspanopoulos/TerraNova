@@ -20,7 +20,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
       className={
         isPlataforma
           ? "flex h-dvh flex-col overflow-hidden bg-bege-natural font-sans text-preto-suave"
-          : "site-root flex min-h-screen flex-col overflow-x-hidden bg-bege-natural font-sans text-preto-suave"
+          : "flex min-h-screen flex-col overflow-x-hidden bg-bege-natural font-sans text-preto-suave"
       }
     >
       {!hideSiteChrome && (
