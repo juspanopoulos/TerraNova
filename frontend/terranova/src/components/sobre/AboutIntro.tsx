@@ -1,5 +1,5 @@
 import logoColorido from "@/assets/logos/logo-colorido.png";
-import { copyOnLight, pageContentGap } from "@/constants/layout";
+import { copyOnLight } from "@/constants/layout";
 import {
   aboutCard,
   aboutGridGap,
@@ -10,7 +10,7 @@ const introCardClass = `${aboutCard} flex h-full min-h-[11rem] flex-col p-5 sm:m
 
 export function AboutIntro() {
   return (
-    <div data-about-block className={`${pageContentGap} w-full ${aboutStackGap}`}>
+    <div data-about-block className={`w-full ${aboutStackGap}`}>
       <blockquote className="relative w-full border-l-2 border-laranja-solar/60 pl-5 sm:pl-6">
         <p className="text-pretty text-lg font-semibold leading-snug tracking-[-0.018em] text-preto-suave sm:text-xl md:text-2xl">
           A gente acredita que cuidar da terra também é cuidar de você: do seu tempo,

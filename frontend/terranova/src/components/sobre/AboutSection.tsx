@@ -1,13 +1,10 @@
 import { useRef } from "react";
-import { Leaf } from "lucide-react";
 import { AboutCta } from "@/components/sobre/AboutCta";
 import { AboutHighlights } from "@/components/sobre/AboutHighlights";
 import { AboutIntro } from "@/components/sobre/AboutIntro";
 import { AboutMission } from "@/components/sobre/AboutMission";
 import { AboutPlatformGrid } from "@/components/sobre/AboutPlatformGrid";
-import { PageBreadcrumb } from "@/components/PageBreadcrumb";
-import { PageHeaderAccent } from "@/components/PageHeaderAccent";
-import { PageTitle } from "@/components/PageTitle";
+import { PageHero } from "@/components/PageHero";
 import {
   aboutPageStack,
   aboutPreCtaPad,
@@ -16,7 +13,7 @@ import {
 import {
   contentShell,
   containerPx,
-  pageHeaderEdgeGap,
+  pageContentGap,
 } from "@/constants/layout";
 import { ROUTES } from "@/constants/routes";
 import { useAboutSectionAnimation } from "@/hooks/useAboutSectionAnimation";
@@ -28,34 +25,28 @@ export function AboutSection() {
 
   return (
     <main>
-      <PageHeaderAccent />
-      <div className={`${containerPx} ${pageHeaderEdgeGap}`}>
-        <div ref={sectionRef}>
-          <div className={aboutPageStack}>
-            <div className={contentShell}>
-              <PageBreadcrumb
-                items={[
-                  { label: "Inicio", to: ROUTES.home },
-                  { label: "Sobre" },
-                ]}
-              />
-              <PageTitle
-                icon={Leaf}
-                subtitle="Uma base digital para aproximar pessoas, território e boas ideias."
-              >
-                Sobre
-              </PageTitle>
+      <PageHero
+        breadcrumb={[
+          { label: "Inicio", to: ROUTES.home },
+          { label: "Sobre" },
+        ]}
+        eyebrow="Institucional"
+        title="Sobre"
+        subtitle="Uma base digital para aproximar pessoas, território e boas ideias."
+      />
 
-              <AboutIntro />
-            </div>
+      <div className={`${containerPx} pb-10 sm:pb-12 md:pb-16 lg:pb-20 xl:pb-20`}>
+        <div ref={sectionRef} className={`${contentShell} ${pageContentGap}`}>
+          <div className={aboutPageStack}>
+            <AboutIntro />
 
             <AboutMission />
 
-            <div className={`${contentShell} ${aboutSectionEndPad}`}>
+            <div className={aboutSectionEndPad}>
               <AboutPlatformGrid />
             </div>
 
-            <div className={`${contentShell} ${aboutPreCtaPad}`}>
+            <div className={aboutPreCtaPad}>
               <AboutHighlights />
             </div>
           </div>

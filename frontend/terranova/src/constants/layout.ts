@@ -24,6 +24,16 @@ export const pageHeaderEdgeGap =
 /** Espaco entre PageTitle e o conteudo da pagina */
 export const pageContentGap = 'mt-8 sm:mt-10'
 
+/** Hero escuro das paginas institucionais */
+export const pageHeroEyebrow =
+  'text-xs font-semibold uppercase tracking-[0.24em] text-laranja-solar'
+
+export const pageHeroTitle =
+  'text-3xl font-bold leading-[1.1] tracking-[-0.022em] text-bege-natural sm:text-4xl md:text-5xl lg:text-[3.25rem]'
+
+export const pageHeroSubtitle =
+  'mt-4 max-w-xl text-base font-medium leading-relaxed text-bege-natural sm:text-lg'
+
 export const containerPyPage = [
   pageHeaderEdgeGap,
   'pb-10 sm:pb-12 md:pb-16 lg:pb-20 xl:pb-20',
