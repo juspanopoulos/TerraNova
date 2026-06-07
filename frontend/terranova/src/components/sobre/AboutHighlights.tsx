@@ -6,13 +6,13 @@ import {
 } from "@/data/sobre/platform";
 import { copyOnLight } from "@/constants/layout";
 import {
-  aboutCard,
   aboutCardGrid,
-  aboutCardInner,
   aboutContentGap,
   aboutEyebrow,
   aboutGridGap,
   aboutSectionTitle,
+  aboutSoftPanel,
+  aboutSoftPanelInner,
 } from "@/components/sobre/aboutShared";
 
 export function AboutHighlights() {
@@ -82,12 +82,19 @@ export function AboutHighlights() {
       <ul className={`${aboutCardGrid} ${aboutContentGap}`}>
         {platformHighlights.map((item) => (
           <li key={item.label} data-about-item>
-            <article className={`${aboutCard} ${aboutCardInner}`}>
-              <div className="flex flex-1 flex-col space-y-3">
-                <span className="block text-xs font-semibold uppercase tracking-[0.22em] text-laranja-solar">
-                  {item.value} · {item.label}
-                </span>
-                <p className={`${copyOnLight} flex-1 text-sm md:text-base`}>{item.detail}</p>
+            <article className={`${aboutSoftPanel} ${aboutSoftPanelInner}`}>
+              <span
+                className="pointer-events-none absolute right-4 top-4 font-mono text-5xl font-bold tabular-nums leading-none text-verde-floresta/10 sm:right-5 sm:top-5 sm:text-6xl"
+                aria-hidden
+              >
+                {item.value}
+              </span>
+
+              <div className="relative flex flex-1 flex-col justify-end gap-3 pt-6 sm:pt-8">
+                <h3 className="max-w-[12rem] text-base font-semibold leading-snug tracking-[-0.012em] text-preto-suave sm:max-w-none sm:text-lg">
+                  {item.label}
+                </h3>
+                <p className={`${copyOnLight} text-sm md:text-base`}>{item.detail}</p>
               </div>
             </article>
           </li>
