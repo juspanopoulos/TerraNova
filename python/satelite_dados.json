@@ -1,9 +1,9 @@
 [
     {
         "id_area": 1,
-        "temperatura": 16.86,
-        "umidade": 88.81,
-        "precipitacao": 1.26,
+        "temperatura": 14.94,
+        "umidade": 85.05,
+        "precipitacao": 1.36,
         "indice_uv": 0.0,
         "fonte_api": "NASA"
     }
