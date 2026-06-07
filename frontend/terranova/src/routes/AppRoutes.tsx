@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
+import { ROUTES, isSmoothScrollRoute } from "@/constants/routes";
 import { BaseLayout } from "@/layouts";
 import { DashboardLayout } from "@/layouts/DashboardLayout";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { setupSmoothScroll } from "@/lib/smoothScroll";
+import Contato from "@/pages/Contato";
 import Equipe from "@/pages/Equipe";
 import FAQ from "@/pages/FAQ";
 import Home from "@/pages/Home";
+import MapaDoSite from "@/pages/MapaDoSite";
 import NotFound from "@/pages/NotFound";
 import Sobre from "@/pages/Sobre";
 import AguaPage from "@/pages/plataforma/AguaPage";
@@ -25,11 +28,11 @@ import VisaoGeralPage from "@/pages/plataforma/VisaoGeralPage";
 import VisaoMesPage from "@/pages/plataforma/VisaoMesPage";
 import VisaoSemanaPage from "@/pages/plataforma/VisaoSemanaPage";
 
-function SmoothScrollOnHome() {
+function SiteSmoothScroll() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname !== ROUTES.home) return;
+    if (!isSmoothScrollRoute(pathname)) return;
     return setupSmoothScroll();
   }, [pathname]);
 
@@ -39,13 +42,16 @@ function SmoothScrollOnHome() {
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
-      <SmoothScrollOnHome />
+      <ScrollToTop />
+      <SiteSmoothScroll />
       <BaseLayout>
         <Routes>
           <Route path={ROUTES.home} element={<Home />} />
           <Route path={ROUTES.sobre} element={<Sobre />} />
           <Route path={ROUTES.equipe} element={<Equipe />} />
           <Route path={ROUTES.faq} element={<FAQ />} />
+          <Route path={ROUTES.contato} element={<Contato />} />
+          <Route path={ROUTES.mapaDoSite} element={<MapaDoSite />} />
           <Route path={ROUTES.plataforma} element={<DashboardLayout />}>
             <Route index element={<Navigate to="visao-geral" replace />} />
             <Route path="visao-geral" element={<VisaoGeralPage />} />
