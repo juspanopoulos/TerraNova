@@ -14,12 +14,7 @@ export const SMOOTH_SCROLL_ROUTES = [
   ROUTES.equipe,
   ROUTES.faq,
   ROUTES.contato,
-  ROUTES.notFound,
 ] as const;
-
-const SMOOTH_SCROLL_FIXED_ROUTES = SMOOTH_SCROLL_ROUTES.filter(
-  (route) => route !== ROUTES.notFound,
-);
 
 function isPlataformaPath(pathname: string) {
   return (
@@ -28,19 +23,25 @@ function isPlataformaPath(pathname: string) {
   );
 }
 
+export function isKnownSiteRoute(pathname: string) {
+  if (pathname === ROUTES.home) return true;
+  if (pathname === ROUTES.sobre) return true;
+  if (pathname === ROUTES.equipe) return true;
+  if (pathname === ROUTES.faq) return true;
+  if (pathname === ROUTES.contato) return true;
+  if (pathname === "/platform") return true;
+  if (isPlataformaPath(pathname)) return true;
+  return false;
+}
+
+export function isNotFoundRoute(pathname: string) {
+  return !isKnownSiteRoute(pathname);
+}
+
 export function isSmoothScrollRoute(pathname: string) {
-  if (
-    SMOOTH_SCROLL_FIXED_ROUTES.includes(
-      pathname as (typeof SMOOTH_SCROLL_FIXED_ROUTES)[number],
-    )
-  ) {
-    return true;
-  }
-
-  if (!SMOOTH_SCROLL_ROUTES.includes(ROUTES.notFound)) return false;
-  if (pathname === "/platform" || isPlataformaPath(pathname)) return false;
-
-  return true;
+  return SMOOTH_SCROLL_ROUTES.includes(
+    pathname as (typeof SMOOTH_SCROLL_ROUTES)[number],
+  );
 }
 
 export const NAV_LINKS = [
