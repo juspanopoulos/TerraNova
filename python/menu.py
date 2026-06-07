@@ -119,7 +119,7 @@ def main():
                     print("-" * 60)
             else:
                 print("\nNenhuma recomendação técnica pendente no momento. Lavouras seguras!")
-        
+
         elif opcao == '6':
             print("\nIniciando Motor de Inteligência Artificial (Terra Nova AI)...")
             time.sleep(1)
@@ -133,6 +133,7 @@ def main():
                 print(f"[Log] Processando modelo RandomForest_Agro (v1.2) para a Área {id_area}...")
                 time.sleep(1.5)
                 
+                # Simula o resultado de um cálculo complexo de IA para estimar a produtividade com base nos dados históricos e atuais
                 produtividade_estimada = 65.50 
                 
                 sucesso = registrar_predicao_ia(conexao, id_area, tipo_modelo, produtividade_estimada)
@@ -141,9 +142,9 @@ def main():
                     print("\n" + "*"*60)
                     print("                RESULTADO DA PREDIÇÃO (IA)")
                     print("*"*60)
-                    print(f"Produtividade Estimada: {produtividade_estimada} toneladas.")
-                    print("Nível de Confiança do Modelo: 92%")
-                    print("Logs gravados com sucesso nas colunas CLOB do Oracle.")
+                    print(f"✅ Produtividade Estimada: {produtividade_estimada} toneladas.")
+                    print("📊 Nível de Confiança do Modelo: 92%")
+                    print("💾 Logs gravados com sucesso nas colunas CLOB do Oracle.")
                     print("*"*60)
             except ValueError:
                 print("\n[ERRO] O ID da área deve ser um número inteiro.")

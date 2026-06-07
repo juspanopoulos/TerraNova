@@ -142,8 +142,6 @@ def registrar_predicao_ia(conexao, id_area, tipo_modelo, produtividade_estimada)
     
     cursor = conexao.cursor()
     try:
-        # Simulando os logs complexos de um modelo de IA sendo transformados em texto (JSON)
-        # Isso atende ao requisito de usar colunas CLOB no Oracle
         entrada_dict = {"features": ["temperatura", "umidade", "chuva", "qualidade_solo"], "area_alvo": id_area}
         saida_dict = {"confidence_score": 0.92, "predicted_yield_tons": produtividade_estimada, "margin_error": 2.5}
         
