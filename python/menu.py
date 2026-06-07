@@ -97,14 +97,7 @@ def main():
                     print(f"   ↳ {alerta['descricao']}\n")
             else:
                 print("\nExcelente! Nenhum alerta crítico aberto no momento.")
-            
-            if alertas:
-                for alerta in alertas:
-                    time.sleep(0.5)
-                    print(f"[{alerta['severidade']}] {alerta['tipo']} em {alerta['area']} -> {alerta['descricao']}")
-            else:
-                print("Excelente! Nenhum alerta crítico aberto no momento.")
-                
+
         elif opcao == '5':
             print("\nCarregando Relatório de Recomendações...")
             time.sleep(1.5)
