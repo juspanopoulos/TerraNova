@@ -8,10 +8,13 @@ export type PageBreadcrumbItem = {
 
 type PageBreadcrumbProps = {
   items: PageBreadcrumbItem[];
+  tone?: "default" | "onDark";
 };
 
-export function PageBreadcrumb({ items }: PageBreadcrumbProps) {
+export function PageBreadcrumb({ items, tone = "default" }: PageBreadcrumbProps) {
   if (items.length === 0) return null;
+
+  const isDark = tone === "onDark";
 
   return (
     <nav aria-label="Breadcrumb" className="mb-5 sm:mb-6">
@@ -26,14 +29,20 @@ export function PageBreadcrumb({ items }: PageBreadcrumbProps) {
             >
               {index > 0 && (
                 <ChevronRight
-                  className="size-3.5 shrink-0 text-preto-suave/35"
+                  className={`size-3.5 shrink-0 ${
+                    isDark ? "text-bege-natural/60" : "text-preto-suave/35"
+                  }`}
                   aria-hidden
                 />
               )}
               {item.to && !isLast ? (
                 <Link
                   to={item.to}
-                  className="truncate font-medium text-preto-suave/55 no-underline transition-colors hover:text-verde-floresta"
+                  className={`truncate font-medium no-underline transition-colors ${
+                    isDark
+                      ? "text-bege-natural/85 hover:text-laranja-solar"
+                      : "text-preto-suave/55 hover:text-verde-floresta"
+                  }`}
                 >
                   {item.label}
                 </Link>
@@ -41,7 +50,13 @@ export function PageBreadcrumb({ items }: PageBreadcrumbProps) {
                 <span
                   className={[
                     "truncate font-semibold",
-                    isLast ? "text-verde-floresta" : "text-preto-suave/55",
+                    isLast
+                      ? isDark
+                        ? "text-bege-natural"
+                        : "text-verde-floresta"
+                      : isDark
+                        ? "text-bege-natural/85"
+                        : "text-preto-suave/55",
                   ].join(" ")}
                   aria-current={isLast ? "page" : undefined}
                 >
