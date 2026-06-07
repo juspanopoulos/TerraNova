@@ -1,3 +1,6 @@
+/** Espaço extra entre o PageHero e o conteúdo da página Sobre */
+export const aboutHeroContentGap = "mt-12 sm:mt-14 md:mt-16";
+
 /** Espaço uniforme entre blocos da página Sobre (usar no wrapper pai; excluir AboutCta) */
 export const aboutPageStack = "flex flex-col gap-16 sm:gap-20 md:gap-24";
 
@@ -34,6 +37,14 @@ export const aboutSectionTitle =
 
 export const aboutCard =
   "rounded-2xl border border-verde-floresta/10 bg-white shadow-sm shadow-verde-floresta/[0.04]";
+
+/** Painel verde suave — mesmo visual do AboutIntro */
+export const aboutSoftPanel =
+  "relative overflow-hidden rounded-3xl bg-verde-floresta/5 ring-1 ring-inset ring-verde-floresta/10";
+
+/** Conteúdo interno do painel suave */
+export const aboutSoftPanelInner =
+  "flex h-full min-h-[11rem] flex-col p-5 sm:min-h-[12rem] sm:p-6";
 
 /** Card padrão da página Sobre — altura mínima e padding responsivos */
 export const aboutCardInner =
