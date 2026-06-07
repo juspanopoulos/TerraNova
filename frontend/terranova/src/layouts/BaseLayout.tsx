@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { siteHeaderSpacer } from "@/constants/layout";
-import { ROUTES } from "@/constants/routes";
+import { ROUTES, isNotFoundRoute } from "@/constants/routes";
 
 type BaseLayoutProps = {
   children: ReactNode;
@@ -13,7 +13,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
   const { pathname } = useLocation();
   const isHome = pathname === ROUTES.home;
   const isPlataforma = pathname.startsWith("/plataforma");
-  const hideSiteChrome = isHome || isPlataforma;
+  const hideSiteChrome = isHome || isPlataforma || isNotFoundRoute(pathname);
 
   return (
     <div
