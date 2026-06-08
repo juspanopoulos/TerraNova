@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="D0FF0FBF-A399-26E5-04E4-1117D2A377DF" containerWithKeyObject="D3DD10C4-5846-BEF5-E187-5DFBB209FFAA" localFKIndex="DE086121-270C-204B-637F-019B05196D82" name="fk_predicao_usuario">
+<sourceDDLFile>terra_nova_ddl_atualizado.sql</sourceDDLFile>
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:11:50 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<importedID>203805A6-8F01-00B0-E26A-6A8B81B54A5E</importedID>
+<referredTableLongName>TN_USUARIO</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>F82B4457-9761-B41B-19BC-70B58397DE3C</referredTableID>
+<keyObject>ADEEFBC8-BD14-F723-2D66-9E3BDC587DC2</keyObject>
+<referredKeyID>ADEEFBC8-BD14-F723-2D66-9E3BDC587DC2</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>id_usuario</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

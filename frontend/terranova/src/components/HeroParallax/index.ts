@@ -1,1 +1,0 @@
-export { HeroParallax } from './HeroParallax'

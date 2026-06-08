@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="TerraNova" id="4A2A2035-2B1B-3964-C4D4-3894FEC5C46E" version="3.5">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:09:15 UTC</createdTime>
+<ownerDesignName>TerraNova</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>4A2A2035-2B1B-3964-C4D4-3894FEC5C46E</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="412BEAE6-283A-2D11-72B7-7B0CA93158BC">
+<designStoragePath>C:\terra_nova_ddl_atualizado</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

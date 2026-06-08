@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_leitura_solo_area" directorySegmentName="seg_0" id="6F9F45E0-8474-537D-6181-0F3C83C5D3F0">
+<createdBy>User PC</createdBy>
+<createdTime>2026-06-07 20:18:14 UTC</createdTime>
+<generatorID>433014CE-689F-5750-66B2-130FB5EAB852</generatorID>
+<ownerDesignName>TerraNova</ownerDesignName>
+<engineerTo>
+<item key="A26E4555-FC35-D613-C731-4183C0202700" value="true"/>
+</engineerTo>
+<sourcePk>B7189ED1-993C-C054-10B2-B27F099C1A95</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>1038159A-D56B-E416-56E5-BE70E7C9FE89</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>E085187B-A558-9ABC-0961-CEB40595AAB3</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>
