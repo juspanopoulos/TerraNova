@@ -49,7 +49,7 @@ export function FaqSection() {
         ]}
         eyebrow="Central de ajuda"
         title="FAQ"
-        subtitle="Sobre a TerraNova, a plataforma e o monitoramento da propriedade."
+        subtitle="Encontre respostas para as dúvidas mais comuns antes de começar a usar a plataforma."
         aside={
           <FaqSearch
             query={query}

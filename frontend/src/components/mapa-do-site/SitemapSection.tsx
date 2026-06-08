@@ -29,7 +29,7 @@ export function SitemapSection() {
         ]}
         eyebrow="Indice do site"
         title="Mapa do site"
-        subtitle="Todas as paginas navegaveis do site institucional e da plataforma TerraNova."
+        subtitle="Navegue por todas as páginas e encontre rapidamente o que procura na plataforma."
       />
 
       <div
