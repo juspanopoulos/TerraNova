@@ -49,7 +49,7 @@ export function HomeClimate() {
           >
             <img
               src={cloudsImg}
-              alt="Nuvens sobre o horizonte"
+              alt="Nuvens cumulus iluminadas por luz dourada em céu campestre"
               className="absolute inset-0 h-full w-full object-cover object-center"
               loading="lazy"
             />

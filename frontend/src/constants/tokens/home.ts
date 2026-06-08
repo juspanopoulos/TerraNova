@@ -122,7 +122,7 @@ export const homeAlertsOverlayOpacity: HomeSectionOverlayOpacity = {
 
 export const homeGrowthOverlayOpacity: HomeSectionOverlayOpacity = {
   '--home-overlay-start': '1.00',
-  '--home-overlay-mid': '0.82',
+  '--home-overlay-mid': '0.20',
   '--home-overlay-end': '1.00',
 }
 

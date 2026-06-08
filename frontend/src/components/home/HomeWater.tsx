@@ -49,7 +49,7 @@ export function HomeWater() {
           >
             <img
               src={irrigacaoImg}
-              alt="Irrigação por aspersão ao entardecer no campo"
+              alt="Irrigação por aspersão ao amanhecer em campo sustentável"
               className="absolute inset-0 h-full w-full object-cover object-center"
               loading="lazy"
             />

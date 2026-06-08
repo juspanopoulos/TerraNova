@@ -10,9 +10,9 @@ import {
   Sprout,
   Waypoints,
 } from "lucide-react";
-import decidirComCalmaImg from "@/assets/images/sobre/decidir-com-calma.jpg";
-import noSeuTempoImg from "@/assets/images/sobre/no-seu-tempo.jpg";
-import verOQueImportaImg from "@/assets/images/sobre/ver-o-que-importa.jpg";
+import decidirComCalmaImg from "@/assets/images/sobre/decidir-com-calma.png";
+import noSeuTempoImg from "@/assets/images/sobre/no-seu-tempo.png";
+import verOQueImportaImg from "@/assets/images/sobre/ver-o-que-importa.png";
 
 export type PlatformModule = {
   id: string;
@@ -164,13 +164,13 @@ export const missionPillars: {
   {
     id: "territory",
     title: "Ver o que importa",
-    image: verOQueImportaImg,
+    image: decidirComCalmaImg,
     imageAlt: "Vista ampla de plantação verde",
   },
   {
     id: "clarity",
     title: "Decidir com calma",
-    image: decidirComCalmaImg,
+    image: verOQueImportaImg,
     imageAlt: "Campo dourado ao entardecer",
   },
   {

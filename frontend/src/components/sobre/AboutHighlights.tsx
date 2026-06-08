@@ -1,4 +1,4 @@
-import backgroundFoliage from "@/assets/hero/background2.png";
+import comoFuncionaImg from "@/assets/images/sobre/como-funciona.png";
 import {
   howItWorksCopy,
   howItWorksSteps,
@@ -29,9 +29,9 @@ export function AboutHighlights() {
       <div className={`${aboutContentGap} grid ${aboutGridGap} lg:grid-cols-2`}>
         <div className="relative min-h-[14rem] overflow-hidden rounded-2xl sm:min-h-[18rem] lg:min-h-[26rem]">
           <img
-            src={backgroundFoliage}
-            alt="Luz filtrada por folhas verdes"
-            className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+            src={comoFuncionaImg}
+            alt="Estrada em bifurcação ao amanhecer em paisagem rural"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
