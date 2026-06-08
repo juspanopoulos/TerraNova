@@ -126,26 +126,33 @@ def main():
             
             try:
                 id_area = int(input("Digite o ID da Área para análise preditiva (ex: 1): "))
-                tipo_modelo = 'PRODUTIVIDADE'
                 
-                print("\n[Log] Coletando histórico climático e dados de solo do Oracle...")
+                print("\n[Log] Lendo infraestrutura da fazenda no Oracle...")
+                time.sleep(1)
+                print("[Log] Extraindo última telemetria da NASA para a Área alvo...")
+                time.sleep(1)
+                print("[Log] Compilando heurística na Árvore de Decisão...")
                 time.sleep(1.5)
-                print(f"[Log] Processando modelo RandomForest_Agro (v1.2) para a Área {id_area}...")
-                time.sleep(1.5)
                 
-                # Simula o resultado de um cálculo complexo de IA para estimar a produtividade com base nos dados históricos e atuais
-                produtividade_estimada = 65.50 
+                resultado_ia = registrar_predicao_ia(conexao, id_area)
                 
-                sucesso = registrar_predicao_ia(conexao, id_area, tipo_modelo, produtividade_estimada)
-                
-                if sucesso:
-                    print("\n" + "*"*60)
+                if resultado_ia:
+                    print("\n" + "*"*65)
                     print("                RESULTADO DA PREDIÇÃO (IA)")
-                    print("*"*60)
-                    print(f"✅ Produtividade Estimada: {produtividade_estimada} toneladas.")
-                    print("📊 Nível de Confiança do Modelo: 92%")
-                    print("💾 Logs gravados com sucesso nas colunas CLOB do Oracle.")
-                    print("*"*60)
+                    print("*"*65)
+                    print(f"Produtividade Estimada: {resultado_ia['predicted_yield_tons']} toneladas.")
+                    print(f"Confiança Matemática do Modelo: {int(resultado_ia['confidence_score'] * 100)}%")
+                    
+                    if resultado_ia['risk_factors']:
+                        print("Fatores Biológicos de Risco Aplicados no Cálculo:")
+                        for risco in resultado_ia['risk_factors']:
+                            print(f"   ↳ {risco}")
+                    else:
+                        print("Condições Climáticas Ideais: Nenhuma penalidade aplicada.")
+                        
+                    print("-" * 65)
+                    print("[SUCESSO] Logs operacionais salvos na coluna CLOB (JSON) do banco.")
+                    print("*"*65)
             except ValueError:
                 print("\n[ERRO] O ID da área deve ser um número inteiro.")
             

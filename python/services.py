@@ -137,29 +137,92 @@ def gerar_relatorio_recomendacoes(conexao):
     finally:
         cursor.close()
 
-def registrar_predicao_ia(conexao, id_area, tipo_modelo, produtividade_estimada):
+def registrar_predicao_ia(conexao, id_area):
     if not conexao: return False
     
     cursor = conexao.cursor()
     try:
-        entrada_dict = {"features": ["temperatura", "umidade", "chuva", "qualidade_solo"], "area_alvo": id_area}
-        saida_dict = {"confidence_score": 0.92, "predicted_yield_tons": produtividade_estimada, "margin_error": 2.5}
+        # Busca o tamanho da Área e cruza com o clima mais recente (NASA) daquela área
+        cursor.execute("""
+            SELECT am.nr_area_hectares, dc.nr_temperatura, dc.nr_umidade, dc.nr_precipitacao
+            FROM TN_AREA_MONITORADA am
+            LEFT JOIN (
+                SELECT id_area, nr_temperatura, nr_umidade, nr_precipitacao
+                FROM (SELECT * FROM TN_DADO_CLIMATICO WHERE id_area = :1 ORDER BY dt_coleta DESC)
+                WHERE ROWNUM = 1
+            ) dc ON am.id_area = dc.id_area
+            WHERE am.id_area = :2
+        """, (id_area, id_area))
         
-        # Converte os dicionários Python para Strings JSON
+        resultado = cursor.fetchone()
+        
+        if not resultado:
+            print("\n[ERRO] Área não encontrada no banco de dados.")
+            return False
+            
+        hectares, temp, umidade, chuva = resultado
+        
+        if hectares is None:
+            print("\n[ERRO] A área não possui 'nr_area_hectares' cadastrado, impossível calcular produtividade.")
+            return False
+            
+        if temp is None:
+            print("\n[ALERTA] Nenhum dado climático da NASA encontrado! Rode a Opção 1 do menu primeiro.")
+            return False
+
+        chuva = 0.0 if chuva is None else float(chuva)
+        # MOTOR PREDITIVO
+        # parametro: safra ideal da Soja: ~3.5 toneladas por hectare
+        produtividade_base = hectares * 3.5 
+        fator_clima = 1.0
+        alertas_ia = []
+        
+        # Penalidade por Temperatura (Soja ideal: 20ºC a 30ºC)
+        if temp < 20.0:
+            fator_clima -= 0.15
+            alertas_ia.append(f"Estresse por frio detectado ({temp}°C)")
+        elif temp > 30.0:
+            fator_clima -= 0.20
+            alertas_ia.append(f"Estresse térmico detectado ({temp}°C)")
+            
+        # Penalidade por Umidade e Chuva
+        if umidade < 60.0 and chuva < 2.0:
+            fator_clima -= 0.10
+            alertas_ia.append("Risco severo de déficit hídrico")
+
+        # Calcula o resultado final da produtividade e o score de confiança da IA
+        produtividade_realista = round(produtividade_base * fator_clima, 2)
+        score_confianca = round(0.95 * fator_clima, 2) # Confiança da IA cai se o clima for muito desfavorável
+
+        # Monta o JSON para a coluna CLOB do Oracle com as variáveis
+        entrada_dict = {
+            "area_hectares": hectares,
+            "temperatura_nasa": temp,
+            "umidade_nasa": umidade,
+            "precipitacao_nasa": chuva
+        }
+        
+        saida_dict = {
+            "confidence_score": score_confianca,
+            "predicted_yield_tons": produtividade_realista,
+            "risk_factors": alertas_ia
+        }
+        
         entrada_json = json.dumps(entrada_dict)
         saida_json = json.dumps(saida_dict)
         
-        # Inserção respeitando a constraint de CHECK (PRODUTIVIDADE ou IRRIGACAO)
+        # Insere no banco os dados processados pela IA, para histórico e análises futuras
         cursor.execute("""
             INSERT INTO TN_PREDICAO_IA 
             (id_area, ds_tipo_modelo, ds_nome_modelo, ds_versao_modelo, ds_entrada_json, ds_saida_json, nr_produtividade_prevista, ds_status) 
-            VALUES (:1, :2, 'RandomForest_Agro', 'v1.2', :3, :4, :5, 'SUCESSO')
-        """, (id_area, tipo_modelo, entrada_json, saida_json, produtividade_estimada))
+            VALUES (:1, 'PRODUTIVIDADE', 'Agro_Predictive_Tree', 'v2.0_RealData', :2, :3, :4, 'SUCESSO')
+        """, (id_area, entrada_json, saida_json, produtividade_realista))
         
         conexao.commit()
-        return True
+        return saida_dict
+        
     except Exception as e:
-        print(f"\n[ERRO] Falha ao registrar predição de IA: {e}")
+        print(f"\n[ERRO] Falha na execução da IA: {e}")
         return False
     finally:
         cursor.close()
