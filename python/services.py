@@ -162,10 +162,15 @@ def registrar_predicao_ia(conexao, id_area):
             
         hectares, temp, umidade, chuva = resultado
         
+        if hectares is None:
+            print("\n[ERRO] A área não possui 'nr_area_hectares' cadastrado, impossível calcular produtividade.")
+            return False
+            
         if temp is None:
             print("\n[ALERTA] Nenhum dado climático da NASA encontrado! Rode a Opção 1 do menu primeiro.")
             return False
 
+        chuva = 0.0 if chuva is None else float(chuva)
         # MOTOR PREDITIVO
         # parametro: safra ideal da Soja: ~3.5 toneladas por hectare
         produtividade_base = hectares * 3.5 
