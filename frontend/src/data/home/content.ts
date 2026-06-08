@@ -274,6 +274,6 @@ export const homeCtaCopy = {
 
 export const homeCtaLinks = [
   { label: "Acessar plataforma", to: ROUTES.plataforma, primary: true },
-  { label: "Conheça a TerraNova", to: ROUTES.sobre, primary: false },
+  { label: "Conheça TerraNova", to: ROUTES.sobre, primary: false },
   { label: "Contato", to: ROUTES.contato, primary: false },
 ] as const;
