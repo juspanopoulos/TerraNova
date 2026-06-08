@@ -14,6 +14,7 @@ Backend RESTful do projeto TerraNova, criado com Java 25, Quarkus e JDBC/Oracle.
 - Jakarta REST (`jakarta.ws.rs`)
 - Jakarta Validation (`jakarta.validation`)
 - JDBC Oracle
+- Quarkus REST Client
 - Agroal DataSource
 - OpenAPI/Swagger
 
@@ -35,6 +36,26 @@ mvn quarkus:dev
 mvn clean package
 ```
 
+## Variaveis de ambiente
+
+Crie um `.env` local a partir de [.env.example](.env.example), ou configure as variaveis no servidor:
+
+```text
+ORACLE_JDBC_URL=jdbc:oracle:thin:@//oracle.fiap.com.br:1521/ORCL
+ORACLE_USER=seu_usuario_oracle
+ORACLE_PASSWORD=sua_senha_oracle
+IA_BASE_URL=http://localhost:5000
+```
+
+## OpenAPI
+
+Com a aplicacao rodando:
+
+```text
+http://localhost:8080/q/swagger-ui
+http://localhost:8080/q/openapi
+```
+
 ## Smoke test
 
 ```http
@@ -50,7 +71,8 @@ Resposta esperada:
 }
 ```
 
-## Observacao
+## Observacoes
 
-O ambiente local desta maquina ainda nao possui Maven no PATH e o Java disponivel e 17.
-Por isso, a validacao de build deve ser feita em ambiente com JDK 25 e Maven.
+- O `pom.xml` bloqueia compilacao fora do Java 25.
+- Nesta sessao, o JDK 25 existe em `C:\Program Files\Java\jdk-25.0.2`, mas o PATH ainda aponta para Java 17.
+- Maven ainda nao esta disponivel no PATH, entao a validacao de build deve ser feita depois de instalar/configurar Maven.
