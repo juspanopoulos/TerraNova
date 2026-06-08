@@ -38,34 +38,46 @@ O frontend do TerraNova é a interface web do projeto: um site institucional e u
 
 ```
 frontend/
+├── docs/                    # Documentação técnica (ex.: integração backend)
 ├── public/                  # Arquivos estáticos servidos na raiz
+│   └── logos/               # Logo público (PDF e URLs absolutas)
 ├── src/
 │   ├── assets/              # Imagens, logos, ícones, fontes e vídeos
-│   │   ├── hero/            # Fundos do hero (home e sobre)
+│   │   ├── hero/            # Fundos parallax (home e sobre)
 │   │   ├── icons/           # Favicon e ícones do projeto
 │   │   ├── images/          # Imagens por seção (home, equipe, sobre, login, 404)
-│   │   ├── logos/           # Logotipos (colorido e branco)
+│   │   ├── logos/           # Logotipos (colorido e branco) — bundle da UI
 │   │   ├── fonts/           # Fontes locais (se houver)
 │   │   └── videos/          # Vídeos do projeto
 │   ├── components/          # Componentes reutilizáveis
-│   │   ├── dashboard/       # Componentes da plataforma
-│   │   ├── equipe/          # Componentes da página de equipe
-│   │   ├── faq/             # Componentes do FAQ
-│   │   ├── home/            # Componentes da home
-│   │   └── ...              # Navbar, Footer, breadcrumbs, etc.
-│   ├── constants/           # Rotas, tokens de layout e configurações
+│   │   ├── contato/         # Formulário e seção de contato
+│   │   ├── dashboard/       # Componentes da plataforma (views, sidebar, auth)
+│   │   ├── equipe/          # Listagem e cards da equipe
+│   │   ├── faq/             # Acordeão e explorador do FAQ
+│   │   ├── home/            # Seções da página inicial
+│   │   ├── mapa-do-site/    # Mapa do site
+│   │   ├── sobre/           # Seções da página Sobre
+│   │   ├── HeroParallax/    # Hero animado da home
+│   │   └── ...              # Navbar, HomeNavbar, Footer, PageHero, breadcrumbs
+│   ├── constants/           # Rotas, layout do dashboard e tokens de UI
+│   │   └── tokens/          # Classes Tailwind reutilizáveis por página
 │   ├── context/             # Context API (Dashboard, Assistente)
-│   ├── data/                # Conteúdo estático e mocks
-│   ├── hooks/               # Hooks customizados (animações, dados)
+│   ├── data/                # Conteúdo estático (.ts) e JSON da equipe
+│   │   ├── equipe/
+│   │   │   ├── team.json    # Manifesto com IDs dos membros
+│   │   │   └── members/     # Um JSON por integrante
+│   │   ├── home/            # Textos e módulos da home
+│   │   └── sobre/           # Textos e módulos da página Sobre
+│   ├── hooks/               # Hooks customizados (animações, equipe)
 │   ├── layouts/             # BaseLayout e DashboardLayout
-│   ├── lib/                 # Utilitários (auth, PDF, scroll, dashboard)
-│   ├── pages/               # Páginas por rota
-│   │   └── plataforma/      # Páginas do dashboard
+│   ├── lib/                 # Auth, PDF, scroll, helpers do dashboard
+│   ├── pages/               # Wrappers finos por rota
+│   │   └── plataforma/      # Páginas do dashboard (delegam para views)
 │   ├── routes/              # Configuração central de rotas (AppRoutes)
-│   ├── services/            # Serviços de dados (ex.: equipe)
+│   ├── services/            # Carregamento assíncrono de dados (equipe)
 │   ├── styles/              # CSS global e módulos
 │   ├── types/               # Tipos TypeScript de domínio
-│   └── utils/               # Funções auxiliares
+│   └── utils/               # Funções auxiliares (DOM, format, assets)
 ├── index.html
 ├── package.json
 ├── vercel.json              # Configuração de deploy na Vercel
@@ -133,24 +145,43 @@ O projeto já inclui `vercel.json` com suporte a SPA (rewrite para `index.html`)
 
 | Arquivo | Caminho | Uso |
 |---------|---------|-----|
-| Logo colorido | `src/assets/logos/logo-colorido.png` | Navbar, sidebar, login |
+| Logo colorido (UI) | `src/assets/logos/logo-colorido.png` | Navbar, sidebar, login, componentes |
+| Logo colorido (público) | `public/logos/logo-colorido.png` | PDF e URLs absolutas (`/logos/...`) |
 | Logo branco | `src/assets/logos/logo-branco.png` | Fundos escuros |
 | Favicon | `src/assets/icons/favicon.ico` | Aba do navegador |
 
 ### Imagens por seção
 
-| Seção | Pasta | Exemplos |
-|-------|-------|----------|
-| Home | `src/assets/images/home/` | germinação, trigo, irrigação, alertas ambientais |
-| Sobre | `src/assets/images/sobre/` | broto, decisão com calma, ver o que importa |
-| Equipe | `src/assets/images/equipe/` | Fotos dos integrantes |
-| Login | `src/assets/images/login/` | Fundo da tela de autenticação |
-| 404 | `src/assets/images/not-found/` | Ilustrações desktop e mobile |
-| Hero | `src/assets/hero/` | Fundos parallax (farm, backgrounds) |
+| Seção | Pasta | Arquivos em uso |
+|-------|-------|-----------------|
+| Home | `src/assets/images/home/` | `germinacao.jpg`, `desenvolvimento.jpg`, `trigo.jpg`, `nuvens.jpg`, `irrigacao.jpeg`, `chuva-fazenda.jpg` |
+| Sobre | `src/assets/images/sobre/` | `broto.png`, `como-funciona.png`, `decidir-com-calma.png`, `no-seu-tempo.png`, `ver-o-que-importa.png` |
+| Equipe | `src/assets/images/equipe/` | Fotos nomeadas pelo `id` de cada membro (`.jpg` ou `.png`) |
+| Login | `src/assets/images/login/` | `background6.jpeg` |
+| 404 | `src/assets/images/not-found/` | `404.png`, `404-mobile.png` |
+| Hero | `src/assets/hero/` | `farm.jpeg`, `background2.png` … `background5.png` |
 
 ### Ícones da interface
 
 Os ícones utilizados na interface vêm da biblioteca **[Lucide React](https://lucide.dev/)** (navegação, dashboard, FAQ, contato, clima, alertas, etc.). Ícones customizados de redes sociais (LinkedIn, GitHub) estão em `src/components/equipe/TeamSocialLinks.tsx`.
+
+---
+
+## Dados estáticos e JSON da equipe
+
+O conteúdo institucional e os mocks do dashboard ficam em arquivos **TypeScript** em `src/data/` (`faq.ts`, `contato.ts`, `mockDashboard.ts`, `home/content.ts`, `sobre/platform.ts`, etc.) e são importados estaticamente pelos componentes.
+
+A página **Equipe** é a única que usa **JSON**. O carregamento é **assíncrono** via `src/services/equipeService.ts` (nunca import estático de `.json` nos componentes):
+
+| Arquivo | Função |
+|---------|--------|
+| `data/equipe/team.json` | Lista de `memberIds` (manifesto) |
+| `data/equipe/members/*.json` | Dados de cada integrante (`id`, `name`, `rm`, `turma`, `role`, `bio`, `social`) |
+| `assets/images/equipe/{id}.*` | Foto resolvida pelo mesmo `id` |
+
+Fluxo: `useTeamMembers` → `loadTeamMembers()` → `await import("team.json")` + `import.meta.glob` para membros e fotos.
+
+Para adicionar um integrante: crie `members/{id}.json`, inclua o `id` em `team.json` e adicione a foto em `assets/images/equipe/`.
 
 ---
 
