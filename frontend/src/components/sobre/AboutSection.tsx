@@ -31,7 +31,7 @@ export function AboutSection() {
         ]}
         eyebrow="Institucional"
         title="Sobre"
-        subtitle="Uma base digital para aproximar pessoas, território e boas ideias."
+        subtitle="Conheça a ideia por trás do TerraNova e por que acreditamos que cuidar da propriedade pode ser mais simples."
       />
 
       <div

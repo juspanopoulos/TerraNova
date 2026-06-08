@@ -26,18 +26,18 @@ export const faqCategories: FaqCategory[] = [
     id: "sobre",
     label: "Sobre",
     description:
-      "O essencial sobre o que é a TerraNova e para quem ela foi pensada.",
+      "O essencial sobre o que é o TerraNova e para quem ela foi pensada.",
     icon: Leaf,
     items: [
       {
         id: "o-que-e",
-        question: "O que é a TerraNova?",
+        question: "O que é o TerraNova?",
         answer:
-          "A TerraNova é uma plataforma digital para acompanhar a propriedade rural com mais clareza. Ela reúne clima, solo, consumo de água, previsão de colheitas, alertas ambientais e anotações de campo — tudo num painel pensado para quem precisa decidir com calma, sem perder tempo caçando informação.",
+          "O TerraNova é uma plataforma digital para acompanhar a propriedade rural com mais clareza. Ela reúne clima, solo, consumo de água, previsão de colheitas, alertas ambientais e anotações de campo, tudo num painel pensado para quem precisa decidir com calma, sem perder tempo caçando informação.",
       },
       {
         id: "publico",
-        question: "Para quem a TerraNova foi pensada?",
+        question: "Para quem o TerraNova foi pensada?",
         answer:
           "Para produtores, gestores e equipes que cuidam de propriedades rurais e querem enxergar o território de forma integrada. A interface prioriza leitura rápida e linguagem acessível, sem exigir que você seja especialista em tecnologia ou em análise de dados.",
       },
@@ -45,7 +45,7 @@ export const faqCategories: FaqCategory[] = [
         id: "diferencial",
         question: "O que muda em relação a planilhas e apps separados?",
         answer:
-          "Em vez de alternar entre ferramentas, sensores e anotações soltas, a TerraNova centraliza indicadores e alertas num único fluxo. Você abre a Visão Geral, vê o que merece atenção primeiro e aprofunda nos módulos de clima, solo, água ou colheitas conforme a necessidade do dia.",
+          "Em vez de alternar entre ferramentas, sensores e anotações soltas, o TerraNova centraliza indicadores e alertas num único fluxo. Você abre a Visão Geral, vê o que merece atenção primeiro e aprofunda nos módulos de clima, solo, água ou colheitas conforme a necessidade do dia.",
       },
     ],
   },
@@ -66,7 +66,7 @@ export const faqCategories: FaqCategory[] = [
         id: "assistente",
         question: "Como funciona o Assistente TerraNova?",
         answer:
-          "É um assiste de conversa integrado à plataforma. Você pode perguntar sobre os dados da propriedade, pedir interpretações de gráficos ou tirar dúvidas sobre manejo — sempre com base no contexto do que está monitorado no painel.",
+          "É um assiste de conversa integrado à plataforma. Você pode perguntar sobre os dados da propriedade, pedir interpretações de gráficos ou tirar dúvidas sobre manejo, sempre com base no contexto do que está monitorado no painel.",
       },
       {
         id: "alertas",
@@ -78,7 +78,7 @@ export const faqCategories: FaqCategory[] = [
         id: "anotacoes",
         question: "Posso registrar observações de campo?",
         answer:
-          "Sim. O módulo de Anotações permite registrar decisões, visitas ao talhão e aprendizados com editor de texto rico. O histórico fica organizado para consultar depois — útil para comparar safras e entender o que funcionou.",
+          "Sim. O módulo de Anotações permite registrar decisões, visitas ao talhão e aprendizados com editor de texto rico. O histórico fica organizado para consultar depois, útil para comparar safras e entender o que funcionou.",
       },
       {
         id: "recortes",
@@ -99,7 +99,7 @@ export const faqCategories: FaqCategory[] = [
         id: "origem-dados",
         question: "De onde vêm os dados climáticos e de solo?",
         answer:
-          "A plataforma combina leituras de sensores instalados na propriedade com integrações configuráveis nas Configurações. Clima, umidade do solo e consumo hídrico são atualizados conforme novos dados chegam — você não precisa importar arquivos manualmente.",
+          "lorem ipsum",
       },
       {
         id: "setores",
@@ -111,7 +111,7 @@ export const faqCategories: FaqCategory[] = [
         id: "colheitas",
         question: "Como funciona a Previsão de Colheitas?",
         answer:
-          "O módulo cruza dados históricos e leituras atuais para estimar janelas de maturação e colheita. Isso ajuda a planejar logística, mão de obra e comercialização com mais antecedência.",
+          "lorem ipsum",
       },
     ],
   },
@@ -126,7 +126,7 @@ export const faqCategories: FaqCategory[] = [
         id: "acesso",
         question: "Como acesso a plataforma?",
         answer:
-          "Pelo menu Plataforma no site ou pela rota /plataforma. Na primeira visita, você passa pela tela de login e pode cadastrar a propriedade nas Configurações. Depois disso, o dashboard fica disponível com todos os módulos.",
+          "Pelo menu Plataforma no site. Na primeira visita, você passa pela tela de login e pode cadastrar a propriedade. Depois disso, o dashboard fica disponível com todos os módulos.",
       },
       {
         id: "configuracao",
@@ -138,7 +138,7 @@ export const faqCategories: FaqCategory[] = [
         id: "seguranca",
         question: "Meus dados ficam seguros?",
         answer:
-          "As informações da propriedade ficam associadas à sua conta e são exibidas apenas dentro do seu painel. Recomendamos manter credenciais de acesso em sigilo e revisar periodicamente quem tem permissão na operação.",
+          "lorem ipsum",
       },
     ],
   },
@@ -153,13 +153,13 @@ export const faqCategories: FaqCategory[] = [
         id: "nao-encontrei",
         question: "Não encontrei minha pergunta aqui. E agora?",
         answer:
-          "Explore a página Sobre para entender a proposta da TerraNova em detalhe, ou conheça a Equipe por trás do projeto. Se preferir testar na prática, acesse a plataforma e navegue pelos módulos — muitas dúvidas se resolvem vendo os dados no contexto real.",
+          "Se a resposta não está aqui, entre em contato pela [Contato]. Envie sua dúvida e a equipe TerraNova responde o mais breve possível.",
       },
       {
         id: "feedback",
         question: "Posso sugerir melhorias ou novos módulos?",
         answer:
-          "Sim. A TerraNova está em evolução contínua. Use as Anotações para registrar ideias durante o uso e compartilhe feedback com a equipe — isso ajuda a priorizar o que faz diferença no campo.",
+          "Sim! Adoramos receber ideias de quem usa a plataforma. Acesse a [Contato] e conte o que faria diferença no seu dia a dia no campo.",
       },
     ],
   },

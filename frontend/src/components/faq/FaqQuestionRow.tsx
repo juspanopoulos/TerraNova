@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import { copyOnLight } from "@/constants/layout";
+import { FaqAnswer } from "@/components/faq/FaqAnswer";
 import {
   faqQuestionAnswerGrid,
   faqQuestionNumber,
@@ -99,9 +99,7 @@ export function FaqQuestionRow({
         <div className="overflow-hidden">
           <div className={faqQuestionAnswerGrid}>
             <div aria-hidden />
-            <p className={`${copyOnLight} max-w-2xl break-words text-sm sm:text-base`}>
-              {answer}
-            </p>
+            <FaqAnswer answer={answer} />
           </div>
         </div>
       </div>

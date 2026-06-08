@@ -41,8 +41,8 @@ export function AboutCta() {
               <p className={aboutEyebrow}>Próximo passo</p>
               <h2 className={aboutSectionTitle}>Entre na plataforma</h2>
               <p className={`${copyOnLight} mt-4 max-w-md lg:mx-0 mx-auto`}>
-                O painel reúne clima, solo, água e alertas — tudo num só lugar.
-                Explore os módulos e veja como a TerraNova organiza o dia a dia no
+                O painel reúne clima, solo, água e alertas, tudo num só lugar.
+                Explore os módulos e veja como o TerraNova organiza o dia a dia no
                 campo.
               </p>
             </div>

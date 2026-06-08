@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import farmHero from "@/assets/hero/farm.jpeg";
+import noSeuTempoHero from "@/assets/images/sobre/no-seu-tempo.png";
 import {
   PageBreadcrumb,
   type PageBreadcrumbItem,
@@ -30,9 +30,9 @@ export function PageHero({
   return (
     <section className="relative overflow-hidden bg-[#2d5238] text-bege-natural">
       <img
-        src={farmHero}
+        src={noSeuTempoHero}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover object-[center_42%]"
+        className="absolute inset-0 h-full w-full object-cover object-center"
         aria-hidden
       />
       <div

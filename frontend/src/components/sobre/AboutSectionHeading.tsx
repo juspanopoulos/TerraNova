@@ -1,5 +1,5 @@
 import { copyOnLight } from "@/constants/layout";
-import { aboutEyebrow, aboutSectionTitle } from "@/constants/tokens/about";
+import { aboutEyebrow, aboutSectionDescription, aboutSectionHeadingTitle } from "@/constants/tokens/about";
 
 type AboutSectionHeadingProps = {
   eyebrow: string;
@@ -15,9 +15,9 @@ export function AboutSectionHeading({
   return (
     <header>
       <p className={aboutEyebrow}>{eyebrow}</p>
-      <h2 className={aboutSectionTitle}>{title}</h2>
+      <h2 className={aboutSectionHeadingTitle}>{title}</h2>
       {description ? (
-        <p className={`${copyOnLight} mt-4 max-w-2xl sm:mt-5`}>{description}</p>
+        <p className={`${copyOnLight} ${aboutSectionDescription}`}>{description}</p>
       ) : null}
     </header>
   );

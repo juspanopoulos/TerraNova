@@ -173,6 +173,19 @@ export function hasFieldErrors<T extends object>(errors: T): boolean {
   return Object.keys(errors).length > 0;
 }
 
+/** Valida um único campo do perfil da empresa (útil com React Hook Form). */
+export function validateCompanyFieldValue(
+  key: keyof CompanyProfile,
+  company: CompanyProfile,
+): string | undefined {
+  return validateCompanyProfile(company)[key];
+}
+
+/** Adapta validadores string para regras `validate` do React Hook Form. */
+export function toFieldValidator(validate: (value: string) => string | undefined) {
+  return (value: string) => validate(value) ?? true;
+}
+
 export function formatStreetAddress(company: Pick<CompanyProfile, "street" | "streetNumber" | "neighborhood">) {
   const parts = [
     company.street.trim(),

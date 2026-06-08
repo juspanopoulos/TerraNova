@@ -7,6 +7,7 @@ export type TeamMemberData = {
   id: string;
   name: string;
   rm: string;
+  turma: string;
   role: string;
   bio: string;
   social: TeamMemberSocial;

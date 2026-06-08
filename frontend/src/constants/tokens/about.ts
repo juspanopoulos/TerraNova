@@ -35,6 +35,14 @@ export const aboutEyebrow =
 export const aboutSectionTitle =
   "mt-3 max-w-3xl text-2xl font-bold leading-tight tracking-[-0.018em] text-preto-suave sm:text-3xl";
 
+/** Parágrafo introdutório abaixo do título — mais largo no desktop para menos quebras */
+export const aboutSectionDescription =
+  "mt-4 max-w-2xl sm:mt-5 lg:max-w-4xl xl:max-w-5xl";
+
+/** Título em blocos com parágrafo longo (Mission, Platform) */
+export const aboutSectionHeadingTitle =
+  `${aboutSectionTitle} lg:max-w-5xl xl:max-w-6xl`;
+
 export const aboutCard =
   "rounded-2xl border border-verde-floresta/10 bg-white shadow-sm shadow-verde-floresta/[0.04]";
 

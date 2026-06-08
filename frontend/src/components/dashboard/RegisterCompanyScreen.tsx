@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthBrandHeader } from "@/components/dashboard/AuthBrandHeader";
-import { CompanyFieldsGrid } from "@/components/dashboard/CompanyFieldInput";
+import { CompanyFieldsGridForm } from "@/components/dashboard/CompanyFieldInput";
 import { authLinkClass } from "@/constants/tokens/authForm";
 import { btnClick } from "@/constants/dashboard";
 import { ROUTES } from "@/constants/routes";
-import { COMPANY_FIELDS, updateCompanyField } from "@/lib/dashboard/companyFields";
+import { COMPANY_FIELDS } from "@/lib/dashboard/companyFields";
 import {
   hasFieldErrors,
   validateCompanyProfile,
-  type CompanyFieldErrors,
 } from "@/lib/dashboard/authValidation";
 import type { CompanyProfile } from "@/types/dashboard";
 
@@ -23,29 +23,37 @@ export function RegisterCompanyScreen({
   onBack: () => void;
   onSubmit: (company: CompanyProfile) => void;
 }) {
-  const [draft, setDraft] = useState<CompanyProfile>(initialCompany);
-  const [errors, setErrors] = useState<CompanyFieldErrors>({});
-  const [submitted, setSubmitted] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    getValues,
+    setError,
+    formState: { errors, isSubmitting, submitCount },
+  } = useForm<CompanyProfile>({
+    defaultValues: initialCompany,
+    mode: "onTouched",
+  });
 
-  const updateField = (key: keyof CompanyProfile, value: string) => {
-    setDraft((current) => updateCompanyField(current, key, value));
-    if (errors[key]) {
-      setErrors((current) => {
-        const next = { ...current };
-        delete next[key];
-        return next;
-      });
+  useEffect(() => {
+    reset(initialCompany);
+  }, [initialCompany, reset]);
+
+  const onFormSubmit = (data: CompanyProfile) => {
+    const fieldErrors = validateCompanyProfile(data);
+    if (hasFieldErrors(fieldErrors)) {
+      (Object.entries(fieldErrors) as [keyof CompanyProfile, string][]).forEach(
+        ([key, message]) => {
+          setError(key, { type: "manual", message });
+        },
+      );
+      return;
     }
+
+    onSubmit(data);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    const nextErrors = validateCompanyProfile(draft);
-    setErrors(nextErrors);
-    if (hasFieldErrors(nextErrors)) return;
-    onSubmit(draft);
-  };
+  const hasVisibleErrors = submitCount > 0 && hasFieldErrors(errors);
 
   return (
     <div className="w-full max-w-2xl shrink-0 rounded-xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
@@ -57,15 +65,15 @@ export function RegisterCompanyScreen({
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-        <CompanyFieldsGrid
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" noValidate>
+        <CompanyFieldsGridForm
           fields={COMPANY_FIELDS}
-          draft={draft}
+          control={control}
+          getValues={getValues}
           errors={errors}
-          onChange={updateField}
         />
 
-        {submitted && hasFieldErrors(errors) && (
+        {hasVisibleErrors && (
           <p className="text-center text-sm font-medium text-red-600" role="alert">
             Corrija os campos destacados antes de continuar.
           </p>
@@ -82,7 +90,8 @@ export function RegisterCompanyScreen({
           </button>
           <button
             type="submit"
-            className={`${btnClick} rounded-lg bg-verde-floresta px-6 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90 sm:min-w-48`}
+            disabled={isSubmitting}
+            className={`${btnClick} rounded-lg bg-verde-floresta px-6 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90 disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-48`}
           >
             Concluir cadastro
           </button>

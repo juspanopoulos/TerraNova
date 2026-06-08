@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AuthBrandHeader } from "@/components/dashboard/AuthBrandHeader";
@@ -12,13 +13,31 @@ import {
 import { btnClick } from "@/constants/dashboard";
 import { ROUTES } from "@/constants/routes";
 import {
-  hasFieldErrors,
   PASSWORD_RULES_HINT,
-  validateLoginForm,
-  validateRegisterStep1,
-  type AuthFieldErrors,
+  toFieldValidator,
+  validateEmail,
+  validateFullName,
+  validatePassword,
 } from "@/lib/dashboard/authValidation";
 import type { AuthMode, RegisterCredentials } from "@/types/dashboard";
+
+type AuthFormValues = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
+const authFormDefaultValues: AuthFormValues = {
+  fullName: "",
+  email: "",
+  password: "",
+};
+
+function fieldClass(hasError: boolean, extra = "") {
+  return [authInputClass, extra, hasError ? authInputErrorClass : ""]
+    .filter(Boolean)
+    .join(" ");
+}
 
 export function LoginScreen({
   mode,
@@ -31,81 +50,68 @@ export function LoginScreen({
   onLogin: () => void;
   onRegisterStep1: (credentials: RegisterCredentials) => void;
 }) {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<AuthFieldErrors>({});
-  const [submitted, setSubmitted] = useState(false);
+  const isRegister = mode === "register";
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<AuthFormValues>({
+    defaultValues: authFormDefaultValues,
+    mode: "onTouched",
+  });
 
   useEffect(() => {
-    if (mode === "login") {
-      setFullName("");
-      setErrors({});
-      setSubmitted(false);
-    }
-  }, [mode]);
+    reset(authFormDefaultValues);
+    setShowPassword(false);
+  }, [mode, reset]);
 
-  const clearError = (field: keyof AuthFieldErrors) => {
-    if (!errors[field]) return;
-    setErrors((current) => {
-      const next = { ...current };
-      delete next[field];
-      return next;
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-
-    const nextErrors =
-      mode === "login"
-        ? validateLoginForm(email, password)
-        : validateRegisterStep1(fullName, email, password);
-
-    setErrors(nextErrors);
-    if (hasFieldErrors(nextErrors)) return;
-
-    if (mode === "login") {
-      onLogin();
+  const onSubmit = (data: AuthFormValues) => {
+    if (isRegister) {
+      onRegisterStep1({
+        fullName: data.fullName.trim(),
+        email: data.email.trim(),
+        password: data.password,
+      });
       return;
     }
-    onRegisterStep1({ fullName: fullName.trim(), email: email.trim(), password });
+
+    onLogin();
   };
 
   return (
     <div className="w-full max-w-md shrink-0 rounded-xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
-        <AuthBrandHeader />
-        <h1 className="-mt-4 mb-6 text-center text-2xl font-bold text-preto-suave">
-          {mode === "login" ? "Acesse sua propriedade" : "Crie sua conta"}
-        </h1>
-        {mode === "register" && (
-          <p className="-mt-4 mb-6 text-center text-sm text-preto-suave/55">
-            Depois você informará os dados da empresa e da fazenda.
-          </p>
-        )}
-      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-        {mode === "register" && (
+      <AuthBrandHeader />
+      <h1 className="-mt-4 mb-6 text-center text-2xl font-bold text-preto-suave">
+        {isRegister ? "Crie sua conta" : "Acesse sua propriedade"}
+      </h1>
+      {isRegister && (
+        <p className="-mt-4 mb-6 text-center text-sm text-preto-suave/55">
+          Depois você informará os dados da empresa e da fazenda.
+        </p>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        {isRegister && (
           <label className="block">
             <span className={authLabelClass}>Nome</span>
             <input
               type="text"
               autoComplete="name"
-              value={fullName}
-              onChange={(e) => {
-                setFullName(e.target.value);
-                clearError("fullName");
-              }}
-              className={[authInputClass, errors.fullName ? authInputErrorClass : ""].join(" ")}
               placeholder="Maria Silva"
+              className={fieldClass(Boolean(errors.fullName))}
               aria-invalid={Boolean(errors.fullName)}
+              aria-describedby={errors.fullName ? "auth-fullName-error" : undefined}
+              {...register("fullName", {
+                validate: toFieldValidator(validateFullName),
+              })}
             />
-            {(submitted || errors.fullName) && errors.fullName && (
-              <p className={authErrorClass} role="alert">
-                {errors.fullName}
+            {errors.fullName ? (
+              <p id="auth-fullName-error" className={authErrorClass} role="alert">
+                {errors.fullName.message}
               </p>
-            )}
+            ) : null}
           </label>
         )}
         <label className="block">
@@ -113,73 +119,70 @@ export function LoginScreen({
           <input
             type="email"
             autoComplete="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              clearError("email");
-            }}
-            className={[authInputClass, errors.email ? authInputErrorClass : ""].join(" ")}
             placeholder="produtor@terranova.app"
+            className={fieldClass(Boolean(errors.email))}
             aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? "auth-email-error" : undefined}
+            {...register("email", {
+              validate: toFieldValidator(validateEmail),
+            })}
           />
-          {(submitted || errors.email) && errors.email && (
-            <p className={authErrorClass} role="alert">
-              {errors.email}
+          {errors.email ? (
+            <p id="auth-email-error" className={authErrorClass} role="alert">
+              {errors.email.message}
             </p>
-          )}
+          ) : null}
         </label>
         <label className="block">
           <span className={authLabelClass}>Senha</span>
           <div className="relative mt-1.5">
             <input
               type={showPassword ? "text" : "password"}
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                clearError("password");
-              }}
-              className={[
-                authInputClass,
-                "mt-0 pr-11",
-                errors.password ? authInputErrorClass : "",
-              ].join(" ")}
+              autoComplete={isRegister ? "new-password" : "current-password"}
               placeholder="••••••••"
+              className={fieldClass(Boolean(errors.password), "mt-0 pr-11")}
               aria-invalid={Boolean(errors.password)}
+              aria-describedby={errors.password ? "auth-password-error" : undefined}
+              {...register("password", {
+                validate: toFieldValidator((value) =>
+                  validatePassword(value, { strict: isRegister }),
+                ),
+              })}
             />
             <button
               type="button"
-              onClick={() => setShowPassword((v) => !v)}
+              onClick={() => setShowPassword((value) => !value)}
               className={`${btnClick} absolute top-1/2 right-3 -translate-y-1/2 rounded-md p-1 text-preto-suave/45 hover:text-verde-floresta`}
               aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
             >
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
-          {mode === "register" && !errors.password && (
+          {isRegister && !errors.password && (
             <p className="mt-1.5 text-xs text-preto-suave/50">{PASSWORD_RULES_HINT}</p>
           )}
-          {(submitted || errors.password) && errors.password && (
-            <p className={authErrorClass} role="alert">
-              {errors.password}
+          {errors.password ? (
+            <p id="auth-password-error" className={authErrorClass} role="alert">
+              {errors.password.message}
             </p>
-          )}
+          ) : null}
         </label>
         <button
           type="submit"
-          className={`${btnClick} w-full rounded-lg bg-verde-floresta px-4 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90`}
+          disabled={isSubmitting}
+          className={`${btnClick} w-full rounded-lg bg-verde-floresta px-4 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90 disabled:cursor-not-allowed disabled:opacity-60`}
         >
-          {mode === "login" ? "Entrar no dashboard" : "Continuar cadastro"}
+          {isRegister ? "Continuar cadastro" : "Entrar no dashboard"}
         </button>
       </form>
       <p className="mt-6 text-center text-sm text-preto-suave/55">
-        {mode === "login" ? "Ainda não tem conta?" : "Já possui conta?"}{" "}
+        {isRegister ? "Já possui conta?" : "Ainda não tem conta?"}{" "}
         <button
           type="button"
-          onClick={() => onModeChange(mode === "login" ? "register" : "login")}
+          onClick={() => onModeChange(isRegister ? "login" : "register")}
           className={`${btnClick} ${authLinkClass} text-verde-floresta hover:underline`}
         >
-          {mode === "login" ? "Criar conta" : "Fazer login"}
+          {isRegister ? "Fazer login" : "Criar conta"}
         </button>
       </p>
       <Link

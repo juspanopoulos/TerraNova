@@ -1,4 +1,4 @@
-import backgroundFoliage from "@/assets/hero/background2.png";
+import comoFuncionaImg from "@/assets/images/sobre/como-funciona.png";
 import {
   howItWorksCopy,
   howItWorksSteps,
@@ -10,6 +10,7 @@ import {
   aboutContentGap,
   aboutEyebrow,
   aboutGridGap,
+  aboutSectionDescription,
   aboutSectionTitle,
   aboutSoftPanel,
   aboutSoftPanelInner,
@@ -21,7 +22,7 @@ export function AboutHighlights() {
       <header>
         <p className={aboutEyebrow}>{howItWorksCopy.eyebrow}</p>
         <h2 className={aboutSectionTitle}>{howItWorksCopy.title}</h2>
-        <p className={`${copyOnLight} mt-4 max-w-3xl sm:mt-5`}>
+        <p className={`${copyOnLight} ${aboutSectionDescription}`}>
           {howItWorksCopy.description}
         </p>
       </header>
@@ -29,9 +30,9 @@ export function AboutHighlights() {
       <div className={`${aboutContentGap} grid ${aboutGridGap} lg:grid-cols-2`}>
         <div className="relative min-h-[14rem] overflow-hidden rounded-2xl sm:min-h-[18rem] lg:min-h-[26rem]">
           <img
-            src={backgroundFoliage}
-            alt="Luz filtrada por folhas verdes"
-            className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+            src={comoFuncionaImg}
+            alt="Estrada em bifurcação ao amanhecer em paisagem rural"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             loading="lazy"
             decoding="async"
           />
@@ -40,7 +41,7 @@ export function AboutHighlights() {
             aria-hidden
           />
           <p className="absolute inset-x-0 bottom-0 px-5 py-5 text-sm leading-relaxed text-bege-natural/95 sm:px-6 sm:py-6 sm:text-base">
-            Menos idas e vindas entre ferramentas — mais tempo olhando para o que
+            Menos idas e vindas entre ferramentas, mais tempo olhando para o que
             realmente importa.
           </p>
         </div>
@@ -83,16 +84,14 @@ export function AboutHighlights() {
         {platformHighlights.map((item) => (
           <li key={item.label} data-about-item>
             <article className={`${aboutSoftPanel} ${aboutSoftPanelInner}`}>
-              <span
-                className="pointer-events-none absolute right-4 top-4 font-mono text-5xl font-bold tabular-nums leading-none text-verde-floresta/10 sm:right-5 sm:top-5 sm:text-6xl"
-                aria-hidden
-              >
-                {item.value}
-              </span>
-
-              <div className="relative flex flex-1 flex-col justify-end gap-3 pt-6 sm:pt-8">
-                <h3 className="max-w-[12rem] text-base font-semibold leading-snug tracking-[-0.012em] text-preto-suave sm:max-w-none sm:text-lg">
-                  {item.label}
+              <div className="relative flex flex-1 flex-col gap-3">
+                <h3 className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                  <span className="text-3xl font-bold tabular-nums leading-none tracking-[-0.04em] text-laranja-solar sm:text-4xl">
+                    {item.value}
+                  </span>
+                  <span className="text-base font-semibold leading-snug tracking-[-0.012em] text-preto-suave sm:text-lg">
+                    {item.label}
+                  </span>
                 </h3>
                 <p className={`${copyOnLight} text-sm md:text-base`}>{item.detail}</p>
               </div>

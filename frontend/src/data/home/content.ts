@@ -15,7 +15,7 @@ import {
   Wind,
 } from "lucide-react";
 import germinacaoImg from "@/assets/images/home/germinacao.jpg";
-import germinacao2Img from "@/assets/images/home/germinacao2.jpg";
+import DesenvolvimentoImg from "@/assets/images/home/desenvolvimento.jpg";
 import trigoImg from "@/assets/images/home/trigo.jpg";
 import { ROUTES } from "@/constants/routes";
 
@@ -98,7 +98,7 @@ export const growthStages = [
     detail:
       "Veja se o solo e o tempo estão bons antes de plantar ou ligar a irrigação.",
     image: germinacaoImg,
-    imageAlt: "Brotos verdes germinando em recipiente de vidro",
+    imageAlt: "Mudas de trigo brotando em fileiras no solo bege ao amanhecer",
   },
   {
     id: "growth",
@@ -106,8 +106,8 @@ export const growthStages = [
     title: "Lavoura crescendo",
     detail:
       "Compare esta safra com as anteriores e perceba o que mudou no campo.",
-    image: germinacao2Img,
-    imageAlt: "Plantas jovens de milho em fileiras no campo ao amanhecer",
+    image: DesenvolvimentoImg,
+    imageAlt: "Fileiras de trigo em crescimento sob luz suave no campo",
   },
   {
     id: "harvest",
@@ -116,7 +116,7 @@ export const growthStages = [
     detail:
       "Acompanhe a maturação da cultura para não perder o momento certo da colheita.",
     image: trigoImg,
-    imageAlt: "Espigas de trigo maduro em campo dourado",
+    imageAlt: "Campo de trigo maduro iluminado por luz dourada ao entardecer",
   },
 ] as const;
 
@@ -274,6 +274,6 @@ export const homeCtaCopy = {
 
 export const homeCtaLinks = [
   { label: "Acessar plataforma", to: ROUTES.plataforma, primary: true },
-  { label: "Conheça a TerraNova", to: ROUTES.sobre, primary: false },
+  { label: "Conheça TerraNova", to: ROUTES.sobre, primary: false },
   { label: "Contato", to: ROUTES.contato, primary: false },
 ] as const;
