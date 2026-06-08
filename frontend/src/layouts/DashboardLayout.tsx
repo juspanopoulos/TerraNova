@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import authBackground from "@/assets/images/login/background6.jpeg";
 import { DashboardBreadcrumb } from "@/components/dashboard/DashboardBreadcrumb";
@@ -24,6 +25,7 @@ import { DashboardProvider, useDashboard } from "@/context/DashboardContext";
 
 function DashboardShell() {
   const location = useLocation();
+  const authScrollRef = useRef<HTMLDivElement>(null);
   const {
     isAuthenticated,
     authMode,
@@ -59,6 +61,11 @@ function DashboardShell() {
   const breadcrumbs = breadcrumbsFromPath(location.pathname);
   const isAssistant = view === "assistant";
 
+  useEffect(() => {
+    if (isAuthenticated) return;
+    authScrollRef.current?.scrollTo(0, 0);
+  }, [isAuthenticated, location.pathname, authMode]);
+
   const rootClass = [
     "dashboard-root flex h-full min-h-0 w-full overflow-hidden",
     shellBg,
@@ -86,7 +93,11 @@ function DashboardShell() {
       );
 
     return (
-      <div className="relative h-full min-h-0 overflow-y-auto overscroll-y-contain">
+      <div
+        ref={authScrollRef}
+        data-auth-scroll
+        className="relative h-full min-h-0 overflow-y-auto overscroll-y-contain"
+      >
         <div
           className="pointer-events-none fixed inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${authBackground})` }}
