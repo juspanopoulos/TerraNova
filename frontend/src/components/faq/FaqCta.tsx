@@ -11,8 +11,8 @@ export function FaqCta() {
         <div className="min-w-0 max-w-xl">
           <h2 className={faqCategoryTitle}>Entre na plataforma</h2>
           <p className={`${copyOnLight} mt-3 text-sm sm:text-base`}>
-            O painel reúne clima, solo, água e alertas — veja na prática o que
-            a TerraNova organiza no dia a dia no campo.
+            O painel reúne clima, solo, água e alertas, veja na prática o que
+            o TerraNova organiza no dia a dia no campo.
           </p>
         </div>
 

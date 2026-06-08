@@ -28,7 +28,7 @@ export function ContactSection() {
         ]}
         eyebrow="Fale conosco"
         title="Contato"
-        subtitle="Tire dúvidas, sugira melhorias ou fale com a equipe por aqui."
+        subtitle="Estamos disponíveis para ouvir suas dúvidas, sugestões e necessidades da propriedade."
       />
 
       <div

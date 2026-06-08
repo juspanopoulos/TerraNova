@@ -61,7 +61,7 @@ export const sitemapSections: SitemapSection[] = [
       {
         label: "Sobre",
         to: ROUTES.sobre,
-        description: "Missão, valores e proposta da TerraNova.",
+        description: "Missão, valores e proposta do TerraNova.",
         icon: Info,
       },
       {

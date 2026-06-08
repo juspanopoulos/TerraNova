@@ -21,7 +21,7 @@ export function TeamListItem({ member }: TeamListItemProps) {
             {member.name}
           </h2>
           <p className="mt-1 text-xs font-medium text-preto-suave/45 sm:text-sm">
-            RM {member.rm}
+            RM {member.rm} · {member.turma}
           </p>
           <p className="mt-1.5 text-sm text-preto-suave/65">{member.role}</p>
         </div>
@@ -45,7 +45,7 @@ export function TeamListItem({ member }: TeamListItemProps) {
               {member.name}
             </h2>
             <span className="text-xs font-medium text-preto-suave/45">
-              RM {member.rm}
+              RM {member.rm} · {member.turma}
             </span>
           </div>
 

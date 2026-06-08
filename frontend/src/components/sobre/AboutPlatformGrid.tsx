@@ -65,7 +65,7 @@ export function AboutPlatformGrid() {
       <AboutSectionHeading
         eyebrow="A plataforma"
         title="Módulos pensados para o ciclo completo da propriedade"
-        description="Cada área do dashboard foi desenhada para responder uma pergunta prática do produtor — do clima imediato ao planejamento de safra."
+        description="Cada área do dashboard foi desenhada para responder uma pergunta prática do produtor, do clima imediato ao planejamento de safra."
       />
 
       <div className={`${aboutContentGap} lg:grid lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:items-start lg:gap-8 xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]`}>

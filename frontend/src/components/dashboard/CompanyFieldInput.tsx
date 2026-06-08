@@ -1,3 +1,4 @@
+import { Controller, type Control, type FieldErrors, type UseFormGetValues } from "react-hook-form";
 import { CustomSelect } from "@/components/dashboard/DashboardPickers";
 import {
   authErrorClass,
@@ -7,6 +8,8 @@ import {
 } from "@/constants/tokens/authForm";
 import { BRAZIL_UFS } from "@/lib/dashboard/brazilStates";
 import type { CompanyFieldConfig } from "@/lib/dashboard/companyFields";
+import { updateCompanyField } from "@/lib/dashboard/companyFields";
+import { validateCompanyFieldValue } from "@/lib/dashboard/authValidation";
 import { formatCompanyField } from "@/lib/dashboard/inputMasks";
 import type { CompanyProfile } from "@/types/dashboard";
 
@@ -159,6 +162,47 @@ export function CompanyFieldsGrid({
             value={draft[field.key]}
             error={errors[field.key]}
             onChange={onChange}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+type CompanyFieldsGridFormProps = {
+  fields: CompanyFieldConfig[];
+  control: Control<CompanyProfile>;
+  getValues: UseFormGetValues<CompanyProfile>;
+  errors: FieldErrors<CompanyProfile>;
+};
+
+export function CompanyFieldsGridForm({
+  fields,
+  control,
+  getValues,
+  errors,
+}: CompanyFieldsGridFormProps) {
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {fields.map((field) => (
+        <div key={field.key} className={field.col === 2 ? "sm:col-span-2" : undefined}>
+          <Controller
+            name={field.key}
+            control={control}
+            rules={{
+              validate: () => validateCompanyFieldValue(field.key, getValues()) ?? true,
+            }}
+            render={({ field: rhfField, fieldState }) => (
+              <CompanyFieldInput
+                field={field}
+                value={rhfField.value}
+                error={fieldState.error?.message ?? errors[field.key]?.message}
+                onChange={(key, value) => {
+                  const next = updateCompanyField(getValues(), key, value);
+                  rhfField.onChange(next[key]);
+                }}
+              />
+            )}
           />
         </div>
       ))}
