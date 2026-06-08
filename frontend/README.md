@@ -115,6 +115,12 @@ npm run typecheck   # Verificação de tipos TypeScript
 npm run lint        # Análise estática com ESLint
 ```
 
+### Integração com backend
+
+Guia para quem for conectar a API real (login, cadastro, dashboard e mocks atuais):
+
+→ [`docs/BACKEND_INTEGRATION.md`](docs/BACKEND_INTEGRATION.md)
+
 ### Deploy na Vercel
 
 O projeto já inclui `vercel.json` com suporte a SPA (rewrite para `index.html`). Basta conectar o repositório na Vercel com o diretório raiz apontando para `frontend/`.
