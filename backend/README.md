@@ -45,6 +45,7 @@ ORACLE_JDBC_URL=jdbc:oracle:thin:@//oracle.fiap.com.br:1521/ORCL
 ORACLE_USER=seu_usuario_oracle
 ORACLE_PASSWORD=sua_senha_oracle
 IA_BASE_URL=http://localhost:5000
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:4173
 ```
 
 ## OpenAPI
@@ -54,6 +55,20 @@ Com a aplicacao rodando:
 ```text
 http://localhost:8080/q/swagger-ui
 http://localhost:8080/q/openapi
+```
+
+## Erros da API
+
+As excecoes globais retornam JSON no padrao:
+
+```json
+{
+  "status": 400,
+  "erro": "VALIDACAO",
+  "mensagem": "Campo obrigatorio nao informado.",
+  "caminho": "api/recurso",
+  "timestamp": "2026-06-08T10:00:00-03:00"
+}
 ```
 
 ## Smoke test
