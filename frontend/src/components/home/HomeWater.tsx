@@ -45,7 +45,7 @@ export function HomeWater() {
         >
           <figure
             data-home-item
-            className={`${styles.imageFrame} relative min-h-72 overflow-hidden rounded-3xl lg:col-span-5 lg:min-h-full`}
+            className="relative min-h-72 overflow-hidden rounded-3xl lg:col-span-5 lg:min-h-full"
           >
             <img
               src={irrigacaoImg}
