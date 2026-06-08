@@ -1,189 +1,165 @@
-# TerraNova — Frontend
+<div align="center">
+  
+<img src="./src/assets/logos/logo-colorido.png" width="500px;" alt="Logo do TerraNova"/><br>
 
-**Inteligência territorial para quem vive o campo.**
+## Plataforma de Inteligência Climática para Decisões mais Eficientes
+Enquanto o clima muda, a tecnologia evolui. O TerraNova conecta dados, inteligência e sustentabilidade para transformar o futuro da agricultura.
 
-O frontend do TerraNova é a interface web do projeto: um site institucional e uma plataforma de gestão agrícola que reúne clima, água, solo e alertas da propriedade para apoiar decisões no campo, safra após safra.
+<div>
+  <img src="https://img.shields.io/badge/Status-Concluído-3D4053?style=flat&logo=github&logoColor=white" alt="Status: Concluído">
+  <img src="https://img.shields.io/badge/Tecnologias-React%20%7C%20Tailwind%20%7C%20TypeScript-61DAFB?style=flat&logo=react&logoColor=white" alt="Foco: React, Tailwind e TypeScript">
+  <img src="https://img.shields.io/badge/Design-Responsivo-1572B6?style=flat&logo=tailwindcss&logoColor=white" alt="Design: Desktop, Tablet e Mobile">
+</div>
 
----
+<br/>
 
-## Links
+🔗 **Acesse o repositório do projeto**
+👉 [github.com/juspanopoulos/TerraNova](https://github.com/juspanopoulos/TerraNova)
 
-| Recurso | URL |
-|---------|-----|
-| Repositório | [github.com/juspanopoulos/TerraNova](https://github.com/juspanopoulos/TerraNova) |
-| Deploy (Vercel) | _A definir — adicionar URL após publicação_ |
-| Vídeo de apresentação | _A definir — adicionar link posteriormente_ |
+🔗 **Acesse o vídeo:**
+👉 [YouTube](https://)
 
----
+🔗 **Veja o site online:**
+👉 [terra-nova-delta.vercel.app](https://terra-nova-delta.vercel.app/)
 
-## Tecnologias utilizadas
+<br/>
 
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
-| [React](https://react.dev/) | 19.2 | Interface do usuário |
-| [TypeScript](https://www.typescriptlang.org/) | 6.0 | Tipagem estática |
-| [Vite](https://vitejs.dev/) | 8.0 | Build e servidor de desenvolvimento |
-| [React Router DOM](https://reactrouter.com/) | 7.16 | Roteamento e navegação |
-| [Tailwind CSS](https://tailwindcss.com/) | 4.3 | Estilização utilitária |
-| [GSAP](https://gsap.com/) | 3.15 | Animações e transições |
-| [Lenis](https://lenis.darkroom.engineering/) | 1.3 | Scroll suave no site institucional |
-| [Lucide React](https://lucide.dev/) | 1.17 | Ícones da interface |
-| [React Hook Form](https://react-hook-form.com/) | 7.77 | Formulários |
-| [@react-pdf/renderer](https://react-pdf.org/) | 4.5 | Geração de relatórios em PDF |
-| [@fontsource/inter](https://fontsource.org/fonts/inter) | 5.2 | Tipografia Inter |
+<img src="./src/assets/images/sobre/painel/" alt="Interface do dashboard" width="100%">
 
----
+<br/>
 
-## Estrutura de pastas
+<div align="left">
+  
+> Projeto desenvolvido durante o curso da **FIAP** para o **Global Solution**.
 
-```
-frontend/
-├── docs/                    # Documentação técnica (ex.: integração backend)
-├── public/                  # Arquivos estáticos servidos na raiz
-│   └── logos/               # Logo público (PDF e URLs absolutas)
-├── src/
-│   ├── assets/              # Imagens, logos, ícones, fontes e vídeos
-│   │   ├── hero/            # Fundos parallax (home e sobre)
-│   │   ├── icons/           # Favicon e ícones do projeto
-│   │   ├── images/          # Imagens por seção (home, equipe, sobre, login, 404)
-│   │   ├── logos/           # Logotipos (colorido e branco) — bundle da UI
-│   │   ├── fonts/           # Fontes locais (se houver)
-│   │   └── videos/          # Vídeos do projeto
-│   ├── components/          # Componentes reutilizáveis
-│   │   ├── contato/         # Formulário e seção de contato
-│   │   ├── dashboard/       # Componentes da plataforma (views, sidebar, auth)
-│   │   ├── equipe/          # Listagem e cards da equipe
-│   │   ├── faq/             # Acordeão e explorador do FAQ
-│   │   ├── home/            # Seções da página inicial
-│   │   ├── mapa-do-site/    # Mapa do site
-│   │   ├── sobre/           # Seções da página Sobre
-│   │   ├── HeroParallax/    # Hero animado da home
-│   │   └── ...              # Navbar, HomeNavbar, Footer, PageHero, breadcrumbs
-│   ├── constants/           # Rotas, layout do dashboard e tokens de UI
-│   │   └── tokens/          # Classes Tailwind reutilizáveis por página
-│   ├── context/             # Context API (Dashboard, Assistente)
-│   ├── data/                # Conteúdo estático (.ts) e JSON da equipe
-│   │   ├── equipe/
-│   │   │   ├── team.json    # Manifesto com IDs dos membros
-│   │   │   └── members/     # Um JSON por integrante
-│   │   ├── home/            # Textos e módulos da home
-│   │   └── sobre/           # Textos e módulos da página Sobre
-│   ├── hooks/               # Hooks customizados (animações, equipe)
-│   ├── layouts/             # BaseLayout e DashboardLayout
-│   ├── lib/                 # Auth, PDF, scroll, helpers do dashboard
-│   ├── pages/               # Wrappers finos por rota
-│   │   └── plataforma/      # Páginas do dashboard (delegam para views)
-│   ├── routes/              # Configuração central de rotas (AppRoutes)
-│   ├── services/            # Carregamento assíncrono de dados (equipe)
-│   ├── styles/              # CSS global e módulos
-│   ├── types/               # Tipos TypeScript de domínio
-│   └── utils/               # Funções auxiliares (DOM, format, assets)
-├── index.html
-├── package.json
-├── vercel.json              # Configuração de deploy na Vercel
-└── vite.config.ts
-```
+> Este repositório contém o Front-End do site institucional e do dashboard do TerraNova. O objetivo é fornecer uma experiência de usuário impecável, rápida e totalmente responsiva para apresentar a solução TerraNova ao mercado corporativo.
 
 ---
 
-## Como usar
+<br/>
 
-### Pré-requisitos
+## 🌱 Sobre o Projeto
+O TerraNova é uma plataforma de gestão rural desenvolvida para ajudar produtores a compreender, monitorar e cuidar de suas propriedades de forma mais simples e estratégica. Em muitas fazendas, informações importantes estão espalhadas entre anotações, planilhas, aplicativos e observações de campo, dificultando a tomada de decisões e aumentando o risco de problemas passarem despercebidos.
 
-- [Node.js](https://nodejs.org/) 18 ou superior
-- npm (incluído com o Node.js)
+Entre os desafios mais comuns estão:
+- Falta de uma visão clara da propriedade
+- Dificuldade para acompanhar recursos hídricos
+- Mudanças climáticas e ambientais sem monitoramento contínuo
+- Informações dispersas e difíceis de consultar
+- Identificação tardia de riscos e ocorrências
 
-### Instalação
+O TerraNova centraliza essas informações em um ambiente visual e intuitivo, transformando dados da propriedade em conhecimento prático para o dia a dia do produtor.
+> 💡 Mais do que um sistema de gestão, o TerraNova foi concebido como uma ferramenta de apoio à tomada de decisão, conectando tecnologia, sustentabilidade e gestão rural em uma única plataforma.
 
-```bash
-cd frontend
-npm install
-```
+<br/>
 
-### Desenvolvimento
+## 🎯 Proposta do Projeto
 
-```bash
-npm run dev
-```
+O objetivo do TerraNova é tornar a gestão da propriedade mais acessível, organizada e preventiva, reunindo:
 
-Acesse `http://localhost:5173` no navegador.
+- Monitoramento ambiental inteligente
+- Gestão e acompanhamento de recursos hídricos
+- Visualização simplificada da propriedade
+- Alertas e acompanhamento de ocorrências
+- Informações centralizadas para tomada de decisão
 
-### Build de produção
+Criando uma experiência que permite ao produtor entender sua propriedade com mais clareza, agir com antecedência e dedicar menos tempo à burocracia e mais tempo ao que realmente importa: produzir de forma sustentável e eficiente.
 
-```bash
-npm run build
-```
+<br/>
 
-### Pré-visualização do build
+## ✨ Funcionalidades Principais
 
-```bash
-npm run preview
-```
+| Funcionalidade | Descrição |
+| :--- | :--- |
+| 📊 Visão Geral da Propriedade | Painel de boas-vindas com indicadores consolidados de clima, solo, água, alertas e colheitas da fazenda cadastrada. |
+| 🗓️ Visões Temporais | Análise por dia, semana, mês e ano com KPIs, gráficos e tabelas reunindo clima, solo, água, irrigação e alertas do período. |
+| 🔔 Central de Alertas | Alertas ambientais organizados em kanban por severidade — crítico, moderado e normal — com tipo, setor e horário. |
+| 🌤️ Controle Climático | Monitoramento de temperatura, umidade e vento, com histórico gráfico e alternância entre métricas. |
+| 🌱 Controle do Solo | Leitura de NPK, pH e umidade, gráfico de nutrientes e tabela de status por talhão ou setor. |
+| 🌾 Previsão de Colheitas | Gráfico de maturidade por cultura e cronograma com zona, semana estimada, data de colheita e status. |
+| 💧 Consumo Hídrico | Indicadores de consumo, histórico, distribuição por setor e tabela de irrigação com comparativos por período. |
+| 🧠 Assistente TerraNova | Chat integrado com prompts sugeridos para consultar clima, solo, irrigação, alertas e colheitas no contexto da propriedade. |
+| 📜 Histórico de Conversas | Armazenamento de conversas do assistente, com opção de abrir histórico e iniciar nova conversa. |
+| 📝 Anotações de Campo | Criação, edição e exclusão de anotações com editor de texto rico. |
+| 🔍 Filtros Avançados | Painel lateral de filtros por período, mês, nível e tipo de alerta, setor do solo e cultura, conforme a view ativa. |
+| 📈 Relatórios em PDF | Exportação de relatório da visão temporal (dia, semana, mês ou ano) com dados da propriedade e alertas. |
+| 🏷️ Gestão de Prioridade | Classificação visual de alertas por urgência, com chips, cores e colunas dedicadas no quadro kanban. |
+| 🏢 Cadastro da Propriedade | Fluxo de login, cadastro de usuário e registro da empresa/propriedade com validação de campos. |
+| ⚙️ Configurações Gerais | Personalização do painel com modo escuro, redução de animações e preferência de alertas por e-mail. |
+| 🔗 Integrações Externas | Área preparada para conectar sensores, irrigação, APIs climáticas e ERP — atualmente marcada como “Em breve”. |
+| 🧭 Navegação e Breadcrumb | Sidebar com módulos da plataforma, breadcrumb por rota e hub de acesso às visões temporais. |
+| 📱 Interface Responsiva | Layout adaptável com sidebar, toolbar, cards e gráficos ajustados para desktop e dispositivos móveis. |
 
-### Outros scripts
+<br/>
 
-```bash
-npm run typecheck   # Verificação de tipos TypeScript
-npm run lint        # Análise estática com ESLint
-```
+## 🚀 Conheça o TerraNova
 
-### Integração com backend
 
-Guia para quem for conectar a API real (login, cadastro, dashboard e mocks atuais):
 
-→ [`docs/BACKEND_INTEGRATION.md`](docs/BACKEND_INTEGRATION.md)
+<br/>
 
-### Deploy na Vercel
+## 📐 Responsividade
+O layout foi desenvolvido para funcionar perfeitamente em:
 
-O projeto já inclui `vercel.json` com suporte a SPA (rewrite para `index.html`). Basta conectar o repositório na Vercel com o diretório raiz apontando para `frontend/`.
+- 📱 Mobile (até 480px)
+- 📲 Tablet (até 768px)
+- 💻 Desktop (992px+)
+- 🖥️ Telas grandes (1300px+)
 
----
+<br/>
 
-## Imagens e ícones
+## 🚀 Stack Tecnológica
 
-### Logotipos e identidade visual
+O front-end do **TerraNova** foi desenvolvido com tecnologias de ponta para garantir performance, segurança e uma experiência de usuário fluida.
 
-| Arquivo | Caminho | Uso |
-|---------|---------|-----|
-| Logo colorido (UI) | `src/assets/logos/logo-colorido.png` | Navbar, sidebar, login, componentes |
-| Logo colorido (público) | `public/logos/logo-colorido.png` | PDF e URLs absolutas (`/logos/...`) |
-| Logo branco | `src/assets/logos/logo-branco.png` | Fundos escuros |
-| Favicon | `src/assets/icons/favicon.ico` | Aba do navegador |
 
-### Imagens por seção
+| Tecnologia | Função / Uso | Descrição |
+| :--- | :--- | :--- |
+| <img src="https://img.shields.io/badge/React_v19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black" /> | **Interface do Usuário** | Biblioteca principal para criação de interfaces baseadas em componentes reutilizáveis. |
+| <img src="https://img.shields.io/badge/TypeScript_v6.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" /> | **Linguagem** | Superset de JavaScript que adiciona tipagem estática e segurança ao código. |
+| <img src="https://img.shields.io/badge/Vite_v8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white" /> | **Build Tool** | Ferramenta de build de próxima geração para um ambiente de desenvolvimento ágil e otimizado. |
+| <img src="https://img.shields.io/badge/React_Router_v7.16-CA4245?style=for-the-badge&logo=react-router&logoColor=white" /> | **Roteamento** | Gerenciamento de rotas e navegação dinâmica single-page entre as visões da plataforma. |
+| <img src="https://img.shields.io/badge/Tailwind_CSS_v4.3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" /> | **Estilização** | Framework utility-first para um design moderno, totalmente responsivo e de carregamento rápido. |
+| <img src="https://img.shields.io/badge/GSAP_v3.15-88CE02?style=for-the-badge&logo=greensock&logoColor=black" /> | **Animações** | Motor de animações robusto e de alta performance para transições fluidas de elementos visuais. |
+| <img src="https://img.shields.io/badge/Lenis_v1.3-000000?style=for-the-badge&logo=smooth-scroll&logoColor=white" /> | **Scroll Suave** | Biblioteca de scroll suave (smooth scroll) integrada para aprimorar a experiência de navegação. |
+| <img src="https://img.shields.io/badge/Lucide_React_v1.17-2C3E50?style=for-the-badge&logo=lucide&logoColor=white" /> | **Ícones** | Conjunto de ícones vetoriais consistentes, leves e otimizados para componentes React. |
+| <img src="https://img.shields.io/badge/React_Hook_Form_v7.77-EC5990?style=for-the-badge&logo=react-hook-form&logoColor=white" /> | **Formulários** | Gerenciamento de estado de formulários focado em performance, validação e redução de re-renders. |
+| <img src="https://img.shields.io/badge/@react--pdf/renderer_v4.5-FF6B6B?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=white" /> | **Relatórios PDF** | Geração e exportação de relatórios dinâmicos diretamente pelo lado do cliente (client-side). |
+| <img src="https://img.shields.io/badge/Inter_Font_v5.2-111111?style=for-the-badge&logo=google-fonts&logoColor=white" /> | **Tipografia** | Família tipográfica Inter carregada via Fontsource para garantir consistência e legibilidade. |
 
-| Seção | Pasta | Arquivos em uso |
-|-------|-------|-----------------|
-| Home | `src/assets/images/home/` | `germinacao.jpg`, `desenvolvimento.jpg`, `trigo.jpg`, `nuvens.jpg`, `irrigacao.jpeg`, `chuva-fazenda.jpg` |
-| Sobre | `src/assets/images/sobre/` | `broto.png`, `como-funciona.png`, `decidir-com-calma.png`, `no-seu-tempo.png`, `ver-o-que-importa.png` |
-| Equipe | `src/assets/images/equipe/` | Fotos nomeadas pelo `id` de cada membro (`.jpg` ou `.png`) |
-| Login | `src/assets/images/login/` | `background6.jpeg` |
-| 404 | `src/assets/images/not-found/` | `404.png`, `404-mobile.png` |
-| Hero | `src/assets/hero/` | `farm.jpeg`, `background2.png` … `background5.png` |
+<br/>
 
-### Ícones da interface
+## 💻 Entregas Funcionais
 
-Os ícones utilizados na interface vêm da biblioteca **[Lucide React](https://lucide.dev/)** (navegação, dashboard, FAQ, contato, clima, alertas, etc.). Ícones customizados de redes sociais (LinkedIn, GitHub) estão em `src/components/equipe/TeamSocialLinks.tsx`.
+Abaixo estão as funcionalidades centrais implementadas no Frontend:
 
----
+| Categoria | Tecnologia / Recurso | Status | Uso no Projeto |
+| :-------- | :------------------- | :----: | :------------- |
+| **Definição de Rotas** | **React Router DOM v7** | :heavy_check_mark: | Estruturação central em `src/routes/AppRoutes.tsx`, com rotas do site institucional e rotas aninhadas da plataforma sob `DashboardLayout`. URLs tipadas em `src/constants/routes.ts` e `src/constants/dashboard.ts`. |
+| **Navegação SPA** | **Navegação fluida (sem reload)** | :heavy_check_mark: | `BrowserRouter`, `NavLink`, `Link`, `Outlet` e `Navigate` garantem troca de páginas sem recarregar o documento. Ex.: `Navbar.tsx`, `Sidebar.tsx`, `HomeNavbar.tsx`. |
+| **Rotas aninhadas e redirecionamento** | **Nested Routes + Navigate** | :heavy_check_mark: | `/plataforma` redireciona para `visao-geral`; `/plataforma/configuracoes` para `geral`; alias `/platform` → `/plataforma`. Configurado em `AppRoutes.tsx`. |
+| **Interpretação de rotas** | **Segmentos estáticos + funções tipadas** | :heavy_check_mark: | O projeto não usa `useParams`. O `pathname` é interpretado por funções como `pathToViewId()`, `TIME_FILTER_FROM_PATH()`, `pathToSettingsTab()` e `breadcrumbsFromPath()` em `constants/dashboard.ts`. |
+| **Feedback ao usuário** | **Estados de carregamento e erro** | :heavy_check_mark: | `DashboardLoadingState` e `DashboardErrorState` no dashboard; estados `isLoading` / `error` na equipe (`useTeamMembers` + `TeamSection.tsx`); mensagens de validação nos formulários de auth e contato. |
+| **Criação de tipos de dados** | **TypeScript 6** | :heavy_check_mark: | Tipagem estática em todo o projeto (`npm run typecheck`). Domínios organizados em `src/types/dashboard.ts` e `src/types/equipe.ts`. |
+| **Tipos básicos** | **string, number, boolean, arrays e object** | :heavy_check_mark: | Utilizados em mocks, formulários e componentes. Ex.: `mockDashboard.ts`, `faq.ts`, `CompanyProfile`, métricas de clima/solo/água no `DashboardContext`. |
+| **Type aliases** | **type** | :heavy_check_mark: | Modelagem principal via `type` para entidades e contratos. Ex.: `CompanyProfile`, `AlertItem`, `TeamMemberData`, `BreadcrumbItem`, `PageFilters` em `FilterSlideover.tsx`. |
+| **Union types** | **Tipos literais restritivos** | :heavy_check_mark: | Garantem valores válidos em rotas, auth e dashboard. Ex.: `AuthMode = "login" \| "register" \| "registerCompany"`, `ViewId`, `TimeFilter`, `AlertLevel`, `DashboardLoadStatus`. |
+| **Intersection types** | **Composição de tipos** | :heavy_check_mark: | Combinação de estruturas para enriquecer dados carregados. Ex.: `TeamMember = TeamMemberData & { photo: string }` em `types/equipe.ts`. |
+| **Tipos avançados** | **Record, Partial, keyof, generics, as const** | :heavy_check_mark: | `Record<ViewId, string>` em `PAGE_TITLES`; `Partial<CompanyProfile>` em `updateCompany()`; `updatePreference<K extends keyof GeneralPreferences>`; `ROUTES` e `DASHBOARD_ROUTES` com `as const`. |
+| **Responsividade total** | **Tailwind CSS 4 (mobile / tablet / desktop)** | :heavy_check_mark: | Layout adaptável com breakpoints `sm:`, `md:`, `lg:` em site institucional e dashboard. Ex.: `DashboardLayout.tsx`, `FilterSlideover.tsx`, `HomeNavbar.tsx`, views da plataforma. |
+| **Gerenciamento de estado** | **React Context API** | :heavy_check_mark: | `DashboardContext` concentra auth, dados do painel, filtros e preferências; `AssistantChatContext` gerencia conversas do assistente. |
+| **Formulários** | **React Hook Form** | :heavy_check_mark: | Validação e controle de campos em login, cadastro da propriedade e contato. Ex.: `LoginScreen.tsx`, `RegisterCompanyScreen.tsx`, `ContactForm.tsx`, `CompanyFieldInput.tsx` com `Controller`. |
+| **Carregamento assíncrono de dados** | **Serviços + import dinâmico** | :heavy_check_mark: | `equipeService.ts` carrega `team.json` e `members/*.json` com `await import()` e `import.meta.glob`; `useTeamMembers` consome no `useEffect`. |
+| **Consumo de API (dashboard)** | **fetchDashboardData (mock)** | :hourglass: | `loadDashboardData.ts` simula latência e erros (`network`, `server`, `timeout`, `unauthorized`) antes de retornar mocks. Contrato preparado para substituição pela API Java descrita em `BACKEND_INTEGRATION.md`. |
+| **Fetch API** | **fetch** | :hourglass: | Uso pontual em `downloadVisionReport.tsx` para carregar o logo público do PDF. Demais módulos ainda consomem dados locais/mock. |
+| **Tratamento de erros** | **Classes de erro + normalização** | :heavy_check_mark: | `DashboardLoadFailure` e `toDashboardLoadError()` em `DashboardLoadState.tsx`; `try/catch` no carregamento do dashboard e da equipe; mensagens amigáveis por tipo de falha. |
+| **Persistência local** | **localStorage / sessionStorage** | :heavy_check_mark: | Sessão de auth (`authSession.ts`), preferências (`preferences.ts`), anotações (`notesStorage.ts`), conversas do assistente (`assistantChat.ts`). `sessionStorage` usado para simular erro forçado no mock do dashboard. |
+| **Relatórios PDF** | **@react-pdf/renderer** | :heavy_check_mark: | Geração e download de relatório das visões temporais via `VisionReportDocument.tsx`, `downloadVisionReport.tsx` e botão `VisionPdfDownloadButton.tsx`. |
+| **Animações e UX** | **GSAP + Lenis** | :heavy_check_mark: | GSAP em hooks de seção (`useHomeSectionAnimation`, `useAboutSectionAnimation`, etc.); Lenis para scroll suave nas páginas institucionais (`smoothScroll.ts`, `SiteSmoothScroll` em `AppRoutes.tsx`). |
+| **Ícones e identidade visual** | **Lucide React + tokens Tailwind** | :heavy_check_mark: | Ícones em navegação, dashboard e FAQ; tokens reutilizáveis em `src/constants/tokens/` (home, sobre, faq, contato, auth). |
+| **Organização do projeto** | **Arquitetura modular** | :heavy_check_mark: | Separação em `components/`, `pages/`, `layouts/`, `routes/`, `context/`, `services/`, `hooks/`, `lib/`, `data/`, `types/`, `utils/` e `styles/`, conforme `README.md`. |
 
-## Dados estáticos e JSON da equipe
-
-O conteúdo institucional e os mocks do dashboard ficam em arquivos **TypeScript** em `src/data/` (`faq.ts`, `contato.ts`, `mockDashboard.ts`, `home/content.ts`, `sobre/platform.ts`, etc.) e são importados estaticamente pelos componentes.
-
-A página **Equipe** é a única que usa **JSON**. O carregamento é **assíncrono** via `src/services/equipeService.ts` (nunca import estático de `.json` nos componentes):
-
-| Arquivo | Função |
-|---------|--------|
-| `data/equipe/team.json` | Lista de `memberIds` (manifesto) |
-| `data/equipe/members/*.json` | Dados de cada integrante (`id`, `name`, `rm`, `turma`, `role`, `bio`, `social`) |
-| `assets/images/equipe/{id}.*` | Foto resolvida pelo mesmo `id` |
-
-Fluxo: `useTeamMembers` → `loadTeamMembers()` → `await import("team.json")` + `import.meta.glob` para membros e fotos.
-
-Para adicionar um integrante: crie `members/{id}.json`, inclua o `id` em `team.json` e adicione a foto em `assets/images/equipe/`.
-
----
+<br/>
 
 ## Rotas, navegação e tipagem
 
@@ -316,43 +292,315 @@ src/types/
 
 Principais tipos: `CompanyProfile`, `GeneralPreferences`, `TeamMemberData`, `BreadcrumbItem`, `NavItem`, `ChartSegment`, `DashboardLoadError`, `RegisterCredentials`, `SitemapSection`.
 
+</br>
+
+## 📁 Estrutura de Pastas
+
+```text
+frontend/
+├── docs/                    → Documentação técnica (ex.: integração backend)
+├── public/                  → Arquivos estáticos servidos na raiz
+│   └── logos/               → Logo público (PDF e URLs absolutas)
+├── src/
+│   ├── assets/              → Imagens, logos, ícones, fontes e vídeos
+│   │   ├── hero/            → Fundos parallax (home e sobre)
+│   │   ├── icons/           → Favicon e ícones do projeto
+│   │   ├── images/          → Imagens por seção (home, equipe, sobre, login, 404)
+│   │   ├── logos/           → Logotipos (colorido e branco) — bundle da UI
+│   │   ├── fonts/           → Fontes locais (se houver)
+│   │   └── videos/          → Vídeos do projeto
+│   ├── components/          → Componentes reutilizáveis
+│   │   ├── contato/         → Formulário e seção de contato
+│   │   ├── dashboard/       → Componentes da plataforma (views, sidebar, auth)
+│   │   ├── equipe/          → Listagem e cards da equipe
+│   │   ├── faq/             → Acordeão e explorador do FAQ
+│   │   ├── home/            → Seções da página inicial
+│   │   ├── mapa-do-site/    → Mapa do site
+│   │   ├── sobre/           → Seções da página Sobre
+│   │   ├── HeroParallax/    → Hero animado da home
+│   │   └── ...              → Navbar, HomeNavbar, Footer, PageHero, breadcrumbs
+│   ├── constants/           v Rotas, layout do dashboard e tokens de UI
+│   │   └── tokens/          → Classes Tailwind reutilizáveis por página
+│   ├── context/             → Context API (Dashboard, Assistente)
+│   ├── data/                → Conteúdo estático (.ts) e JSON da equipe
+│   │   ├── equipe/
+│   │   │   ├── team.json    → Manifesto com IDs dos membros
+│   │   │   └── members/     → Um JSON por integrante
+│   │   ├── home/            → Textos e módulos da home
+│   │   └── sobre/           → Textos e módulos da página Sobre
+│   ├── hooks/               → Hooks customizados (animações, equipe)
+│   ├── layouts/             → BaseLayout e DashboardLayout
+│   ├── lib/                 → Auth, PDF, scroll, helpers do dashboard
+│   ├── pages/               → Wrappers finos por rota
+│   │   └── plataforma/      → Páginas do dashboard (delegam para views)
+│   ├── routes/              → Configuração central de rotas (AppRoutes)
+│   ├── services/            → Carregamento assíncrono de dados (equipe)
+│   ├── styles/              → CSS global e módulos
+│   ├── types/               → Tipos TypeScript de domínio
+│   └── utils/               → Funções auxiliares (DOM, format, assets)
+├── index.html
+├── package.json
+├── vercel.json              → Configuração de deploy na Vercel
+└── vite.config.ts
+```
+
+<br/>
+
+## 🚀 Execução
+
+Siga os passos abaixo para executar o projeto localmente:
+
+> ⚠️ Esse projeto faz parte do repositório principal do TerraNova.  
+> Para o funcionamento completo da aplicação, é necessário executar o **backend** e o **frontend** simultaneamente.
+
+<br/>
+
+### Clonando o repositório
+
+```bash
+git clone https://github.com/juspanopoulos/TerraNova.git
+cd TerraNova
+```
+
 ---
 
-## Autores e créditos
+## ▶️ Executando o Backend / API
 
-### Equipe TerraNova
+A API foi desenvolvida em **Java 17** com **Quarkus** e utiliza banco de dados **Oracle**.
+Acesse a pasta do backend:
 
-| Nome | RM | Papel |
-|------|----|-------|
-| Julia Silva Spanopoulos | 566754 | Product Owner e Desenvolvedora Java |
-| Julia Valerio Guimarães da Silva | 568275 | Desenvolvedora Front-End |
-| Igor Dantas da Silva | 568337 | Desenvolvedor de Inteligência Artificial |
-| Guilherme Santos Sena | 568101 | Desenvolvedor de Banco de Dados |
-| Guilherme Anitelli Cardoso | 566744 | Desenvolvedor Python |
+```bash
+cd backend/api
+```
 
-### Créditos de bibliotecas e recursos
+Configure as variáveis de ambiente necessárias para conexão com o banco Oracle:
 
-- **[Lucide](https://lucide.dev/)** — ícones da interface
-- **[GSAP](https://gsap.com/)** — animações
-- **[Lenis](https://lenis.darkroom.engineering/)** — scroll suave
-- **[Inter](https://rsms.me/inter/)** via [@fontsource/inter](https://fontsource.org/fonts/inter) — tipografia
-- **[React PDF](https://react-pdf.org/)** — geração de relatórios
+### Windows (PowerShell)
 
-Imagens e logotipos do projeto são assets próprios em `src/assets/`.
+```bash
+$env:ORACLE_USERNAME="rm"
+$env:ORACLE_PASSWORD="senha"
+$env:ORACLE_JDBC_URL="jdbc:oracle:thin:@host:porta/service"
+$env:PORT="8080"
+```
+
+### Linux / macOS
+
+Garanta permissão de execução no Maven wrapper:
+
+```bash
+chmod +x ./mvnw
+```
+
+Configure as variáveis de ambiente:
+
+```bash
+export ORACLE_USERNAME="rm"
+export ORACLE_PASSWORD="senha"
+export ORACLE_JDBC_URL="jdbc:oracle:thin:@host:porta/service"
+export PORT="8080"
+```
+
+Depois execute a aplicação em modo desenvolvimento:
+
+### Windows (PowerShell)
+
+```bash
+mvnw.cmd quarkus:dev
+```
+
+### Linux / macOS
+
+```bash
+./mvnw quarkus:dev
+```
+
+A API estará disponível em:
+👉 http://localhost:8080
+
+A documentação Swagger estará disponível em:
+👉 http://localhost:8080/swagger-ui
+
+</br>
+
+## ▶️ Executando o Frontend
+
+Com o backend ainda em execução, abra um **novo terminal** e acesse a pasta do frontend:
+
+```bash
+cd frontend
+```
+
+Instale as dependências:
+
+### Windows (PowerShell)
+
+```powershell
+npm install
+```
+
+### Linux / macOS
+
+```bash
+npm install
+```
+
+### Configuração da API
+
+O frontend já possui configuração automática para ambiente local.
+Durante o desenvolvimento (`npm run dev`), caso nenhuma variável seja definida, a aplicação utilizará automaticamente:
+
+```bash
+http://localhost:8080
+```
+
+Opcionalmente, é possível sobrescrever a URL da API através de uma variável de ambiente.
+
+### Windows (PowerShell)
+
+```powershell
+$env:VITE_API_URL="http://localhost:8080"
+```
+
+### Linux / macOS
+
+```bash
+export VITE_API_URL="http://localhost:8080"
+```
+
+> Caso nenhuma variável seja informada, o sistema utilizará automaticamente a configuração padrão para desenvolvimento local.
+
+Execute a aplicação:
+
+### Windows (PowerShell)
+
+```powershell
+npm run dev
+```
+
+### Linux / macOS
+
+```bash
+npm run dev
+```
+
+O frontend estará disponível em:
+👉 http://localhost:5173
+
+</br>
+
+## 🔗 Integração entre Frontend e Backend
+
+Para funcionamento completo da aplicação, o backend e frontend precisam estar executando simultaneamente.
+
+| Serviço       | Tecnologia     | URL local             |
+| :------------ | :------------- | :-------------------- |
+| Backend / API | Java + Quarkus | http://localhost:8080 |
+| Frontend      | React + Vite   | http://localhost:5173 |
+
+> Caso o backend não esteja em execução, o frontend continuará abrindo normalmente, porém funcionalidades que dependem da API (login, dashboard, tickets, contatos, relatórios, financeiro e demais recursos dinâmicos) poderão apresentar erros ou não carregar informações.
 
 ---
 
-## Contato
+</br>
 
-| Canal | Informação |
-|-------|------------|
-| E-mail | [contato@terranova.com.br](mailto:contato@terranova.com.br) |
-| Telefone | (11) 9999-9999 |
-| WhatsApp | [(11) 99999-9999](https://wa.me/5511999999999) |
-| Endereço | Av. Paulista, 1100, São Paulo — SP |
+## 🤝 Contribuidores
 
----
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/juliarichesky">
+        <img src="./src/assets/images/equipe/julia-guimaraes.png" width="180" height="180" alt="Julia Guimarães"/><br>
+        <sub><b>Julia Guimarães</b></sub>
+      </a><br>
+      RM: 568275<br>
+      Turma: 1TDSPA<br><br>
+      <a href="https://www.linkedin.com/in/juliarichesky/">
+        <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+      </a>
+      <a href="https://github.com/juliarichesky">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/juspanopoulos">
+        <img src="./src/assets/images/equipe/julia-spanopoulos.png" width="180" height="180" alt="Julia Spanopoulos"/><br>
+        <sub><b>Julia Spanopoulos</b></sub>
+      </a><br>
+      RM: 566754<br>
+      Turma: 1TDSPA<br><br>
+      <a href="https://www.linkedin.com/in/juspanopoulos/">
+        <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+      </a>
+      <a href="https://github.com/juspanopoulos">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/GuilhermeAnitelli">
+        <img src="./src/assets/images/equipe/guilherme-anitelli.jpg" width="180" height="180" alt="Guilherme Anitelli"/><br>
+        <sub><b>Guilherme Anitelli</b></sub>
+      </a><br>
+      RM: 566744<br>
+      Turma: 1TDSPB<br><br>
+      <a href="https://www.linkedin.com/in/guilherme-anitelli">
+        <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+      </a>
+      <a href="https://github.com/GuilhermeAnitelli">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/sena-guilherme">
+        <img src="./src/assets/images/equipe/guilherme-sena.png" width="180" height="180" alt="Guilherme Sena"/><br>
+        <sub><b>Guilherme Sena</b></sub>
+      </a><br>
+      RM: 568101<br>
+      Turma: 1TDSPA<br><br>
+      <a href="https://www.linkedin.com/in/guilherme-sena-7126b5328/">
+        <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+      </a>
+      <a href="https://github.com/sena-guilherme">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Igor-D1">
+        <img src="./src/assets/images/equipe/igor-dantas.jpg" width="180" height="180" alt="Igor Dantas"/><br>
+        <sub><b>Igor Dantas</b></sub>
+      </a><br>
+      RM: 568337<br>
+      Turma: 1TDSPA<br><br>
+      <a href="https://www.linkedin.com/in/igor-dantas-0092b2384">
+        <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+      </a>
+      <a href="https://github.com/Igor-D1">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+      </a>
+    </td>
+    <td align="center">
+      &nbsp;
+    </td>
+  </tr>
+</table>
 
-## Licença
+</br>
 
-Projeto acadêmico desenvolvido pela equipe TerraNova. Consulte o repositório principal para informações de licenciamento.
+## 📬 Contato da Equipe
+
+Caso tenha dúvidas ou sugestões:
+
+📧 **Julia Guimarães:** juliavaleriogs@gmail.com
+<br/>
+📧 **Julia Spanopoulos:** jusspan@gmail.com
+<br/>
+📧 **Guilherme Anitelli:** guilherme.anitelli10@gmail.com
+<br/>
+📧 **Guilherme Sena:** guilhermesantossena@gmail.com
+<br/>
+📧 **Igor Dantas:** igor.pb2017@gmail.com
+<br/>
+
+[![GitHub](https://img.shields.io/badge/GitHub-Repositório-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/juspanopoulos/TerraNova)
