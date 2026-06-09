@@ -1,0 +1,36 @@
+INTEGRANTES DO GRUPO - TerraNova
+
+-- Guilherme Anitelli Cardoso - RM: 566744 - 1TDSPB
+-- Guilherme Santos Sena - RM: 568101 - 1TDSPA
+-- Igor Dantas da Silva - RM: 568337 - 1TDSPA
+-- Julia Silva Spanopoulos - RM: 566754 - 1TDSPA
+-- Julia Valério Guimarães da Silva - RM: 568275 - 1TDSPA
+
+INFORMACOES ADICIONAIS
+
+Este diretório contém os entregáveis do componente de IA & Chatbot do projeto TerraNova.
+
+Dados utilizados:
+-- Models/data/crop_yield.csv
+-- Models/data/irrigation_prediction.csv
+
+Notebooks de desenvolvimento:
+-- Models/GS-M1/GS_Modelo1_ipybn.ipynb
+-- Models/GS-M2/GS_Modelo2.ipynb
+
+Modelos pré-treinados:
+-- Models/GS-M1/best_yield_prediction_model.joblib
+-- Models/GS-M2/best_irrigation_model.joblib
+
+API REST:
+-- app.py
+-- Endpoint de saúde: GET /health
+-- Modelo 1 - previsão de produtividade: POST /modelo1/predict
+-- Modelo 2 - recomendação de irrigação: POST /modelo2/predict
+-- Assistente GAIA: POST /chat
+
+Observações de execução:
+-- Instalar as dependências listadas em requirements.txt antes de iniciar a API.
+-- Para executar localmente: python app.py
+-- O endpoint /chat utiliza Gemini e depende da variável de ambiente GEMINI_API_KEY.
+-- O Modelo 2 consulta a NASA POWER API para obter dados climáticos. Caso essa API falhe ou retorne dados incompletos, o serviço usa valores de fallback baseados no dataset de treinamento para manter a predição operacional.
