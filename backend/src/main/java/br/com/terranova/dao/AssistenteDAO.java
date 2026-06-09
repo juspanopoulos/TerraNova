@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,10 @@ public class AssistenteDAO {
     @Inject
     ConnectionFactory connectionFactory;
 
+    private volatile boolean tabelasVerificadas;
+
     public List<AssistenteConversa> listarConversasPorUsuario(Long idUsuario) {
+        garantirTabelas();
         String sql = """
                 SELECT id_conversa, id_usuario, ds_titulo, dt_criacao, dt_atualizacao
                 FROM TN_ASSISTENTE_CONVERSA
@@ -43,6 +47,7 @@ public class AssistenteDAO {
     }
 
     public Optional<AssistenteConversa> buscarConversa(Long idConversa) {
+        garantirTabelas();
         String sql = """
                 SELECT id_conversa, id_usuario, ds_titulo, dt_criacao, dt_atualizacao
                 FROM TN_ASSISTENTE_CONVERSA
@@ -60,12 +65,13 @@ public class AssistenteDAO {
     }
 
     public AssistenteConversa inserirConversa(AssistenteConversa conversa) {
+        garantirTabelas();
         String sql = """
                 INSERT INTO TN_ASSISTENTE_CONVERSA (id_usuario, ds_titulo, dt_criacao, dt_atualizacao)
                 VALUES (?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_conversa"})) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"ID_CONVERSA"})) {
             statement.setLong(1, conversa.getIdUsuario());
             statement.setString(2, conversa.getTitulo());
             DaoUtils.setLocalDateTime(statement, 3, conversa.getDataCriacao());
@@ -79,6 +85,7 @@ public class AssistenteDAO {
     }
 
     public void atualizarConversa(AssistenteConversa conversa) {
+        garantirTabelas();
         String sql = """
                 UPDATE TN_ASSISTENTE_CONVERSA
                 SET ds_titulo = ?, dt_atualizacao = ?
@@ -96,6 +103,7 @@ public class AssistenteDAO {
     }
 
     public boolean deletarConversa(Long idConversa) {
+        garantirTabelas();
         String deleteMensagens = "DELETE FROM TN_ASSISTENTE_MENSAGEM WHERE id_conversa = ?";
         String deleteConversa = "DELETE FROM TN_ASSISTENTE_CONVERSA WHERE id_conversa = ?";
         try (Connection connection = connectionFactory.getConnection();
@@ -111,6 +119,7 @@ public class AssistenteDAO {
     }
 
     public List<AssistenteMensagem> listarMensagens(Long idConversa) {
+        garantirTabelas();
         String sql = """
                 SELECT id_mensagem, id_conversa, ds_papel, ds_conteudo, dt_mensagem
                 FROM TN_ASSISTENTE_MENSAGEM
@@ -133,12 +142,13 @@ public class AssistenteDAO {
     }
 
     public AssistenteMensagem inserirMensagem(AssistenteMensagem mensagem) {
+        garantirTabelas();
         String sql = """
                 INSERT INTO TN_ASSISTENTE_MENSAGEM (id_conversa, ds_papel, ds_conteudo, dt_mensagem)
                 VALUES (?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_mensagem"})) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"ID_MENSAGEM"})) {
             statement.setLong(1, mensagem.getIdConversa());
             statement.setString(2, mensagem.getPapel());
             statement.setString(3, mensagem.getConteudo());
@@ -148,6 +158,79 @@ public class AssistenteDAO {
             return mensagem;
         } catch (SQLException exception) {
             throw new BancoDadosException("Erro ao salvar mensagem do assistente.", exception);
+        }
+    }
+
+    private void garantirTabelas() {
+        if (tabelasVerificadas) {
+            return;
+        }
+        synchronized (this) {
+            if (tabelasVerificadas) {
+                return;
+            }
+            try (Connection connection = connectionFactory.getConnection()) {
+                if (!tabelaExiste(connection, "TN_ASSISTENTE_CONVERSA")) {
+                    criarTabelaConversa(connection);
+                }
+                if (!tabelaExiste(connection, "TN_ASSISTENTE_MENSAGEM")) {
+                    criarTabelaMensagem(connection);
+                }
+                tabelasVerificadas = true;
+            } catch (SQLException exception) {
+                throw new BancoDadosException("Erro ao preparar tabelas do assistente.", exception);
+            }
+        }
+    }
+
+    private boolean tabelaExiste(Connection connection, String nomeTabela) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, nomeTabela);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() && resultSet.getInt(1) > 0;
+            }
+        }
+    }
+
+    private void criarTabelaConversa(Connection connection) throws SQLException {
+        String sql = """
+                CREATE TABLE TN_ASSISTENTE_CONVERSA (
+                    id_conversa         NUMBER          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                    id_usuario          NUMBER          NOT NULL,
+                    ds_titulo           VARCHAR2(120)   NOT NULL,
+                    dt_criacao          DATE            DEFAULT SYSDATE NOT NULL,
+                    dt_atualizacao      DATE            DEFAULT SYSDATE NOT NULL,
+                    CONSTRAINT fk_conversa_usuario FOREIGN KEY (id_usuario)
+                        REFERENCES TN_USUARIO (id_usuario) ON DELETE CASCADE
+                )
+                """;
+        executarCriacao(connection, sql);
+    }
+
+    private void criarTabelaMensagem(Connection connection) throws SQLException {
+        String sql = """
+                CREATE TABLE TN_ASSISTENTE_MENSAGEM (
+                    id_mensagem         NUMBER          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                    id_conversa         NUMBER          NOT NULL,
+                    ds_papel            VARCHAR2(20)    NOT NULL,
+                    ds_conteudo         CLOB            NOT NULL,
+                    dt_mensagem         DATE            DEFAULT SYSDATE NOT NULL,
+                    CONSTRAINT fk_mensagem_conversa FOREIGN KEY (id_conversa)
+                        REFERENCES TN_ASSISTENTE_CONVERSA (id_conversa) ON DELETE CASCADE,
+                    CONSTRAINT ck_mensagem_papel CHECK (ds_papel IN ('user', 'assistant'))
+                )
+                """;
+        executarCriacao(connection, sql);
+    }
+
+    private void executarCriacao(Connection connection, String sql) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (SQLException exception) {
+            if (exception.getErrorCode() != 955) {
+                throw exception;
+            }
         }
     }
 

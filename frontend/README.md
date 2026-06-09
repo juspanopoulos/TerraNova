@@ -39,7 +39,7 @@ Enquanto o clima muda, a tecnologia evolui. O TerraNova conecta dados, inteligê
 <br/>
 
 ## 🌱 Sobre o Projeto
-O TerraNova é uma plataforma de gestão rural desenvolvida para ajudar produtores a compreender, monitorar e cuidar de suas propriedades de forma mais simples e estratégica. Em muitas fazendas, informações importantes estão espalhadas entre anotações, planilhas, aplicativos e observações de campo, dificultando a tomada de decisões e aumentando o risco de problemas passarem despercebidos.
+O TerraNova é uma plataforma de gestão rural desenvolvida para ajudar produtores a compreender, monitorar e cuidar de suas propriedades de forma mais simples e estratégica. Em muitas fazendas, informações importantes estão espalhadas entre planilhas, aplicativos e observações de campo, dificultando a tomada de decisões e aumentando o risco de problemas passarem despercebidos.
 
 Entre os desafios mais comuns estão:
 - Falta de uma visão clara da propriedade
@@ -80,7 +80,6 @@ Criando uma experiência que permite ao produtor entender sua propriedade com ma
 | 💧 Consumo Hídrico | Indicadores de consumo, histórico, distribuição por setor e tabela de irrigação com comparativos por período. |
 | 🧠 Assistente TerraNova | Chat integrado com prompts sugeridos para consultar clima, solo, irrigação, alertas e colheitas no contexto da propriedade. |
 | 📜 Histórico de Conversas | Armazenamento de conversas do assistente, com opção de abrir histórico e iniciar nova conversa. |
-| 📝 Anotações de Campo | Criação, edição e exclusão de anotações com editor de texto rico. |
 | 🔍 Filtros Avançados | Painel lateral de filtros por período, mês, nível e tipo de alerta, setor do solo e cultura, conforme a view ativa. |
 | 📈 Relatórios em PDF | Exportação de relatório da visão temporal (dia, semana, mês ou ano) com dados da propriedade e alertas. |
 | 🏷️ Gestão de Prioridade | Classificação visual de alertas por urgência, com chips, cores e colunas dedicadas no quadro kanban. |
@@ -153,7 +152,7 @@ Abaixo estão as funcionalidades centrais implementadas no Frontend:
 | **Consumo de API (dashboard)** | **fetchDashboardData (mock)** | :hourglass: | `loadDashboardData.ts` simula latência e erros (`network`, `server`, `timeout`, `unauthorized`) antes de retornar mocks. Contrato preparado para substituição pela API Java descrita em `BACKEND_INTEGRATION.md`. |
 | **Fetch API** | **fetch** | :hourglass: | Uso pontual em `downloadVisionReport.tsx` para carregar o logo público do PDF. Demais módulos ainda consomem dados locais/mock. |
 | **Tratamento de erros** | **Classes de erro + normalização** | :heavy_check_mark: | `DashboardLoadFailure` e `toDashboardLoadError()` em `DashboardLoadState.tsx`; `try/catch` no carregamento do dashboard e da equipe; mensagens amigáveis por tipo de falha. |
-| **Persistência local** | **localStorage / sessionStorage** | :heavy_check_mark: | Sessão de auth (`authSession.ts`), preferências (`preferences.ts`), anotações (`notesStorage.ts`), conversas do assistente (`assistantChat.ts`). `sessionStorage` usado para simular erro forçado no mock do dashboard. |
+| **Persistência local** | **localStorage / sessionStorage** | :heavy_check_mark: | Sessão de auth (`authSession.ts`), preferências (`preferences.ts`) e conversas do assistente (`assistantChat.ts`). `sessionStorage` usado para simular erro forçado no mock do dashboard. |
 | **Relatórios PDF** | **@react-pdf/renderer** | :heavy_check_mark: | Geração e download de relatório das visões temporais via `VisionReportDocument.tsx`, `downloadVisionReport.tsx` e botão `VisionPdfDownloadButton.tsx`. |
 | **Animações e UX** | **GSAP + Lenis** | :heavy_check_mark: | GSAP em hooks de seção (`useHomeSectionAnimation`, `useAboutSectionAnimation`, etc.); Lenis para scroll suave nas páginas institucionais (`smoothScroll.ts`, `SiteSmoothScroll` em `AppRoutes.tsx`). |
 | **Ícones e identidade visual** | **Lucide React + tokens Tailwind** | :heavy_check_mark: | Ícones em navegação, dashboard e FAQ; tokens reutilizáveis em `src/constants/tokens/` (home, sobre, faq, contato, auth). |
@@ -194,7 +193,6 @@ O roteamento utiliza **React Router DOM v7** com URLs centralizadas em `src/cons
 | `/plataforma/colheitas` | Previsão de colheitas |
 | `/plataforma/agua` | Consumo hídrico |
 | `/plataforma/assistente` | Assistente TerraNova |
-| `/plataforma/anotacoes` | Anotações |
 | `/plataforma/configuracoes/geral` | Configurações gerais |
 | `/plataforma/configuracoes/empresa` | Dados da empresa |
 | `/plataforma/configuracoes/integracoes` | Integrações |
@@ -264,7 +262,7 @@ export type GeneralPreferences = {
 
 ```typescript
 export type AuthMode = "login" | "register" | "registerCompany";
-export type ViewId = "overview" | "alerts" | "climate" | "soil" | "growth" | "water" | "assistant" | "notes" | "settings";
+export type ViewId = "overview" | "alerts" | "climate" | "soil" | "growth" | "water" | "assistant" | "settings";
 export type TimeFilter = "daily" | "weekly" | "monthly" | "yearly";
 export type AlertLevel = "critical" | "warning" | "normal";
 export type DashboardLoadStatus = "idle" | "loading" | "success" | "error";

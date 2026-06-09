@@ -10,7 +10,7 @@ export type DateRange = { start: string; end: string };
 
 export type AlertLevel = "critical" | "warning" | "normal";
 
-export type ViewId = "overview" | "alerts" | "climate" | "soil" | "growth" | "water" | "assistant" | "notes" | "settings";
+export type ViewId = "overview" | "alerts" | "climate" | "soil" | "growth" | "water" | "assistant" | "settings";
 
 export type TimeFilter = "daily" | "weekly" | "monthly" | "yearly";
 
@@ -68,7 +68,7 @@ const ALERT_LEVELS: { id: AlertLevel; label: string }[] = [
 ];
 
 export function hasFiltersForView(view: ViewId, timeFilter: TimeFilter): boolean {
-  if (view === "climate" || view === "settings" || view === "assistant" || view === "notes") return false;
+  if (view === "climate" || view === "settings" || view === "assistant") return false;
   if (view === "alerts" || view === "soil" || view === "growth") return true;
   if (view === "overview" || view === "water") return timeFilter !== "daily";
   return false;

@@ -243,20 +243,6 @@ export type UsuarioPreferenciasRequest = Partial<
   Omit<UsuarioPreferenciasResponse, "idUsuario" | "dataAtualizacao">
 >;
 
-export type AnotacaoResponse = {
-  idAnotacao: number;
-  idUsuario: number;
-  titulo: string;
-  conteudoHtml: string | null;
-  dataCriacao: string;
-  dataAtualizacao: string;
-};
-
-export type AnotacaoRequest = {
-  titulo: string;
-  conteudoHtml?: string | null;
-};
-
 export type AssistenteMensagemResponse = {
   idMensagem: number;
   idConversa: number;

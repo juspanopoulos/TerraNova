@@ -8,7 +8,6 @@ import {
   Flame,
   LayoutDashboard,
   Leaf,
-  NotebookPen,
   Sprout,
   Sun,
   Thermometer,
@@ -197,7 +196,7 @@ export const homeAlerts: HomeAlert[] = [
 export const platformCopy = {
   eyebrow: "A plataforma",
   title: "Ferramentas para produtores",
-  body: "Do panorama do dia às anotações de campo, tudo integrado num só fluxo.",
+  body: "Do panorama do dia aos dados do campo, tudo integrado num só fluxo.",
 };
 
 export type HomeModule = {
@@ -257,13 +256,6 @@ export const homeModules: HomeModule[] = [
     description:
       "Enxergue consumo e eficiência hídrica por setor: onde a água vai, onde dá para economizar e quando algo foge do padrão. Metas e comparativos ficam visíveis para ajustar a irrigação.",
     icon: Droplets,
-  },
-  {
-    id: "notes",
-    title: "Anotações",
-    description:
-      "Registre o que viu no campo, decisões tomadas e aprendizados da safra. O histórico fica organizado para consultar depois, na próxima rodada ou na safra que vem.",
-    icon: NotebookPen,
   },
 ];
 

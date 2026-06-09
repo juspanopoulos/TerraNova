@@ -22,7 +22,7 @@ O backend previsto é uma **API Java** (REST) persistindo dados em **Oracle Data
                            │ usuários,    │        │ (OpenWeather,│        │ ( sensores,   │
                            │ propriedade, │        │ INMET, etc.) │        │  IA, etc.)   │
                            │ alertas,     │        └──────────────┘        └──────────────┘
-                           │ anotações…   │
+                           │ históricos…  │
                            └──────────────┘
 ```
 
@@ -32,7 +32,7 @@ O backend previsto é uma **API Java** (REST) persistindo dados em **Oracle Data
 |--------|------------------|
 | **Frontend (este repo)** | UI, validação de formulário, token em memória/localStorage, consumo da API Java |
 | **API Java** | Autenticação, regras de negócio, ORM/JDBC com Oracle, agregação de dados, cache de APIs externas |
-| **Oracle** | Persistência: usuários, empresas/fazendas, alertas, anotações, históricos, configurações |
+| **Oracle** | Persistência: usuários, empresas/fazendas, alertas, históricos, configurações |
 | **APIs externas** | Dados em tempo real ou previsão (clima, etc.) — **somente o backend Java acessa** |
 
 ### Implicações para quem integra o frontend
@@ -61,7 +61,6 @@ Hoje **não há chamadas HTTP reais** para autenticação nem para a maioria dos
 | Clima / solo / água (resumo) | Mock em `fetchDashboardData()` |
 | Alertas, colheitas, gráficos históricos | Importam `MOCK_DASHBOARD_DATA` direto nas views |
 | Empresa | Estado React + default mock; salvar em Configurações não chama API |
-| Anotações | `localStorage` (`notesStorage.ts`) |
 | Assistente IA | Respostas simuladas (`mockAssistantReply` em `assistantChat.ts`) |
 | Contato (site) | Formulário validado com React Hook Form; submit ainda não envia e-mail/API |
 
@@ -402,7 +401,6 @@ Após login bem-sucedido, buscar perfil da empresa e fazer `setCompany(profile)`
 
 | Módulo | Arquivo | Persistência atual |
 |--------|---------|-------------------|
-| Anotações | `lib/dashboard/notesStorage.ts` | localStorage |
 | Assistente | `lib/dashboard/assistantChat.ts` | localStorage + mock reply |
 | Preferências | `lib/dashboard/preferences.ts` | localStorage (tema, motion, e-mail) |
 | Contato (site) | `components/contato/ContactForm.tsx` | submit local (sem API) |
@@ -428,7 +426,7 @@ Todas ficam sob `/plataforma/*` dentro de `DashboardLayout`. Requerem autentica�
 4. CRUD empresa/propriedade
 5. Serviço de clima: integração com API externa + cache/persistência no Oracle
 6. Endpoints de dashboard (summary, alertas, solo, água, colheitas, históricos)
-7. Anotações, assistente, contato, integrações
+7. Assistente, contato, integrações
 
 ### Frontend (este repo — consumindo a API Java)
 
@@ -438,7 +436,7 @@ Todas ficam sob `/plataforma/*` dentro de `DashboardLayout`. Requerem autentica�
 4. **GET dashboard summary** → `fetchDashboardData.ts`
 5. **GET/PATCH company** → login + `EmpresaView`
 6. Substituir `MOCK_DASHBOARD_DATA` nas views, módulo a módulo
-7. Anotações, assistente, contato (endpoints Java correspondentes)
+7. Assistente e contato (endpoints Java correspondentes)
 
 ---
 

@@ -15,7 +15,6 @@ import {
   Mail,
   Map,
   Network,
-  NotebookPen,
   Plug,
   Settings2,
   Sprout,
@@ -132,12 +131,6 @@ export const sitemapSections: SitemapSection[] = [
         to: DASHBOARD_ROUTES.assistente,
         description: "Apoio inteligente no dia a dia no campo.",
         icon: Bot,
-      },
-      {
-        label: "Anotações",
-        to: DASHBOARD_ROUTES.anotacoes,
-        description: "Registros e observações de campo.",
-        icon: NotebookPen,
       },
       {
         label: "Alertas",

@@ -142,19 +142,7 @@ CREATE TABLE TN_AREA_MONITORADA (
         REFERENCES TN_PROPRIEDADE (id_propriedade)
 );
 
--- 5.1. TN_ANOTACAO
-CREATE TABLE TN_ANOTACAO (
-    id_anotacao         NUMBER          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_usuario          NUMBER          NOT NULL,
-    ds_titulo           VARCHAR2(120)   NOT NULL,
-    ds_conteudo_html    CLOB,
-    dt_criacao          DATE            DEFAULT SYSDATE NOT NULL,
-    dt_atualizacao      DATE            DEFAULT SYSDATE NOT NULL,
-    CONSTRAINT fk_anotacao_usuario FOREIGN KEY (id_usuario)
-        REFERENCES TN_USUARIO (id_usuario) ON DELETE CASCADE
-);
-
--- 5.2. TN_ASSISTENTE_CONVERSA
+-- 5.1. TN_ASSISTENTE_CONVERSA
 CREATE TABLE TN_ASSISTENTE_CONVERSA (
     id_conversa         NUMBER          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_usuario          NUMBER          NOT NULL,
@@ -165,7 +153,7 @@ CREATE TABLE TN_ASSISTENTE_CONVERSA (
         REFERENCES TN_USUARIO (id_usuario) ON DELETE CASCADE
 );
 
--- 5.3. TN_ASSISTENTE_MENSAGEM
+-- 5.2. TN_ASSISTENTE_MENSAGEM
 CREATE TABLE TN_ASSISTENTE_MENSAGEM (
     id_mensagem         NUMBER          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_conversa         NUMBER          NOT NULL,

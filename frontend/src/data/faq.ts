@@ -33,7 +33,7 @@ export const faqCategories: FaqCategory[] = [
         id: "o-que-e",
         question: "O que é o TerraNova?",
         answer:
-          "O TerraNova é uma plataforma digital para acompanhar a propriedade rural com mais clareza. Ela reúne clima, solo, consumo de água, previsão de colheitas, alertas ambientais e anotações de campo, tudo num painel pensado para quem precisa decidir com calma, sem perder tempo caçando informação.",
+          "O TerraNova é uma plataforma digital para acompanhar a propriedade rural com mais clareza. Ela reúne clima, solo, consumo de água, previsão de colheitas e alertas ambientais em um painel pensado para quem precisa decidir com calma, sem perder tempo caçando informação.",
       },
       {
         id: "publico",
@@ -45,7 +45,7 @@ export const faqCategories: FaqCategory[] = [
         id: "diferencial",
         question: "O que muda em relação a planilhas e apps separados?",
         answer:
-          "Em vez de alternar entre ferramentas, sensores e anotações soltas, o TerraNova centraliza indicadores e alertas num único fluxo. Você abre a Visão Geral, vê o que merece atenção primeiro e aprofunda nos módulos de clima, solo, água ou colheitas conforme a necessidade do dia.",
+          "Em vez de alternar entre ferramentas e sensores, o TerraNova centraliza indicadores e alertas num único fluxo. Você abre a Visão Geral, vê o que merece atenção primeiro e aprofunda nos módulos de clima, solo, água ou colheitas conforme a necessidade do dia.",
       },
     ],
   },
@@ -73,12 +73,6 @@ export const faqCategories: FaqCategory[] = [
         question: "Que tipo de alertas a plataforma envia?",
         answer:
           "Alertas sobre condições que podem afetar a safra ou a operação: seca prolongada, calor extremo, chuva intensa, umidade do solo fora da faixa ideal e outros sinais configuráveis. Eles aparecem priorizados por criticidade para você agir no que é urgente.",
-      },
-      {
-        id: "anotacoes",
-        question: "Posso registrar observações de campo?",
-        answer:
-          "Sim. O módulo de Anotações permite registrar decisões, visitas ao talhão e aprendizados com editor de texto rico. O histórico fica organizado para consultar depois, útil para comparar safras e entender o que funcionou.",
       },
       {
         id: "recortes",

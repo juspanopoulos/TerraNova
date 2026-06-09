@@ -30,7 +30,6 @@ export type ViewId =
   | "growth"
   | "water"
   | "assistant"
-  | "notes"
   | "settings";
 
 export type SettingsTabId = "geral" | "empresa" | "integracoes";

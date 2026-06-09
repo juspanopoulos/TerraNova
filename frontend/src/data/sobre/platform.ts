@@ -6,7 +6,6 @@ import {
   Droplets,
   LayoutDashboard,
   Leaf,
-  NotebookPen,
   Sprout,
   Waypoints,
 } from "lucide-react";
@@ -73,13 +72,6 @@ export const platformModules: PlatformModule[] = [
       "Eficiência de irrigação, comparativos por setor e economia de água com metas visíveis.",
     icon: Droplets,
   },
-  {
-    id: "notes",
-    title: "Anotações",
-    description:
-      "Registre observações de campo, decisões e aprendizados com editor rico e histórico organizado.",
-    icon: NotebookPen,
-  },
 ];
 
 export const platformHighlights: {
@@ -93,9 +85,9 @@ export const platformHighlights: {
     detail: "Compare hoje, esta semana, o mês passado ou o ano anterior sem montar relatório na mão.",
   },
   {
-    value: "8+",
+    value: "7+",
     label: "Ferramentas juntas",
-    detail: "Cultivo, água, alertas, assistente e anotações convivem na mesma tela, sem app extra.",
+    detail: "Cultivo, água, alertas e assistente convivem na mesma tela, sem app extra.",
   },
   {
     value: "1",
@@ -142,10 +134,10 @@ export const howItWorksSteps: HowItWorksStep[] = [
   },
   {
     id: "decide",
-    title: "Anote e aprenda",
+    title: "Acompanhe e aprenda",
     description:
-      "Registre o que fez e volte depois com mais segurança na próxima escolha.",
-    icon: NotebookPen,
+      "Compare os dados do campo e volte depois com mais segurança na próxima escolha.",
+    icon: LayoutDashboard,
   },
 ];
 
