@@ -17,6 +17,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.Map;
+import org.jboss.resteasy.reactive.ResponseStatus;
 
 @ApplicationScoped
 @Path("/ia")
@@ -35,12 +36,14 @@ public class IaResource {
 
     @POST
     @Path("/produtividade")
+    @ResponseStatus(201)
     public IaProdutividadeResponse predizerProdutividade(@Valid IaProdutividadeRequest request) {
         return iaBO.predizerProdutividade(request);
     }
 
     @POST
     @Path("/irrigacao")
+    @ResponseStatus(201)
     public IaIrrigacaoResponse predizerIrrigacao(@Valid IaIrrigacaoRequest request) {
         return iaBO.predizerIrrigacao(request);
     }

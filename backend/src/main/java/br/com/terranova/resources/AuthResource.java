@@ -14,6 +14,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import org.jboss.resteasy.reactive.ResponseStatus;
 
 @ApplicationScoped
 @Path("/auth")
@@ -35,6 +36,7 @@ public class AuthResource {
 
     @POST
     @Path("/register")
+    @ResponseStatus(201)
     public CadastroPlataformaResponse cadastrar(@Valid CadastroPlataformaRequest request) {
         return cadastroPlataformaBO.cadastrar(request);
     }

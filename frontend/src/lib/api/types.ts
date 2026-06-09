@@ -122,13 +122,6 @@ export type ColetaNasaResponse = {
   dadoClimatico: DadoClimaticoResponse;
 };
 
-export type AreaMonitoradaRequest = {
-  idPropriedade: number;
-  nomeArea: string;
-  areaHectares?: number | null;
-  tipoSolo?: string | null;
-};
-
 export type LeituraSoloResponse = {
   idLeituraSolo: number;
   idArea: number;
@@ -143,11 +136,7 @@ export type LeituraSoloRequest = {
   dataColeta?: string | null;
   umidadeSolo: number;
   tipoSolo?: string | null;
-<<<<<<< Updated upstream
   fonte?: "MANUAL" | "SENSOR" | "NASA" | "IA" | string | null;
-=======
-  fonte?: "MANUAL" | "SENSOR" | string | null;
->>>>>>> Stashed changes
 };
 
 export type IrrigacaoResponse = {
@@ -170,11 +159,7 @@ export type IrrigacaoRequest = {
   consumoAtualMm?: number | null;
   areaCampoHectare?: number | null;
   usouCoberturaSolo?: "SIM" | "NAO" | string | null;
-<<<<<<< Updated upstream
   origem?: "MANUAL" | "SENSOR" | "IA" | string | null;
-=======
-  origem?: "MANUAL" | "SENSOR" | string | null;
->>>>>>> Stashed changes
 };
 
 export type CulturaResponse = {

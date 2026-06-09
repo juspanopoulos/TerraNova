@@ -14,6 +14,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import org.jboss.resteasy.reactive.ResponseStatus;
 
 @ApplicationScoped
 @Path("/clima/nasa")
@@ -26,6 +27,7 @@ public class ClimaNasaResource {
 
     @POST
     @Path("/areas/{idArea:[0-9]+}/coletar")
+    @ResponseStatus(201)
     public ColetaNasaResponse coletarEPersistir(
             @PathParam("idArea") Long idArea,
             @QueryParam("dataReferencia") String dataReferencia

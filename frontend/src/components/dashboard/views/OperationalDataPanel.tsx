@@ -33,10 +33,6 @@ const REGISTER_ACTIONS: {
   { id: "crop", label: "Plantio", icon: Sprout, requiresArea: true },
 ];
 
-<<<<<<< Updated upstream
-const IRRIGATION_TYPES = ["GOTEJAMENTO", "ASPERSAO", "SULCO", "PIVO", "MANUAL", "OUTRO"];
-const YES_NO = ["SIM", "NAO"];
-=======
 const SOIL_TYPE_OPTIONS = [
   { value: "Clay", label: "Argiloso" },
   { value: "Silt", label: "Siltoso" },
@@ -59,7 +55,6 @@ const SOURCE_OPTIONS = [
   { value: "MANUAL", label: "Manual" },
   { value: "SENSOR", label: "Sensor" },
 ] as const;
->>>>>>> Stashed changes
 
 function dateInput(offsetDays = 0) {
   const date = new Date();
@@ -91,14 +86,11 @@ function normalizeYesNo(value: string | null | undefined) {
   return normalized === "SIM" || normalized === "YES" || normalized === "TRUE" ? "Yes" : "No";
 }
 
-<<<<<<< Updated upstream
-=======
 function validSoilType(value: string | null | undefined) {
   const normalized = (value ?? "").trim();
   return SOIL_TYPE_OPTIONS.some((option) => option.value === normalized) ? normalized : SOIL_TYPE_OPTIONS[0].value;
 }
 
->>>>>>> Stashed changes
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block">
@@ -158,16 +150,6 @@ export function OperationalDataPanel() {
     setSelectedAreaId(dashboardAreas[0].idArea);
   }, [dashboardAreas, selectedAreaId]);
 
-<<<<<<< Updated upstream
-  const [areaForm, setAreaForm] = useState({
-    nomeArea: "",
-    areaHectares: "",
-    tipoSolo: "",
-  });
-  const [soilForm, setSoilForm] = useState({
-    umidadeSolo: "",
-    tipoSolo: "",
-=======
   const [areaForm, setAreaForm] = useState<{
     nomeArea: string;
     areaHectares: string;
@@ -184,7 +166,6 @@ export function OperationalDataPanel() {
   }>({
     umidadeSolo: "",
     tipoSolo: SOIL_TYPE_OPTIONS[0].value,
->>>>>>> Stashed changes
     fonte: "MANUAL",
   });
   const [irrigationForm, setIrrigationForm] = useState({
@@ -209,11 +190,7 @@ export function OperationalDataPanel() {
     if (!selectedArea) return;
     setSoilForm((current) => ({
       ...current,
-<<<<<<< Updated upstream
-      tipoSolo: current.tipoSolo || selectedArea.tipoSolo || selectedSoil?.soilType || "",
-=======
       tipoSolo: validSoilType(current.tipoSolo || selectedArea.tipoSolo || selectedSoil?.soilType),
->>>>>>> Stashed changes
       umidadeSolo: current.umidadeSolo || String(Math.round(selectedSoil?.moisture ?? soil.current.moisture ?? 0)),
     }));
     setIrrigationForm((current) => ({
@@ -251,11 +228,7 @@ export function OperationalDataPanel() {
           idPropriedade: company.idPropriedade!,
           nomeArea: areaForm.nomeArea.trim(),
           areaHectares: numberOrNull(areaForm.areaHectares),
-<<<<<<< Updated upstream
-          tipoSolo: areaForm.tipoSolo.trim() || null,
-=======
           tipoSolo: areaForm.tipoSolo,
->>>>>>> Stashed changes
         }),
       "Área gravada no banco de dados.",
     );
@@ -269,11 +242,7 @@ export function OperationalDataPanel() {
           idArea: areaId,
           dataColeta: dateTimeFromDate(dateInput()),
           umidadeSolo: numberOrZero(soilForm.umidadeSolo),
-<<<<<<< Updated upstream
-          tipoSolo: soilForm.tipoSolo.trim() || selectedArea?.tipoSolo || null,
-=======
           tipoSolo: soilForm.tipoSolo || selectedArea?.tipoSolo || null,
->>>>>>> Stashed changes
           fonte: soilForm.fonte,
         }),
       "Leitura de solo gravada no banco de dados.",
@@ -359,11 +328,7 @@ export function OperationalDataPanel() {
           idUsuario: authUser.idUsuario,
           latitude: company.latitude!,
           longitude: company.longitude!,
-<<<<<<< Updated upstream
-          soil_type: selectedSoil.soilType || selectedArea?.tipoSolo || "",
-=======
           soil_type: validSoilType(selectedSoil.soilType || selectedArea?.tipoSolo),
->>>>>>> Stashed changes
           soil_moisture: selectedSoil.moisture,
           crop_type: activeCrop.name,
           crop_growth_stage: activeCrop.stage,
@@ -440,9 +405,6 @@ export function OperationalDataPanel() {
                 <input className={inputField} type="number" min="0" step="0.01" value={areaForm.areaHectares} onChange={(event) => setAreaForm({ ...areaForm, areaHectares: event.target.value })} />
               </Field>
               <Field label="Tipo de solo">
-<<<<<<< Updated upstream
-                <input className={inputField} value={areaForm.tipoSolo} onChange={(event) => setAreaForm({ ...areaForm, tipoSolo: event.target.value })} />
-=======
                 <select className={inputField} value={areaForm.tipoSolo} onChange={(event) => setAreaForm({ ...areaForm, tipoSolo: event.target.value })}>
                   {SOIL_TYPE_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -450,7 +412,6 @@ export function OperationalDataPanel() {
                     </option>
                   ))}
                 </select>
->>>>>>> Stashed changes
               </Field>
             </div>
           )}
@@ -461,13 +422,6 @@ export function OperationalDataPanel() {
                 <input className={inputField} type="number" min="0" max="100" step="0.01" value={soilForm.umidadeSolo} onChange={(event) => setSoilForm({ ...soilForm, umidadeSolo: event.target.value })} />
               </Field>
               <Field label="Tipo de solo">
-<<<<<<< Updated upstream
-                <input className={inputField} value={soilForm.tipoSolo} onChange={(event) => setSoilForm({ ...soilForm, tipoSolo: event.target.value })} />
-              </Field>
-              <Field label="Fonte">
-                <select className={inputField} value={soilForm.fonte} onChange={(event) => setSoilForm({ ...soilForm, fonte: event.target.value })}>
-                  {["MANUAL", "SENSOR"].map((value) => <option key={value}>{value}</option>)}
-=======
                 <select className={inputField} value={soilForm.tipoSolo} onChange={(event) => setSoilForm({ ...soilForm, tipoSolo: event.target.value })}>
                   {SOIL_TYPE_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -483,7 +437,6 @@ export function OperationalDataPanel() {
                       {option.label}
                     </option>
                   ))}
->>>>>>> Stashed changes
                 </select>
               </Field>
             </div>
@@ -493,15 +446,11 @@ export function OperationalDataPanel() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <Field label="Tipo">
                 <select className={inputField} value={irrigationForm.tipoIrrigacao} onChange={(event) => setIrrigationForm({ ...irrigationForm, tipoIrrigacao: event.target.value })}>
-<<<<<<< Updated upstream
-                  {IRRIGATION_TYPES.map((value) => <option key={value}>{value}</option>)}
-=======
                   {IRRIGATION_TYPE_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
->>>>>>> Stashed changes
                 </select>
               </Field>
               <Field label="Irrigação anterior (mm)">
@@ -515,28 +464,20 @@ export function OperationalDataPanel() {
               </Field>
               <Field label="Cobertura de solo">
                 <select className={inputField} value={irrigationForm.usouCoberturaSolo} onChange={(event) => setIrrigationForm({ ...irrigationForm, usouCoberturaSolo: event.target.value })}>
-<<<<<<< Updated upstream
-                  {YES_NO.map((value) => <option key={value}>{value}</option>)}
-=======
                   {YES_NO_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
->>>>>>> Stashed changes
                 </select>
               </Field>
               <Field label="Origem">
                 <select className={inputField} value={irrigationForm.origem} onChange={(event) => setIrrigationForm({ ...irrigationForm, origem: event.target.value })}>
-<<<<<<< Updated upstream
-                  {["MANUAL", "SENSOR"].map((value) => <option key={value}>{value}</option>)}
-=======
                   {SOURCE_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
->>>>>>> Stashed changes
                 </select>
               </Field>
             </div>

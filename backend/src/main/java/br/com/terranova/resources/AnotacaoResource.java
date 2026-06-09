@@ -26,36 +26,12 @@ public class AnotacaoResource {
     AnotacaoBO anotacaoBO;
 
     @GET
-<<<<<<< Updated upstream
-    @Path("usuarios/{idUsuario:[0-9]+}/anotacoes")
-=======
->>>>>>> Stashed changes
     public List<AnotacaoResponse> listar(@PathParam("idUsuario") Long idUsuario) {
         return anotacaoBO.listarPorUsuario(idUsuario);
     }
 
     @POST
-<<<<<<< Updated upstream
-    @Path("usuarios/{idUsuario:[0-9]+}/anotacoes")
     public Response criar(@PathParam("idUsuario") Long idUsuario, @Valid AnotacaoRequest request) {
         return ResourceUtils.created(anotacaoBO.criar(idUsuario, request));
     }
-
-    @PUT
-    @Path("anotacoes/{id:[0-9]+}")
-    public AnotacaoResponse atualizar(@PathParam("id") Long id, @Valid AnotacaoRequest request) {
-        return anotacaoBO.atualizar(id, request);
-    }
-
-    @DELETE
-    @Path("anotacoes/{id:[0-9]+}")
-    public Response deletar(@PathParam("id") Long id) {
-        anotacaoBO.deletar(id);
-        return ResourceUtils.noContent();
-    }
-=======
-    public Response criar(@PathParam("idUsuario") Long idUsuario, @Valid AnotacaoRequest request) {
-        return ResourceUtils.created(anotacaoBO.criar(idUsuario, request));
-    }
->>>>>>> Stashed changes
 }
