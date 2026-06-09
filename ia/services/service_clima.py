@@ -22,6 +22,7 @@ def get_clima(latitude, longitude):
             params=params,
             timeout=30
         )
+        response.raise_for_status()
 
         data = response.json()
 

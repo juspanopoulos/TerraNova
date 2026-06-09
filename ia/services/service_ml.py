@@ -14,6 +14,23 @@ model2 = joblib.load(
     BASE_DIR / "Models" / "GS-M2" / "best_irrigation_model.joblib"
 )
 
+# Valores medianos aproximados do dataset de treinamento do Modelo 2.
+CLIMA_FALLBACK = {
+    "temperature": 27.09,
+    "humidity": 60.04,
+    "rainfall": 1250.34,
+    "sunlight_hours": 7.56,
+    "wind_speed": 10.19
+}
+
+CLIMA_PAYLOAD_KEYS = {
+    "temperature": ("temperature", "temperature_c", "temperature_celsius"),
+    "humidity": ("humidity",),
+    "rainfall": ("rainfall", "rainfall_mm"),
+    "sunlight_hours": ("sunlight_hours",),
+    "wind_speed": ("wind_speed", "wind_speed_kmh")
+}
+
 
 def preparar_dados_modelo1(data):
     input_data = pd.DataFrame([{
@@ -45,12 +62,21 @@ def preparar_dados_modelo2(data):
         latitude = data.get("latitude")
         longitude = data.get("longitude")
 
-        clima = get_clima(latitude, longitude)
-        season = get_season()
+        try:
+            clima_api = get_clima(latitude, longitude)
+        except Exception as clima_error:
+            print(f"Erro ao obter dados climaticos: {clima_error}")
+            clima_api = {}
+
+        clima = normalizar_dados_climaticos(
+            clima_api,
+            data
+        )
+        season = data.get("season") or get_season()
 
         dados_modelo = pd.DataFrame([{
             "Soil_Type": data["soil_type"],
-            "Soil_Moisture": data["soil_moisture"],
+            "Soil_Moisture": float(data["soil_moisture"]),
             "Temperature_C": clima["temperature"],
             "Humidity": clima["humidity"],
             "Rainfall_mm": clima["rainfall"],
@@ -60,17 +86,18 @@ def preparar_dados_modelo2(data):
             "Crop_Growth_Stage": data["crop_growth_stage"],
             "Season": season,
             "Irrigation_Type": data["irrigation_type"],
-            "Field_Area_hectare": data["field_area_hectare"],
+            "Field_Area_hectare": float(data["field_area_hectare"]),
             "Mulching_Used": normalizar_cobertura_solo(data["mulching_used"]),
-            "Previous_Irrigation_mm": data["previous_irrigation_mm"]
+            "Previous_Irrigation_mm": float(data["previous_irrigation_mm"])
         }])
 
         prediction = model2.predict(dados_modelo)
         resultado = str(prediction[0])
         return resultado, dados_modelo
     except Exception as e:
-        print(f"Erro ao preparar dados para o modelo de irrigacao: {e}")
-        return "Erro"
+        raise ValueError(
+            f"Erro ao preparar dados para o modelo de irrigacao: {e}"
+        ) from e
 
 
 def gerar_recomendacao(resultado, crop_type, consumo_atual):
@@ -91,7 +118,9 @@ def gerar_recomendacao(resultado, crop_type, consumo_atual):
         "High": 1.3
     }
 
-    recomendado = round(base * fatores[resultado], 2)
+    fator = fatores.get(resultado, fatores["Medium"])
+    recomendado = round(base * fator, 2)
+    consumo_atual = float(consumo_atual)
     margem = 0.5
 
     if consumo_atual < recomendado - margem:
@@ -112,6 +141,33 @@ def normalizar_cobertura_solo(valor):
     if isinstance(valor, str):
         return 1 if valor.strip().lower() in ("yes", "sim", "1", "true") else 0
     return int(valor)
+
+
+def normalizar_dados_climaticos(clima, data):
+    clima = clima or {}
+
+    return {
+        campo: obter_valor_climatico(clima, data, campo)
+        for campo in CLIMA_FALLBACK
+    }
+
+
+def obter_valor_climatico(clima, data, campo):
+    valor = clima.get(campo)
+
+    if valor in (None, ""):
+        for chave_payload in CLIMA_PAYLOAD_KEYS[campo]:
+            valor = data.get(chave_payload)
+            if valor not in (None, ""):
+                break
+
+    if valor in (None, ""):
+        return CLIMA_FALLBACK[campo]
+
+    try:
+        return float(valor)
+    except (TypeError, ValueError):
+        return CLIMA_FALLBACK[campo]
 
 
 def gerar_contexto_irrigacao(recomendado, consumo_atual, situacao):
