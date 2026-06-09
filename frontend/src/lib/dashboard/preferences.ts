@@ -1,6 +1,6 @@
+import type { PageFilters } from "@/components/dashboard/FilterSlideover";
+import type { UsuarioPreferenciasResponse } from "@/lib/api/types";
 import type { GeneralPreferences } from "@/types/dashboard";
-
-export const PREFERENCES_STORAGE_KEY = "terranova-dashboard-preferences";
 
 export const DEFAULT_GENERAL_PREFERENCES: GeneralPreferences = {
   darkMode: false,
@@ -8,19 +8,31 @@ export const DEFAULT_GENERAL_PREFERENCES: GeneralPreferences = {
   emailNotifications: true,
 };
 
-export function loadStoredPreferences(): GeneralPreferences {
-  if (typeof window === "undefined") return { ...DEFAULT_GENERAL_PREFERENCES };
-
-  try {
-    const raw = localStorage.getItem(PREFERENCES_STORAGE_KEY);
-    if (!raw) return { ...DEFAULT_GENERAL_PREFERENCES };
-    const parsed = JSON.parse(raw) as Partial<GeneralPreferences>;
-    return { ...DEFAULT_GENERAL_PREFERENCES, ...parsed };
-  } catch {
-    return { ...DEFAULT_GENERAL_PREFERENCES };
-  }
+export function filtersFromPreferences(
+  preferencias: UsuarioPreferenciasResponse,
+): PageFilters {
+  return {
+    dateRange: {
+      start: preferencias.dateRangeStart,
+      end: preferencias.dateRangeEnd,
+    },
+    selectedMonth: preferencias.selectedMonth,
+    alertLevels: preferencias.alertLevels.filter(
+      (level): level is PageFilters["alertLevels"][number] =>
+        level === "critical" || level === "warning" || level === "normal",
+    ),
+    alertTypes: preferencias.alertTypes,
+    soilSector: preferencias.soilSector || "all",
+    growthCrop: preferencias.growthCrop || "all",
+  };
 }
 
-export function saveStoredPreferences(preferences: GeneralPreferences) {
-  localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(preferences));
+export function generalPreferencesFromResponse(
+  preferencias: UsuarioPreferenciasResponse,
+): GeneralPreferences {
+  return {
+    darkMode: preferencias.darkMode,
+    reducedMotion: preferencias.reducedMotion,
+    emailNotifications: preferencias.emailNotifications,
+  };
 }

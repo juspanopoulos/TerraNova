@@ -15,46 +15,73 @@ import {
   type PageFilters,
 } from "@/components/dashboard/FilterSlideover";
 import { toDashboardLoadError } from "@/components/dashboard/DashboardLoadState";
-import { DEFAULT_COMPANY_PROFILE } from "@/data/mockCompany";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
-import { clamp, clearFiltersForView } from "@/lib/dashboard/helpers";
+import { ApiRequestError } from "@/lib/api/client";
+import { updateEmpresa } from "@/lib/api/companiesApi";
+import { updateUsuarioPreferencias, getUsuarioPreferencias } from "@/lib/api/preferencesApi";
+import { updatePropriedade } from "@/lib/api/propertiesApi";
+import { loginUsuario, listUsuarios, registerPlataforma, updateUsuario } from "@/lib/api/usersApi";
+import type { UsuarioPreferenciasRequest, UsuarioResponse } from "@/lib/api/types";
+import { clearFiltersForView } from "@/lib/dashboard/helpers";
 import {
   companyProfileFromRegister,
   EMPTY_COMPANY_PROFILE,
 } from "@/lib/dashboard/companyFields";
-import { fetchDashboardData } from "@/lib/dashboard/loadDashboardData";
+import {
+  EMPTY_CLIMATE,
+  EMPTY_CLIMATE_HISTORY,
+  EMPTY_SOIL,
+  EMPTY_WATER,
+  companyProfileFromApi,
+  fetchDashboardData,
+} from "@/lib/dashboard/loadDashboardData";
+import type {
+  AreaMonitoradaResponse,
+  DashboardAreaResumoResponse,
+  DashboardResumoResponse,
+} from "@/lib/api/types";
 import {
   clearAuthSession,
   loadStoredAuthSession,
   saveAuthSession,
 } from "@/lib/dashboard/authSession";
 import {
-  loadStoredPreferences,
-  saveStoredPreferences,
+  DEFAULT_GENERAL_PREFERENCES,
+  filtersFromPreferences,
+  generalPreferencesFromResponse,
 } from "@/lib/dashboard/preferences";
 import type {
   AuthMode,
+  AlertItem,
+  ClimateHistoryState,
+  ClimateState,
   CompanyProfile,
+  CropPlantingItem,
   DashboardLoadError,
   DashboardLoadStatus,
   GeneralPreferences,
+  LoginCredentials,
+  LoginUserOption,
+  PredictionItem,
   RegisterCredentials,
+  SoilState,
   TimeFilter,
   ViewId,
+  WaterState,
 } from "@/types/dashboard";
-
-type ClimateState = typeof MOCK_DASHBOARD_DATA.climate.current;
-type SoilState = typeof MOCK_DASHBOARD_DATA.soil.current;
-type WaterState = typeof MOCK_DASHBOARD_DATA.water.current;
 
 type DashboardContextValue = {
   isAuthenticated: boolean;
+  authUser: UsuarioResponse | null;
   authMode: AuthMode;
   setAuthMode: (mode: AuthMode) => void;
-  login: () => void;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  loginError: string | null;
+  loginUsers: LoginUserOption[];
+  isLoadingLoginUsers: boolean;
+  reloadLoginUsers: () => Promise<void>;
   submitRegisterStep1: (credentials: RegisterCredentials) => void;
   backFromRegisterCompany: () => void;
-  completeRegistration: (company: CompanyProfile) => void;
+  completeRegistration: (company: CompanyProfile) => Promise<void>;
   registerCompanyDraft: CompanyProfile;
   logout: () => void;
 
@@ -66,21 +93,24 @@ type DashboardContextValue = {
   reloadDashboard: () => Promise<void>;
 
   company: CompanyProfile;
-  updateCompany: (data: Partial<CompanyProfile>) => void;
+  updateCompany: (data: CompanyProfile) => Promise<void>;
 
+  dashboardSummary: DashboardResumoResponse | null;
+  dashboardAreas: AreaMonitoradaResponse[];
+  selectedArea: DashboardAreaResumoResponse | null;
+  alerts: AlertItem[];
   climate: ClimateState;
+  climateHistory: ClimateHistoryState;
   soil: SoilState;
   water: WaterState;
+  crops: CropPlantingItem[];
+  predictions: PredictionItem[];
 
   appliedFilters: PageFilters;
   draftFilters: PageFilters;
   setDraftFilters: (filters: PageFilters) => void;
   isFilterOpen: boolean;
 
-  selectedNutrient: string | null;
-  setSelectedNutrient: (id: string | null) => void;
-  selectedWaterSeg: string | null;
-  setSelectedWaterSeg: (id: string | null) => void;
   selectedCrop: string | null;
   setSelectedCrop: (id: string | null) => void;
 
@@ -108,14 +138,49 @@ type DashboardContextValue = {
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
 
+const LEGACY_DEMO_PASSWORD_BY_EMAIL: Record<string, string> = {
+  "carlos.mendes@agrotech.com.br": "hash_senha_001",
+  "fernanda.lima@agrotech.com.br": "hash_senha_002",
+  "roberto.souza@campoverde.com.br": "hash_senha_003",
+  "patricia.oliveira@campoverde.com.br": "hash_senha_004",
+  "marcos.alves@sertaofertil.com.br": "hash_senha_005",
+  "ana.costa@sertaofertil.com.br": "hash_senha_006",
+};
+
+function demoPasswordForUser(usuario: UsuarioResponse) {
+  return (
+    LEGACY_DEMO_PASSWORD_BY_EMAIL[usuario.email.toLowerCase()] ??
+    `hash_senha_${String(usuario.idUsuario).padStart(3, "0")}`
+  );
+}
+
+function toLoginUserOption(usuario: UsuarioResponse): LoginUserOption {
+  return {
+    id: String(usuario.idUsuario),
+    name: usuario.nomeUsuario,
+    email: usuario.email,
+    password: demoPasswordForUser(usuario),
+    profile: usuario.perfil,
+    status: usuario.status,
+  };
+}
+
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
-  const initialPreferences = useMemo(() => loadStoredPreferences(), []);
-  const [isAuthenticated, setIsAuthenticated] = useState(() => loadStoredAuthSession());
+  const initialAuthSession = useMemo(() => loadStoredAuthSession(), []);
+  const [authUser, setAuthUser] = useState<UsuarioResponse | null>(
+    () => initialAuthSession?.usuario ?? null,
+  );
+  const [isAuthenticated, setIsAuthenticated] = useState(() =>
+    Boolean(initialAuthSession?.usuario),
+  );
   const [authMode, setAuthModeState] = useState<AuthMode>("login");
   const [registerCredentials, setRegisterCredentials] = useState<RegisterCredentials | null>(
     null,
   );
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginUsers, setLoginUsers] = useState<LoginUserOption[]>([]);
+  const [isLoadingLoginUsers, setIsLoadingLoginUsers] = useState(false);
 
   const setAuthMode = useCallback((mode: AuthMode) => {
     if (mode === "login") {
@@ -128,68 +193,113 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     if (!registerCredentials) return { ...EMPTY_COMPANY_PROFILE };
     return {
       ...EMPTY_COMPANY_PROFILE,
-      responsibleName: registerCredentials.fullName,
-      email: registerCredentials.email,
+      nomeUsuario: registerCredentials.fullName,
+      emailUsuario: registerCredentials.email,
     };
   }, [registerCredentials]);
-  const [preferences, setPreferences] = useState<GeneralPreferences>(initialPreferences);
+  const [preferences, setPreferences] = useState<GeneralPreferences>({
+    ...DEFAULT_GENERAL_PREFERENCES,
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [loadStatus, setLoadStatus] = useState<DashboardLoadStatus>("idle");
   const [loadError, setLoadError] = useState<DashboardLoadError | null>(null);
   const loadRequestRef = useRef(0);
 
-  const [company, setCompany] = useState<CompanyProfile>({ ...DEFAULT_COMPANY_PROFILE });
+  const [company, setCompany] = useState<CompanyProfile>({ ...EMPTY_COMPANY_PROFILE });
 
   const [appliedFilters, setAppliedFilters] = useState<PageFilters>(DEFAULT_PAGE_FILTERS);
   const [draftFilters, setDraftFilters] = useState<PageFilters>(DEFAULT_PAGE_FILTERS);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const [climate, setClimate] = useState<ClimateState>({ ...MOCK_DASHBOARD_DATA.climate.current });
-  const [soil, setSoil] = useState<SoilState>({ ...MOCK_DASHBOARD_DATA.soil.current });
-  const [water, setWater] = useState<WaterState>({ ...MOCK_DASHBOARD_DATA.water.current });
+  const [climate, setClimate] = useState<ClimateState>({ ...EMPTY_CLIMATE });
+  const [climateHistory, setClimateHistory] = useState<ClimateHistoryState>({
+    ...EMPTY_CLIMATE_HISTORY,
+  });
+  const [soil, setSoil] = useState<SoilState>({ ...EMPTY_SOIL });
+  const [water, setWater] = useState<WaterState>({ ...EMPTY_WATER });
+  const [dashboardSummary, setDashboardSummary] = useState<DashboardResumoResponse | null>(null);
+  const [dashboardAreas, setDashboardAreas] = useState<AreaMonitoradaResponse[]>([]);
+  const [selectedArea, setSelectedArea] = useState<DashboardAreaResumoResponse | null>(null);
+  const [alerts, setAlerts] = useState<AlertItem[]>([]);
+  const [crops, setCrops] = useState<CropPlantingItem[]>([]);
+  const [predictions, setPredictions] = useState<PredictionItem[]>([]);
 
-  const [selectedNutrient, setSelectedNutrient] = useState<string | null>(null);
-  const [selectedWaterSeg, setSelectedWaterSeg] = useState<string | null>(null);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [pageTimeFilter, setPageTimeFilter] = useState<TimeFilter>("daily");
 
-  const alertTypeOptions = useMemo(
-    () => [...new Set(MOCK_DASHBOARD_DATA.alerts.map((a) => a.type))],
-    [],
-  );
-  const soilSectorOptions = useMemo(
-    () => MOCK_DASHBOARD_DATA.soil.sectors.map((s) => s.sector),
-    [],
-  );
+  const alertTypeOptions = useMemo(() => [...new Set(alerts.map((a) => a.type))], [alerts]);
+  const soilSectorOptions = useMemo(() => soil.sectors.map((s) => s.sector), [soil.sectors]);
   const growthCropOptions = useMemo(
-    () => MOCK_DASHBOARD_DATA.crops.map((c) => ({ id: c.id, label: c.name })),
-    [],
+    () => crops.map((crop) => ({ id: crop.id, label: crop.name })),
+    [crops],
   );
 
   const reloadDashboard = useCallback(async () => {
+    if (!authUser) {
+      setLoadStatus("idle");
+      return;
+    }
+
     const requestId = ++loadRequestRef.current;
     setLoadStatus("loading");
     setLoadError(null);
 
     try {
-      const data = await fetchDashboardData();
+      const data = await fetchDashboardData(authUser);
       if (requestId !== loadRequestRef.current) return;
 
+      setCompany(data.company);
+      setDashboardSummary(data.summary);
+      setDashboardAreas(data.areas);
+      setSelectedArea(data.selectedArea);
+      setAlerts(data.alerts);
       setClimate(data.climate);
+      setClimateHistory(data.climateHistory);
       setSoil(data.soil);
       setWater(data.water);
+      setCrops(data.crops);
+      setPredictions(data.predictions);
       setLoadStatus("success");
     } catch (err) {
       if (requestId !== loadRequestRef.current) return;
       setLoadError(toDashboardLoadError(err));
       setLoadStatus("error");
     }
+  }, [authUser]);
+
+  const reloadLoginUsers = useCallback(async () => {
+    setIsLoadingLoginUsers(true);
+    try {
+      const usuarios = await listUsuarios();
+      setLoginUsers(usuarios.map(toLoginUserOption));
+    } catch {
+      setLoginUsers([]);
+    } finally {
+      setIsLoadingLoginUsers(false);
+    }
   }, []);
 
-  const login = useCallback(() => {
-    saveAuthSession();
-    setIsAuthenticated(true);
+  const login = useCallback(async (credentials: LoginCredentials) => {
+    setLoginError(null);
+
+    try {
+      const response = await loginUsuario({
+        email: credentials.email.trim(),
+        senha: credentials.password,
+      });
+
+      saveAuthSession(response.usuario);
+      setAuthUser(response.usuario);
+      setIsAuthenticated(true);
+      setAuthModeState("login");
+    } catch (error) {
+      setLoginError(
+        error instanceof ApiRequestError
+          ? error.message
+          : "Nao foi possivel fazer login. Tente novamente.",
+      );
+    }
   }, []);
 
   const submitRegisterStep1 = useCallback((credentials: RegisterCredentials) => {
@@ -202,46 +312,139 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const completeRegistration = useCallback(
-    (draft: CompanyProfile) => {
+    async (draft: CompanyProfile) => {
       if (!registerCredentials) return;
-      setCompany(companyProfileFromRegister(registerCredentials, draft));
-      setRegisterCredentials(null);
-      setAuthModeState("login");
-      saveAuthSession();
-      setIsAuthenticated(true);
+      setLoginError(null);
+      const companyDraft = companyProfileFromRegister(registerCredentials, draft);
+      try {
+        const response = await registerPlataforma({
+          nomeEmpresa: companyDraft.nomeEmpresa.trim(),
+          cnpj: companyDraft.cnpj.trim(),
+          emailEmpresa: companyDraft.emailEmpresa.trim(),
+          telefoneEmpresa: companyDraft.telefoneEmpresa.trim() || null,
+          nomePropriedade: companyDraft.nomePropriedade.trim(),
+          localizacao: companyDraft.localizacao.trim(),
+          latitude: companyDraft.latitude,
+          longitude: companyDraft.longitude,
+          areaTotalHectares: companyDraft.areaTotalHectares || null,
+          nomeUsuario: companyDraft.nomeUsuario.trim(),
+          emailUsuario: companyDraft.emailUsuario.trim(),
+          senha: registerCredentials.password,
+          cpf: companyDraft.cpf.trim() || null,
+        });
+
+        saveAuthSession(response.usuario);
+        setAuthUser(response.usuario);
+        setIsAuthenticated(true);
+        setCompany(companyProfileFromApi(response.usuario, response.empresa, response.propriedade));
+        setRegisterCredentials(null);
+        setAuthModeState("login");
+      } catch (error) {
+        setLoginError(
+          error instanceof ApiRequestError
+            ? error.message
+            : "Nao foi possivel concluir o cadastro. Tente novamente.",
+        );
+      }
     },
     [registerCredentials],
   );
 
   const logout = useCallback(() => {
     clearAuthSession();
+    setAuthUser(null);
     setIsAuthenticated(false);
     setLoadStatus("idle");
     setLoadError(null);
+    setCompany({ ...EMPTY_COMPANY_PROFILE });
+    setDashboardSummary(null);
+    setDashboardAreas([]);
+    setSelectedArea(null);
+    setAlerts([]);
+    setClimate({ ...EMPTY_CLIMATE });
+    setClimateHistory({ ...EMPTY_CLIMATE_HISTORY });
+    setSoil({ ...EMPTY_SOIL });
+    setWater({ ...EMPTY_WATER });
+    setCrops([]);
+    setPredictions([]);
+    setPreferences({ ...DEFAULT_GENERAL_PREFERENCES });
+    setAppliedFilters(DEFAULT_PAGE_FILTERS);
+    setDraftFilters(DEFAULT_PAGE_FILTERS);
     setRegisterCredentials(null);
     setAuthModeState("login");
   }, []);
 
-  const updateCompany = useCallback((data: Partial<CompanyProfile>) => {
-    setCompany((current) => ({ ...current, ...data }));
-  }, []);
+  const updateCompany = useCallback(
+    async (data: CompanyProfile) => {
+      const idEmpresa = data.idEmpresa ?? authUser?.idEmpresa;
+      const idPropriedade = data.idPropriedade;
+      const idUsuario = data.idUsuario ?? authUser?.idUsuario;
+      if (!authUser || !idEmpresa || !idPropriedade || !idUsuario) return;
+
+      const [empresa, propriedade, usuario] = await Promise.all([
+        updateEmpresa(idEmpresa, {
+          nomeEmpresa: data.nomeEmpresa.trim(),
+          cnpj: data.cnpj.trim(),
+          email: data.emailEmpresa.trim(),
+          telefone: data.telefoneEmpresa.trim() || null,
+        }),
+        updatePropriedade(idPropriedade, {
+          idEmpresa,
+          nomePropriedade: data.nomePropriedade.trim(),
+          localizacao: data.localizacao.trim(),
+          latitude: data.latitude,
+          longitude: data.longitude,
+          areaTotalHectares: data.areaTotalHectares || null,
+        }),
+        updateUsuario(idUsuario, {
+          idEmpresa,
+          nomeUsuario: data.nomeUsuario.trim(),
+          email: data.emailUsuario.trim(),
+          senha: null,
+          cpf: data.cpf.trim() || null,
+          perfil: data.perfil,
+          status: data.status,
+        }),
+      ]);
+
+      saveAuthSession(usuario);
+      setAuthUser(usuario);
+      setCompany(companyProfileFromApi(usuario, empresa, propriedade));
+    },
+    [authUser],
+  );
+
+  const saveUserPreferences = useCallback(
+    (idUsuario: number, general: GeneralPreferences, filters: PageFilters) => {
+      const body: UsuarioPreferenciasRequest = {
+        ...general,
+        dateRangeStart: filters.dateRange.start,
+        dateRangeEnd: filters.dateRange.end,
+        selectedMonth: filters.selectedMonth,
+        alertLevels: filters.alertLevels,
+        alertTypes: filters.alertTypes,
+        soilSector: filters.soilSector,
+        growthCrop: filters.growthCrop,
+      };
+      void updateUsuarioPreferencias(idUsuario, body);
+    },
+    [],
+  );
 
   const updatePreference = useCallback(
     <K extends keyof GeneralPreferences>(key: K, value: GeneralPreferences[K]) => {
       setPreferences((current) => {
         const next = { ...current, [key]: value };
-        saveStoredPreferences(next);
+        if (authUser) saveUserPreferences(authUser.idUsuario, next, appliedFilters);
         return next;
       });
     },
-    [],
+    [appliedFilters, authUser, saveUserPreferences],
   );
 
   const toggleSidebar = useCallback(() => setIsSidebarOpen((o) => !o), []);
 
   const resetSelections = useCallback(() => {
-    setSelectedNutrient(null);
-    setSelectedWaterSeg(null);
     setSelectedCrop(null);
   }, []);
 
@@ -253,9 +456,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const closeFilters = useCallback(() => setIsFilterOpen(false), []);
 
   const applyFilters = useCallback(() => {
-    setAppliedFilters(draftFilters);
+    const next = draftFilters;
+    setAppliedFilters(next);
     setIsFilterOpen(false);
-  }, [draftFilters]);
+    if (authUser) saveUserPreferences(authUser.idUsuario, preferences, next);
+  }, [authUser, draftFilters, preferences, saveUserPreferences]);
 
   const clearDraftFilters = useCallback(
     (view: ViewId, timeFilter: TimeFilter) => {
@@ -271,6 +476,33 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
+    if (isAuthenticated) return;
+    void reloadLoginUsers();
+  }, [isAuthenticated, reloadLoginUsers]);
+
+  useEffect(() => {
+    if (!authUser) return;
+    let cancelled = false;
+
+    void getUsuarioPreferencias(authUser.idUsuario)
+      .then((data) => {
+        if (cancelled) return;
+        const filters = filtersFromPreferences(data);
+        setPreferences(generalPreferencesFromResponse(data));
+        setAppliedFilters(filters);
+        setDraftFilters(filters);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPreferences({ ...DEFAULT_GENERAL_PREFERENCES });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser]);
+
+  useEffect(() => {
     if (!isAuthenticated) return;
     void reloadDashboard();
   }, [isAuthenticated, reloadDashboard]);
@@ -282,26 +514,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     prevPathRef.current = location.pathname;
     void reloadDashboard();
   }, [location.pathname, isAuthenticated, reloadDashboard]);
-
-  useEffect(() => {
-    if (!isAuthenticated || loadStatus !== "success") return;
-    const id = window.setInterval(() => {
-      setClimate((p) => ({
-        temperature: clamp(p.temperature + (Math.random() - 0.5) * 0.4, 18, 36),
-        humidity: clamp(p.humidity + (Math.random() - 0.5) * 2, 40, 95),
-        wind: clamp(p.wind + (Math.random() - 0.5) * 1.2, 4, 28),
-      }));
-      setSoil((p) => ({
-        ...p,
-        moisture: clamp(p.moisture + (Math.random() - 0.5) * 1.5, 35, 85),
-      }));
-      setWater((p) => ({
-        ...p,
-        consumptionLiters: Math.round(p.consumptionLiters + (Math.random() - 0.45) * 20),
-      }));
-    }, 8000);
-    return () => window.clearInterval(id);
-  }, [isAuthenticated, loadStatus]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -316,9 +528,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     (): DashboardContextValue => ({
       isAuthenticated,
+      authUser,
       authMode,
       setAuthMode,
       login,
+      loginError,
+      loginUsers,
+      isLoadingLoginUsers,
+      reloadLoginUsers,
       submitRegisterStep1,
       backFromRegisterCompany,
       completeRegistration,
@@ -331,17 +548,20 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       reloadDashboard,
       company,
       updateCompany,
+      dashboardSummary,
+      dashboardAreas,
+      selectedArea,
+      alerts,
       climate,
+      climateHistory,
       soil,
       water,
+      crops,
+      predictions,
       appliedFilters,
       draftFilters,
       setDraftFilters,
       isFilterOpen,
-      selectedNutrient,
-      setSelectedNutrient,
-      selectedWaterSeg,
-      setSelectedWaterSeg,
       selectedCrop,
       setSelectedCrop,
       alertTypeOptions,
@@ -360,9 +580,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     }),
     [
       isAuthenticated,
+      authUser,
       authMode,
       setAuthMode,
       login,
+      loginError,
+      loginUsers,
+      isLoadingLoginUsers,
+      reloadLoginUsers,
       submitRegisterStep1,
       backFromRegisterCompany,
       completeRegistration,
@@ -375,14 +600,19 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       reloadDashboard,
       company,
       updateCompany,
+      dashboardSummary,
+      dashboardAreas,
+      selectedArea,
+      alerts,
       climate,
+      climateHistory,
       soil,
       water,
+      crops,
+      predictions,
       appliedFilters,
       draftFilters,
       isFilterOpen,
-      selectedNutrient,
-      selectedWaterSeg,
       selectedCrop,
       alertTypeOptions,
       soilSectorOptions,

@@ -5,11 +5,10 @@ import { DashboardCard } from "@/components/dashboard/ui";
 import { btnClick, cardBase, gridCols3, labelMuted, textPrimary } from "@/constants/dashboard";
 import { useDashboard } from "@/context/DashboardContext";
 import { climateMetricColor } from "@/lib/dashboard/chartTheme";
-import { getClimateHistory } from "@/lib/dashboard/helpers";
 
 export function ClimateView() {
-  const { climate, preferences, pageTimeFilter } = useDashboard();
-  const history = getClimateHistory(pageTimeFilter);
+  const { climate, climateHistory, preferences, pageTimeFilter } = useDashboard();
+  const history = climateHistory[pageTimeFilter];
   const [metric, setMetric] = useState<"temperature" | "humidity" | "wind">("temperature");
 
   const metrics = useMemo(

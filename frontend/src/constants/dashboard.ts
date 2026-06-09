@@ -92,8 +92,6 @@ export const VISION_CARDS: {
   { id: "yearly", label: "Visão Anual", description: "Evolução e metas ao longo do ano", icon: TrendingUp },
 ];
 
-export const DEFAULT_MONTH = "2026-06";
-
 export const PAGE_TITLES: Record<ViewId, string> = {
   overview: "Visão Geral",
   alerts: "Alertas",

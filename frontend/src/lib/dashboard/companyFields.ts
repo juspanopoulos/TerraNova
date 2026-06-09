@@ -1,15 +1,6 @@
 import type { CompanyProfile } from "@/types/dashboard";
 
-export type CompanyFieldKind =
-  | "text"
-  | "email"
-  | "tel"
-  | "number"
-  | "cnpj"
-  | "cpf"
-  | "phone"
-  | "cep"
-  | "uf";
+export type CompanyFieldKind = "text" | "email" | "tel" | "number" | "cnpj" | "cpf" | "phone";
 
 export type CompanyFieldConfig = {
   key: keyof CompanyProfile;
@@ -20,26 +11,19 @@ export type CompanyFieldConfig = {
   required?: boolean;
 };
 
-/** Campos na ordem do formulário (grid 2 colunas no cadastro e em Empresa). */
 export const COMPANY_FIELDS: CompanyFieldConfig[] = [
-  { key: "tradeName", label: "Nome fantasia", kind: "text", col: 1, placeholder: "Terra Nova" },
-  { key: "legalName", label: "Razão social", kind: "text", col: 1, placeholder: "Terra Nova Agropecuária Ltda." },
-  { key: "cnpj", label: "CNPJ", kind: "cnpj", col: 1, placeholder: "00.000.000/0000-00", required: false },
-  { key: "cpf", label: "CPF do responsável", kind: "cpf", col: 1, placeholder: "000.000.000-00" },
-  { key: "responsibleName", label: "Responsável", kind: "text", col: 1, placeholder: "Nome do responsável" },
-  { key: "email", label: "E-mail", kind: "email", col: 1, placeholder: "contato@empresa.com.br" },
-  { key: "phone", label: "Telefone", kind: "phone", col: 1, placeholder: "(00) 0000-0000", required: false },
-  { key: "mobile", label: "Celular", kind: "phone", col: 1, placeholder: "(00) 00000-0000", required: true },
-  { key: "street", label: "Rua / logradouro", kind: "text", col: 2, placeholder: "Rua das Flores" },
-  { key: "streetNumber", label: "Número", kind: "text", col: 1, placeholder: "123" },
-  { key: "neighborhood", label: "Bairro", kind: "text", col: 1, placeholder: "Centro" },
-  { key: "city", label: "Cidade", kind: "text", col: 1, placeholder: "Cidade" },
-  { key: "state", label: "Estado (UF)", kind: "uf", col: 1 },
-  { key: "zipCode", label: "CEP", kind: "cep", col: 1, placeholder: "00000-000" },
-  { key: "farmName", label: "Nome da fazenda", kind: "text", col: 1, placeholder: "Fazenda Exemplo" },
-  { key: "farmRegion", label: "Região da fazenda", kind: "text", col: 1, placeholder: "Sul de Minas" },
-  { key: "totalAreaHa", label: "Área total (ha)", kind: "number", col: 1, placeholder: "0" },
-  { key: "activeSectors", label: "Setores ativos", kind: "number", col: 1, placeholder: "0" },
+  { key: "nomeEmpresa", label: "Empresa", kind: "text", col: 1, placeholder: "Terra Nova Agro" },
+  { key: "cnpj", label: "CNPJ", kind: "cnpj", col: 1, placeholder: "00.000.000/0000-00" },
+  { key: "emailEmpresa", label: "E-mail da empresa", kind: "email", col: 1, placeholder: "contato@empresa.com.br" },
+  { key: "telefoneEmpresa", label: "Telefone", kind: "phone", col: 1, placeholder: "(00) 0000-0000", required: false },
+  { key: "nomeUsuario", label: "Usuario responsavel", kind: "text", col: 1, placeholder: "Nome do usuario" },
+  { key: "emailUsuario", label: "E-mail do usuario", kind: "email", col: 1, placeholder: "usuario@empresa.com.br" },
+  { key: "cpf", label: "CPF", kind: "cpf", col: 1, placeholder: "000.000.000-00", required: false },
+  { key: "nomePropriedade", label: "Propriedade", kind: "text", col: 1, placeholder: "Fazenda Exemplo" },
+  { key: "localizacao", label: "Localizacao", kind: "text", col: 2, placeholder: "Cidade, UF" },
+  { key: "latitude", label: "Latitude", kind: "number", col: 1, placeholder: "-23.000000", required: false },
+  { key: "longitude", label: "Longitude", kind: "number", col: 1, placeholder: "-46.000000", required: false },
+  { key: "areaTotalHectares", label: "Area total (ha)", kind: "number", col: 1, placeholder: "0", required: false },
 ];
 
 export const COMPANY_FIELDS_EMPRESA = {
@@ -48,24 +32,23 @@ export const COMPANY_FIELDS_EMPRESA = {
 };
 
 export const EMPTY_COMPANY_PROFILE: CompanyProfile = {
-  legalName: "",
-  tradeName: "",
+  idEmpresa: null,
+  idPropriedade: null,
+  idUsuario: null,
+  nomeEmpresa: "",
   cnpj: "",
+  emailEmpresa: "",
+  telefoneEmpresa: "",
+  nomePropriedade: "",
+  localizacao: "",
+  latitude: null,
+  longitude: null,
+  areaTotalHectares: 0,
+  nomeUsuario: "",
+  emailUsuario: "",
   cpf: "",
-  email: "",
-  phone: "",
-  mobile: "",
-  street: "",
-  streetNumber: "",
-  neighborhood: "",
-  city: "",
-  state: "",
-  zipCode: "",
-  farmName: "",
-  farmRegion: "",
-  totalAreaHa: 0,
-  activeSectors: 0,
-  responsibleName: "",
+  perfil: "ADMIN",
+  status: "ATIVO",
 };
 
 export function companyProfileFromRegister(
@@ -74,8 +57,8 @@ export function companyProfileFromRegister(
 ): CompanyProfile {
   return {
     ...draft,
-    responsibleName: draft.responsibleName.trim() || credentials.fullName,
-    email: draft.email.trim() || credentials.email,
+    nomeUsuario: draft.nomeUsuario.trim() || credentials.fullName,
+    emailUsuario: draft.emailUsuario.trim() || credentials.email,
   };
 }
 
@@ -84,19 +67,13 @@ export function updateCompanyField(
   key: keyof CompanyProfile,
   value: string,
 ): CompanyProfile {
-  if (key === "totalAreaHa") {
+  if (key === "areaTotalHectares") {
     const n = Number(value);
-    return {
-      ...current,
-      totalAreaHa: Number.isFinite(n) && n > 0 ? n : 0,
-    };
+    return { ...current, areaTotalHectares: Number.isFinite(n) && n > 0 ? n : 0 };
   }
-  if (key === "activeSectors") {
+  if (key === "latitude" || key === "longitude") {
     const n = Number(value);
-    return {
-      ...current,
-      activeSectors: Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0,
-    };
+    return { ...current, [key]: Number.isFinite(n) ? n : null };
   }
   return { ...current, [key]: value };
 }

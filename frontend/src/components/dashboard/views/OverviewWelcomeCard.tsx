@@ -13,19 +13,19 @@ import {
 import logoColorido from "@/assets/logos/logo-colorido.png";
 import { DashboardCard } from "@/components/dashboard/ui";
 import { cardInset, gridCols4, labelMuted, LOGO_SRC, textFaint, textMuted, textPrimary } from "@/constants/dashboard";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
 import { useDashboard } from "@/context/DashboardContext";
 import { formatTodayPt, getGreeting } from "@/lib/dashboard/loadDashboardData";
 
 export function OverviewWelcomeCard() {
-  const { company, climate, water, soil } = useDashboard();
-  const alerts = MOCK_DASHBOARD_DATA.alerts;
+  const { company, dashboardSummary, dashboardAreas, alerts, climate, water, soil } = useDashboard();
   const criticalAlerts = alerts.filter((a) => a.level === "critical").length;
   const warningAlerts = alerts.filter((a) => a.level === "warning").length;
-  const cropCount = MOCK_DASHBOARD_DATA.crops.length;
-  const avgMaturity = Math.round(
-    MOCK_DASHBOARD_DATA.crops.reduce((sum, c) => sum + c.maturity, 0) / MOCK_DASHBOARD_DATA.crops.length,
+  const totalAreaHa = Math.round(
+    dashboardAreas.reduce((sum, area) => sum + Number(area.areaHectares ?? 0), 0),
   );
+  const cropCount = dashboardSummary?.indicadores.totalCulturas ?? 0;
+  const activeSectors = dashboardSummary?.indicadores.totalAreas ?? 0;
+  const activePlantings = dashboardSummary?.indicadores.totalPlantiosAtivos ?? 0;
   const greeting = getGreeting();
 
   return (
@@ -35,17 +35,17 @@ export function OverviewWelcomeCard() {
           <div className="min-w-0">
             <p className={`${labelMuted} mb-2`}>Painel geral</p>
             <h2 className={`text-xl font-bold tracking-tight sm:text-2xl md:text-3xl ${textPrimary}`}>
-              {greeting}, {company.responsibleName.split(" ")[0]}!
+              {greeting}, {company.nomeUsuario.split(" ")[0] || "usuario"}!
             </h2>
             <p className={`mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm sm:text-base ${textMuted}`}>
               <span className="inline-flex items-center gap-1.5 font-semibold text-verde-floresta">
                 <MapPin className="size-4 shrink-0" aria-hidden />
-                {company.farmName}
+                {company.nomePropriedade || "Propriedade"}
               </span>
               <span className={`hidden sm:inline ${textFaint}`} aria-hidden>
                 ·
               </span>
-              <span>{company.farmRegion}</span>
+              <span>{company.localizacao}</span>
             </p>
             <p className={`mt-1 text-xs capitalize sm:text-sm ${textFaint}`}>
               {formatTodayPt()}
@@ -68,8 +68,11 @@ export function OverviewWelcomeCard() {
           <strong className={`font-semibold ${textPrimary}`}>
             {climate.temperature.toFixed(1)}°C
           </strong>
-          , com eficiência hídrica de{" "}
-          <strong className={`font-semibold ${textPrimary}`}>{water.efficiency}%</strong> e{" "}
+          , com consumo hidrico atual de{" "}
+          <strong className={`font-semibold ${textPrimary}`}>
+            {water.current.consumptionMm.toLocaleString("pt-BR")} mm
+          </strong>{" "}
+          e{" "}
           <strong className={`font-semibold ${textPrimary}`}>{criticalAlerts}</strong>{" "}
           {criticalAlerts === 1 ? "alerta crítico" : "alertas críticos"} ativos.
         </p>
@@ -77,11 +80,13 @@ export function OverviewWelcomeCard() {
         <div className={`${gridCols4} lg:col-span-2`}>
           <div className={cardInset}>
             <p className={labelMuted}>Área total</p>
-            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{company.totalAreaHa} ha</p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              {totalAreaHa > 0 ? totalAreaHa : company.areaTotalHectares} ha
+            </p>
           </div>
           <div className={cardInset}>
             <p className={labelMuted}>Setores ativos</p>
-            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{company.activeSectors}</p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{activeSectors}</p>
           </div>
           <div className={cardInset}>
             <p className={labelMuted}>Culturas</p>
@@ -91,10 +96,10 @@ export function OverviewWelcomeCard() {
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Maturidade média</p>
+            <p className={labelMuted}>Plantios ativos</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Gauge className="size-4 text-verde-floresta" aria-hidden />
-              {avgMaturity}%
+              {activePlantings}
             </p>
           </div>
           <div className={cardInset}>
@@ -115,7 +120,7 @@ export function OverviewWelcomeCard() {
             <p className={labelMuted}>Umidade do solo</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Leaf className="size-4 text-verde-floresta" aria-hidden />
-              {Math.round(soil.moisture)}%
+              {Math.round(soil.current.moisture)}%
             </p>
           </div>
           <div className={cardInset}>
@@ -126,23 +131,23 @@ export function OverviewWelcomeCard() {
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Consumo hídrico hoje</p>
+            <p className={labelMuted}>Consumo hidrico atual</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Droplets className="size-4 text-verde-floresta" aria-hidden />
-              {water.consumptionLiters.toLocaleString("pt-BR")} L
+              {water.current.consumptionMm.toLocaleString("pt-BR")} mm
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Eficiência hídrica</p>
+            <p className={labelMuted}>Irrigacao anterior</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Droplets className="size-4 text-verde-claro" aria-hidden />
-              {water.efficiency}%
+              {water.current.previousMm.toLocaleString("pt-BR")} mm
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Economia acumulada</p>
-            <p className="mt-1 text-lg font-bold text-verde-claro sm:text-xl">
-              {water.savingsLiters.toLocaleString("pt-BR")} L
+            <p className={labelMuted}>Tipo de irrigacao</p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              {water.current.type}
             </p>
           </div>
           <div className={cardInset}>

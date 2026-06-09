@@ -31,6 +31,9 @@ function DashboardShell() {
     authMode,
     setAuthMode,
     login,
+    loginError,
+    loginUsers,
+    isLoadingLoginUsers,
     submitRegisterStep1,
     backFromRegisterCompany,
     completeRegistration,
@@ -82,12 +85,16 @@ function DashboardShell() {
           initialCompany={registerCompanyDraft}
           onBack={backFromRegisterCompany}
           onSubmit={completeRegistration}
+          errorMessage={loginError}
         />
       ) : (
         <LoginScreen
           mode={authMode === "register" ? "register" : "login"}
           onModeChange={setAuthMode}
           onLogin={login}
+          loginError={loginError}
+          loginUsers={loginUsers}
+          isLoadingLoginUsers={isLoadingLoginUsers}
           onRegisterStep1={submitRegisterStep1}
         />
       );
@@ -147,7 +154,10 @@ function DashboardShell() {
       >
         <div className={`${dashboardContentShell} py-5 sm:py-7 ${contentPad}`}>
           {isAssistant ? (
-            <AssistantChatProvider farmName={company.farmName || "sua fazenda"}>
+            <AssistantChatProvider
+              idUsuario={company.idUsuario}
+              propertyName={company.nomePropriedade || "sua propriedade"}
+            >
               {mainContent}
               <AssistantHistorySlideover />
             </AssistantChatProvider>

@@ -14,10 +14,9 @@ import {
   textPrimary,
   tooltipSurface,
 } from "@/constants/dashboard";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
 import { useDashboard } from "@/context/DashboardContext";
 import { chartSegmentColor } from "@/lib/dashboard/chartTheme";
-import type { ChartSegment, DonutLegendLayout } from "@/types/dashboard";
+import type { ChartSegment, CropPlantingItem, DonutLegendLayout } from "@/types/dashboard";
 
 export function ChartDetailPanel({ title, detail }: { title: string; detail: string }) {
   return (
@@ -54,6 +53,7 @@ export function DonutChart({
   const cx = size / 2;
   const circumference = 2 * Math.PI * r;
   const total = segments.reduce((s, seg) => s + seg.value, 0);
+  const safeTotal = Math.max(total, 1);
   let accumulated = 0;
   const selected = segments.find((s) => s.id === selectedId);
   const hoveredSeg = hovered ? segments.find((s) => s.id === hovered.id) : null;
@@ -66,7 +66,7 @@ export function DonutChart({
   };
 
   const renderLegendButton = (seg: ChartSegment, showPctInline: boolean) => {
-    const pct = ((seg.value / total) * 100).toFixed(0);
+    const pct = ((seg.value / safeTotal) * 100).toFixed(0);
     return (
       <button
         key={seg.id}
@@ -126,7 +126,7 @@ export function DonutChart({
               strokeWidth={strokeWidth}
             />
             {segments.map((seg) => {
-              const dash = (seg.value / total) * circumference;
+              const dash = (seg.value / safeTotal) * circumference;
               const offset = accumulated;
               accumulated += dash;
               const active = selectedId === seg.id || hovered?.id === seg.id;
@@ -181,7 +181,7 @@ export function DonutChart({
         ) : (
           <div className="flex flex-wrap items-start justify-center gap-x-4 gap-y-3">
             {segments.map((seg) => {
-              const pct = ((seg.value / total) * 100).toFixed(0);
+              const pct = ((seg.value / safeTotal) * 100).toFixed(0);
               return (
                 <div key={seg.id} className="flex flex-col items-center gap-1">
                   {renderLegendButton(seg, false)}
@@ -197,12 +197,12 @@ export function DonutChart({
   );
 }
 
-export function MaturityHorizontalChart({
+export function CropHorizontalChart({
   crops,
   selectedId,
   onSelect,
 }: {
-  crops: typeof MOCK_DASHBOARD_DATA.crops;
+  crops: CropPlantingItem[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
 }) {
@@ -219,7 +219,7 @@ export function MaturityHorizontalChart({
 
   return (
     <div data-chart-root className="relative">
-      <p className={`${labelMuted} mb-5`}>Maturidade por cultura</p>
+      <p className={`${labelMuted} mb-5`}>Plantios ativos</p>
       <div className="space-y-4">
         {crops.map((crop) => (
           <button
@@ -232,26 +232,26 @@ export function MaturityHorizontalChart({
           >
             <div className="mb-1.5 flex items-center justify-between gap-2">
               <span className={`text-sm font-semibold ${textPrimary}`}>
-                {crop.name} — {crop.zone}
+                {crop.name} - {crop.zone}
               </span>
-              <span className="text-sm font-bold tabular-nums text-verde-floresta">
-                {crop.maturity}%
+              <span className={`text-xs font-semibold ${textMuted}`}>
+                {crop.status}
               </span>
             </div>
-            <div className="relative h-8 overflow-hidden rounded-full bg-[var(--db-chart-bar-bg)] ring-1 ring-inset ring-verde-floresta/15">
-              <div
-                className="flex h-full items-center rounded-full bg-linear-to-r from-verde-floresta to-verde-claro px-3 transition-opacity duration-200 ease-out"
-                style={{
-                  width: `${crop.maturity}%`,
-                  opacity: selectedId && selectedId !== crop.id ? 0.45 : hovered?.id === crop.id ? 1 : 0.8,
-                }}
-              >
-                {(hovered?.id === crop.id || selectedId === crop.id) && (
-                  <span className="text-[10px] font-semibold text-bege-natural sm:text-xs">
-                    {crop.status}
-                  </span>
-                )}
-              </div>
+            <div
+              className="flex min-h-8 items-center justify-between gap-3 rounded-full bg-[var(--db-chart-bar-bg)] px-3 ring-1 ring-inset ring-verde-floresta/15"
+              style={{
+                opacity: selectedId && selectedId !== crop.id ? 0.55 : hovered?.id === crop.id ? 1 : 0.86,
+              }}
+            >
+              <span className="truncate text-[10px] font-semibold text-verde-floresta sm:text-xs">
+                {crop.stage}
+              </span>
+              {crop.harvestAt && (
+                <span className={`shrink-0 text-[10px] font-semibold sm:text-xs ${textFaint}`}>
+                  {crop.harvestAt}
+                </span>
+              )}
             </div>
           </button>
         ))}
@@ -262,14 +262,14 @@ export function MaturityHorizontalChart({
             <span className="text-[10px] font-semibold uppercase tracking-wider text-verde-floresta/75">
               Colheita
             </span>
-            <span className="mt-0.5 block font-bold">{hoveredCrop.estimate}</span>
+            <span className="mt-0.5 block font-bold">{hoveredCrop.harvestAt || "Nao informada"}</span>
           </span>
         </CursorTooltip>
       )}
       {selected && (
         <ChartDetailPanel
-          title={`${selected.name} — ${selected.zone}`}
-          detail={`Maturidade ${selected.maturity}% · ${selected.week} · Previsão: ${selected.estimate}.`}
+          title={`${selected.name} - ${selected.zone}`}
+          detail={`Estagio: ${selected.stage}. Plantio: ${selected.plantedAt || "nao informado"}. Colheita prevista: ${selected.harvestAt || "nao informada"}.`}
         />
       )}
     </div>
@@ -436,11 +436,13 @@ export function ClimateAreaChart({
 export function WaterBarChart({
   values,
   labels,
+  unit = "mm",
   selectedIndex,
   onSelect,
 }: {
   values: readonly number[];
   labels: readonly string[];
+  unit?: string;
   selectedIndex: number | null;
   onSelect: (i: number | null) => void;
 }) {
@@ -490,7 +492,7 @@ export function WaterBarChart({
       {hovered !== null && (
         <CursorTooltip x={hovered.x} y={hovered.y}>
           <span className="font-bold tabular-nums">
-            {values[hovered.index].toLocaleString("pt-BR")} L
+            {values[hovered.index].toLocaleString("pt-BR")} {unit}
           </span>
         </CursorTooltip>
       )}

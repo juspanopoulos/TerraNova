@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Clock, MapPin } from "lucide-react";
-import type { AlertItem } from "@/data/mockDashboard";
+import type { AlertItem } from "@/types/dashboard";
 import {
   levelAccent,
   textFaint,

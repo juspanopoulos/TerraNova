@@ -1,19 +1,30 @@
-import { MaturityHorizontalChart } from "@/components/dashboard/charts";
+import { CropHorizontalChart } from "@/components/dashboard/charts";
 import { DashboardCard, DataTable } from "@/components/dashboard/ui";
-import { badgeStatus, labelMuted, rowHover, tdClass, textMuted, thClass } from "@/constants/dashboard";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
+import {
+  badgeStatus,
+  labelMuted,
+  rowHover,
+  tdClass,
+  textMuted,
+  thClass,
+} from "@/constants/dashboard";
 import { useDashboard } from "@/context/DashboardContext";
 
+function formatOptionalNumber(value: number | null, unit: string) {
+  if (value === null) return "Nao informado";
+  return `${value.toLocaleString("pt-BR")} ${unit}`;
+}
+
 export function GrowthView() {
-  const { selectedCrop, setSelectedCrop, appliedFilters } = useDashboard();
-  const crops = MOCK_DASHBOARD_DATA.crops.filter(
+  const { crops: dashboardCrops, predictions, selectedCrop, setSelectedCrop, appliedFilters } = useDashboard();
+  const crops = dashboardCrops.filter(
     (crop) => appliedFilters.growthCrop === "all" || crop.id === appliedFilters.growthCrop,
   );
 
   return (
     <div className="space-y-4 sm:space-y-6">
       <DashboardCard>
-        <MaturityHorizontalChart crops={crops} selectedId={selectedCrop} onSelect={setSelectedCrop} />
+        <CropHorizontalChart crops={crops} selectedId={selectedCrop} onSelect={setSelectedCrop} />
       </DashboardCard>
       <DashboardCard>
         <p className={`${labelMuted} mb-4`}>Cronograma</p>
@@ -22,29 +33,83 @@ export function GrowthView() {
             <tr>
               <th className={thClass}>Cultura</th>
               <th className={thClass}>Zona</th>
-              <th className={thClass}>Maturidade</th>
-              <th className={thClass}>Semana</th>
-              <th className={thClass}>Colheita</th>
+              <th className={thClass}>Estagio</th>
+              <th className={thClass}>Plantio</th>
+              <th className={thClass}>Colheita prevista</th>
+              <th className={thClass}>Necessidade hidrica</th>
               <th className={thClass}>Status</th>
             </tr>
           </thead>
           <tbody>
-            {crops.map((c) => (
-              <tr key={c.id} className={rowHover}>
-                <td className={`${tdClass} font-medium`}>{c.name}</td>
-                <td className={`${tdClass} ${textMuted}`}>{c.zone}</td>
-                <td className={tdClass}>
-                  <span className="font-bold text-verde-floresta">{c.maturity}%</span>
-                </td>
-                <td className={tdClass}>{c.week}</td>
-                <td className={tdClass}>{c.estimate}</td>
-                <td className={tdClass}>
-                  <span className={badgeStatus}>
-                    {c.status}
-                  </span>
+            {crops.length === 0 ? (
+              <tr>
+                <td className={tdClass} colSpan={7}>
+                  Nenhum plantio ativo encontrado.
                 </td>
               </tr>
-            ))}
+            ) : (
+              crops.map((crop) => (
+                <tr key={crop.id} className={rowHover}>
+                  <td className={`${tdClass} font-medium`}>{crop.name}</td>
+                  <td className={`${tdClass} ${textMuted}`}>{crop.zone}</td>
+                  <td className={tdClass}>{crop.stage}</td>
+                  <td className={tdClass}>{crop.plantedAt || "Nao informado"}</td>
+                  <td className={tdClass}>{crop.harvestAt || "Nao informada"}</td>
+                  <td className={`${tdClass} tabular-nums`}>
+                    {formatOptionalNumber(crop.waterNeedMm, "mm")}
+                  </td>
+                  <td className={tdClass}>
+                    <span className={badgeStatus}>{crop.status}</span>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </DataTable>
+      </DashboardCard>
+
+      <DashboardCard>
+        <p className={`${labelMuted} mb-4`}>Predicoes IA</p>
+        <DataTable caption="Predicoes IA">
+          <thead>
+            <tr>
+              <th className={thClass}>Data</th>
+              <th className={thClass}>Area</th>
+              <th className={thClass}>Cultura</th>
+              <th className={thClass}>Modelo</th>
+              <th className={thClass}>Produtividade</th>
+              <th className={thClass}>Classificacao</th>
+              <th className={thClass}>Agua sugerida</th>
+              <th className={thClass}>Situacao</th>
+            </tr>
+          </thead>
+          <tbody>
+            {predictions.length === 0 ? (
+              <tr>
+                <td className={tdClass} colSpan={8}>
+                  Nenhuma predicao de IA encontrada.
+                </td>
+              </tr>
+            ) : (
+              predictions.map((prediction) => (
+                <tr key={prediction.id} className={rowHover}>
+                  <td className={tdClass}>{prediction.date || "Nao informada"}</td>
+                  <td className={`${tdClass} ${textMuted}`}>{prediction.sector}</td>
+                  <td className={tdClass}>{prediction.cropName ?? "Nao informada"}</td>
+                  <td className={tdClass}>{prediction.type}</td>
+                  <td className={`${tdClass} tabular-nums`}>
+                    {formatOptionalNumber(prediction.productivity, "t/ha")}
+                  </td>
+                  <td className={tdClass}>{prediction.classification}</td>
+                  <td className={`${tdClass} tabular-nums`}>
+                    {formatOptionalNumber(prediction.waterVolumeMm, "mm")}
+                  </td>
+                  <td className={tdClass}>
+                    <span className={badgeStatus}>{prediction.situation}</span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </DataTable>
       </DashboardCard>

@@ -2,7 +2,6 @@ import {
   formatCnpj,
   formatCpf,
   formatPhone,
-  formatZipCode,
 } from "@/utils/format/masks";
 
 export {
@@ -10,7 +9,6 @@ export {
   formatCnpj,
   formatCpf,
   formatPhone,
-  formatZipCode,
 } from "@/utils/format/masks";
 
 export function formatCompanyField(key: string, value: string): string {
@@ -19,11 +17,8 @@ export function formatCompanyField(key: string, value: string): string {
       return formatCnpj(value);
     case "cpf":
       return formatCpf(value);
-    case "phone":
-    case "mobile":
+    case "telefoneEmpresa":
       return formatPhone(value);
-    case "zipCode":
-      return formatZipCode(value);
     default:
       return value;
   }

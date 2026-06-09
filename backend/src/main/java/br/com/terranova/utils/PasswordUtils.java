@@ -25,6 +25,33 @@ public final class PasswordUtils {
                 + Base64.getEncoder().encodeToString(hash);
     }
 
+    public static boolean verificarSenha(String senha, String senhaHash) {
+        if (senha == null || senha.isBlank() || senhaHash == null || senhaHash.isBlank()) {
+            return false;
+        }
+
+        if (!senhaHash.startsWith("sha256$")) {
+            return MessageDigest.isEqual(
+                    senha.getBytes(StandardCharsets.UTF_8),
+                    senhaHash.getBytes(StandardCharsets.UTF_8)
+            );
+        }
+
+        String[] partes = senhaHash.split("\\$");
+        if (partes.length != 3) {
+            return false;
+        }
+
+        try {
+            byte[] salt = Base64.getDecoder().decode(partes[1]);
+            byte[] hashEsperado = Base64.getDecoder().decode(partes[2]);
+            byte[] hashInformado = gerarSha256(salt, senha);
+            return MessageDigest.isEqual(hashEsperado, hashInformado);
+        } catch (IllegalArgumentException exception) {
+            return false;
+        }
+    }
+
     private static byte[] gerarSha256(byte[] salt, String senha) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
