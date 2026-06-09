@@ -23,12 +23,28 @@ export type PageFilters = {
   growthCrop: string;
 };
 
-export const DEFAULT_DATE_RANGE: DateRange = {
-  start: "2026-05-01",
-  end: "2026-06-04",
-};
+function isoDate(date: Date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
 
-export const DEFAULT_MONTH = "2026-06";
+function monthKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function defaultDateRange(): DateRange {
+  const end = new Date();
+  const start = new Date(end);
+  start.setDate(start.getDate() - 30);
+  return { start: isoDate(start), end: isoDate(end) };
+}
+
+export const DEFAULT_DATE_RANGE: DateRange = defaultDateRange();
+
+export const DEFAULT_MONTH = monthKey(new Date());
 
 export const DEFAULT_PAGE_FILTERS: PageFilters = {
   dateRange: DEFAULT_DATE_RANGE,

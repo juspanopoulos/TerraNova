@@ -18,10 +18,12 @@ export function RegisterCompanyScreen({
   initialCompany,
   onBack,
   onSubmit,
+  errorMessage,
 }: {
   initialCompany: CompanyProfile;
   onBack: () => void;
-  onSubmit: (company: CompanyProfile) => void;
+  onSubmit: (company: CompanyProfile) => Promise<void>;
+  errorMessage?: string | null;
 }) {
   const {
     control,
@@ -39,7 +41,7 @@ export function RegisterCompanyScreen({
     reset(initialCompany);
   }, [initialCompany, reset]);
 
-  const onFormSubmit = (data: CompanyProfile) => {
+  const onFormSubmit = async (data: CompanyProfile) => {
     const fieldErrors = validateCompanyProfile(data);
     if (hasFieldErrors(fieldErrors)) {
       (Object.entries(fieldErrors) as [keyof CompanyProfile, string][]).forEach(
@@ -50,7 +52,7 @@ export function RegisterCompanyScreen({
       return;
     }
 
-    onSubmit(data);
+    await onSubmit(data);
   };
 
   const hasVisibleErrors = submitCount > 0 && hasFieldErrors(errors);
@@ -76,6 +78,12 @@ export function RegisterCompanyScreen({
         {hasVisibleErrors && (
           <p className="text-center text-sm font-medium text-red-600" role="alert">
             Corrija os campos destacados antes de continuar.
+          </p>
+        )}
+
+        {errorMessage && (
+          <p className="text-center text-sm font-medium text-red-600" role="alert">
+            {errorMessage}
           </p>
         )}
 

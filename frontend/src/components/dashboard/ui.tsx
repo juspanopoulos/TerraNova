@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import type { Thermometer } from "lucide-react";
 import { History, MessageSquarePlus } from "lucide-react";
 import { ToolbarActionButton } from "@/components/dashboard/AssistantHistorySlideover";
-import { VisionPdfDownloadButton } from "@/components/dashboard/VisionPdfDownloadButton";
+import { VisionExcelExportButton } from "@/components/dashboard/VisionExcelExportButton";
 import { useAssistantChatOptional } from "@/context/AssistantChatContext";
 import {
   FilterTriggerButton,
@@ -50,16 +50,16 @@ export function PageToolbar({
   const showFilters = hasFiltersForView(view, timeFilter);
   const showAssistantActions = view === "assistant" && assistantChat;
   const visionTimeFilter = TIME_FILTER_FROM_PATH(pathname);
-  const showVisionPdf = visionTimeFilter !== null;
-  const showActions = showPeriodFilter || showFilters || showAssistantActions || showVisionPdf;
+  const showVisionExport = visionTimeFilter !== null;
+  const showActions = showPeriodFilter || showFilters || showAssistantActions || showVisionExport;
 
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-4 sm:mb-8">
       <h1 className={`min-w-0 flex-1 ${pageTitle}`}>{pageTitleFromPath(pathname)}</h1>
       {showActions && (
         <div className="flex flex-wrap items-center justify-end gap-2">
-          {showVisionPdf && visionTimeFilter && (
-            <VisionPdfDownloadButton timeFilter={visionTimeFilter} />
+          {showVisionExport && visionTimeFilter && (
+            <VisionExcelExportButton timeFilter={visionTimeFilter} />
           )}
           {showPeriodFilter && (
             <PeriodFilterTabs value={timeFilter} onChange={onPeriodChange} inline />

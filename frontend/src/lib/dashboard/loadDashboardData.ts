@@ -78,8 +78,6 @@ const ALERT_TYPE_LABELS: Record<string, string> = {
   DEFICIT_HIDRICO: "Deficit hidrico",
 };
 
-const WATER_SEGMENT_COLORS = ["#3F6B4B", "#A8C7A1", "#E59B3A", "#94a3b8", "#64748b"];
-
 export const EMPTY_CLIMATE: ClimateState = {
   temperature: 0,
   humidity: 0,
@@ -142,7 +140,6 @@ export const EMPTY_WATER: WaterState = {
     monthly: { ...EMPTY_WATER_SERIES },
     yearly: { ...EMPTY_WATER_SERIES },
   },
-  distribution: [],
   irrigation: [],
 };
 
@@ -241,7 +238,7 @@ export async function fetchDashboardData(usuario: UsuarioResponse): Promise<Dash
     const crops = mapCrops(scopedActivePlantings, culturas, scopedAreas, scopedSummary);
 
     return {
-      company: mapCompanyProfile(usuario, empresas, scopedProperties, scopedAreas),
+      company: mapCompanyProfile(usuario, empresas, scopedProperties),
       summary: scopedSummary,
       areas: scopedAreas,
       selectedArea,
@@ -310,49 +307,40 @@ function mapScopedSummary(
   };
 }
 
+export function companyProfileFromApi(
+  usuario: UsuarioResponse,
+  empresa: EmpresaResponse | null,
+  propriedade: PropriedadeResponse | null,
+): CompanyProfile {
+  return {
+    ...EMPTY_COMPANY_PROFILE,
+    idEmpresa: empresa?.idEmpresa ?? usuario.idEmpresa,
+    idPropriedade: propriedade?.idPropriedade ?? null,
+    idUsuario: usuario.idUsuario,
+    nomeEmpresa: empresa?.nomeEmpresa ?? "",
+    cnpj: empresa?.cnpj ?? "",
+    emailEmpresa: empresa?.email ?? "",
+    telefoneEmpresa: empresa?.telefone ?? "",
+    nomePropriedade: propriedade?.nomePropriedade ?? "",
+    localizacao: propriedade?.localizacao ?? "",
+    latitude: propriedade?.latitude ?? null,
+    longitude: propriedade?.longitude ?? null,
+    areaTotalHectares: propriedade?.areaTotalHectares ?? 0,
+    nomeUsuario: usuario.nomeUsuario,
+    emailUsuario: usuario.email,
+    cpf: usuario.cpf ?? "",
+    perfil: usuario.perfil,
+    status: usuario.status,
+  };
+}
+
 function mapCompanyProfile(
   usuario: UsuarioResponse,
   empresas: EmpresaResponse[],
   propriedades: PropriedadeResponse[],
-  areas: AreaMonitoradaResponse[],
 ): CompanyProfile {
-  const empresa = empresas.find((item) => item.idEmpresa === usuario.idEmpresa);
-  const primaryProperty = propriedades[0] ?? null;
-  const locations = uniqueValues(propriedades.map((propriedade) => propriedade.localizacao));
-  const [city = "", state = ""] = (primaryProperty?.localizacao ?? "")
-    .split(",")
-    .map((part) => part.trim());
-
-  const totalAreaHa =
-    sumValues(propriedades.map((propriedade) => propriedade.areaTotalHectares)) ||
-    sumValues(areas.map((area) => area.areaHectares));
-
-  return {
-    ...EMPTY_COMPANY_PROFILE,
-    legalName: empresa?.nomeEmpresa ?? "",
-    tradeName: empresa?.nomeEmpresa ?? "",
-    cnpj: empresa?.cnpj ?? "",
-    cpf: usuario.cpf ?? "",
-    email: empresa?.email ?? usuario.email,
-    phone: empresa?.telefone ?? "",
-    city,
-    state,
-    farmName: formatFarmName(propriedades),
-    farmRegion: locations.join(" / "),
-    totalAreaHa,
-    activeSectors: areas.length,
-    responsibleName: usuario.nomeUsuario,
-  };
-}
-
-function formatFarmName(propriedades: PropriedadeResponse[]) {
-  if (propriedades.length === 0) return "";
-  if (propriedades.length === 1) return propriedades[0].nomePropriedade;
-  return propriedades.map((propriedade) => propriedade.nomePropriedade).join(", ");
-}
-
-function uniqueValues(values: Array<string | null | undefined>) {
-  return [...new Set(values.map((value) => value?.trim()).filter((value): value is string => Boolean(value)))];
+  const empresa = empresas.find((item) => item.idEmpresa === usuario.idEmpresa) ?? null;
+  return companyProfileFromApi(usuario, empresa, propriedades[0] ?? null);
 }
 
 function sumValues(values: Array<number | null | undefined>) {
@@ -681,14 +669,6 @@ function mapClimateHistory(data: DadoClimaticoResponse[], current: ClimateState)
   };
 }
 
-function soilStatus(moisture: number, hasReading: boolean) {
-  if (!hasReading) return "Sem leitura";
-  if (moisture >= 70) return "Umido";
-  if (moisture >= 55) return "Normal";
-  if (moisture >= 45) return "Atencao";
-  return "Seco";
-}
-
 function latestSoilByArea(
   summary: DashboardResumoResponse,
   readings: LeituraSoloResponse[],
@@ -746,7 +726,6 @@ function mapSoilData(
       soilType: areaSoil?.tipoSolo ?? area.tipoSolo ?? "Nao informado",
       source: humanizeEnum(areaSoil?.fonte),
       collectedAt: formatDateOnly(areaSoil?.dataColeta),
-      status: soilStatus(moisture, Boolean(areaSoil)),
     };
   });
 
@@ -879,7 +858,6 @@ function mapWaterData(
       date: formatDateOnly(latest?.dataRegistro),
     },
     history: mapWaterHistory(source, toNumber(latest?.consumoAtualMm)),
-    distribution: mapWaterDistribution(source),
     irrigation: knownAreas(areas, summary)
       .map((area): IrrigationRow | null => {
         const row = latestByArea.get(area.idArea);
@@ -943,26 +921,6 @@ function toWaterSeries(samples: NumericSample[]): WaterSeries {
 
 function ensureWaterSeries(series: WaterSeries, currentValue: number): WaterSeries {
   return series.labels.length > 0 ? series : { labels: ["Atual"], values: [currentValue] };
-}
-
-function mapWaterDistribution(data: IrrigacaoResponse[]) {
-  const totals = new Map<string, number>();
-
-  data.forEach((item) => {
-    const type = humanizeEnum(item.tipoIrrigacao);
-    totals.set(type, (totals.get(type) ?? 0) + toNumber(item.consumoAtualMm));
-  });
-
-  return [...totals.entries()]
-    .filter(([, value]) => value > 0)
-    .sort((a, b) => b[1] - a[1])
-    .map(([type, value], index) => ({
-      id: type.toLowerCase().replace(/\s+/g, "-"),
-      value,
-      color: WATER_SEGMENT_COLORS[index % WATER_SEGMENT_COLORS.length],
-      label: type,
-      detail: `${value.toLocaleString("pt-BR")} mm registrados para ${type.toLowerCase()}.`,
-    }));
 }
 
 function mapCrops(

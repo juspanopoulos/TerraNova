@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { Droplets, Gauge, Waves } from "lucide-react";
-import {
-  ChartDetailPanel,
-  DonutChart,
-  WaterBarChart,
-} from "@/components/dashboard/charts";
+import { ChartDetailPanel, WaterBarChart } from "@/components/dashboard/charts";
 import { DashboardCard, DataTable, MetricTile } from "@/components/dashboard/ui";
 import {
   gridCols3,
-  gridSplit2,
   labelMuted,
   rowHover,
   tdClass,
@@ -21,8 +16,6 @@ import { filterLabel } from "@/lib/dashboard/helpers";
 export function WaterView() {
   const {
     water,
-    selectedWaterSeg,
-    setSelectedWaterSeg,
     pageTimeFilter,
   } = useDashboard();
   const history = water.history[pageTimeFilter];
@@ -46,39 +39,22 @@ export function WaterView() {
         <MetricTile label="Origem" value={water.current.origin} icon={Gauge} />
       </div>
 
-      <div className={gridSplit2}>
-        <DashboardCard>
-          <p className={`${labelMuted} mb-4`}>Distribuicao por tipo</p>
-          {water.distribution.length > 0 ? (
-            <DonutChart
-              segments={water.distribution}
-              centerValue={`${water.current.consumptionMm.toLocaleString("pt-BR")} mm`}
-              centerLabel="Consumo atual"
-              selectedId={selectedWaterSeg}
-              onSelect={setSelectedWaterSeg}
-              legendLayout="horizontal"
-            />
-          ) : (
-            <p className={`text-sm ${textMuted}`}>Nenhuma irrigacao registrada para distribuir.</p>
-          )}
-        </DashboardCard>
-        <DashboardCard>
-          <p className={`${labelMuted} mb-4`}>Historico - {filterLabel(pageTimeFilter)}</p>
-          <WaterBarChart
-            values={history.values}
-            labels={history.labels}
-            unit="mm"
-            selectedIndex={barIndex}
-            onSelect={setBarIndex}
+      <DashboardCard>
+        <p className={`${labelMuted} mb-4`}>Historico - {filterLabel(pageTimeFilter)}</p>
+        <WaterBarChart
+          values={history.values}
+          labels={history.labels}
+          unit="mm"
+          selectedIndex={barIndex}
+          onSelect={setBarIndex}
+        />
+        {barIndex !== null && (
+          <ChartDetailPanel
+            title={`${history.labels[barIndex]} - consumo`}
+            detail={`${history.values[barIndex].toLocaleString("pt-BR")} mm no periodo ${filterLabel(pageTimeFilter).toLowerCase()}.`}
           />
-          {barIndex !== null && (
-            <ChartDetailPanel
-              title={`${history.labels[barIndex]} - consumo`}
-              detail={`${history.values[barIndex].toLocaleString("pt-BR")} mm no periodo ${filterLabel(pageTimeFilter).toLowerCase()}.`}
-            />
-          )}
-        </DashboardCard>
-      </div>
+        )}
+      </DashboardCard>
 
       <DashboardCard>
         <p className={`${labelMuted} mb-4`}>Irrigacao por setor</p>

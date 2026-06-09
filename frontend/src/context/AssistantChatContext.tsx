@@ -9,15 +9,13 @@ import {
 } from "react";
 import { useLocation } from "react-router-dom";
 import {
-  conversationTitleFromMessage,
-  createConversation,
-  formatChatTime,
-  loadConversations,
-  saveConversations,
-  type ChatMessage,
-  type Conversation,
-} from "@/lib/dashboard/assistantChat";
-import { chatIa } from "@/lib/api/iaApi";
+  createAssistenteConversa,
+  deleteAssistenteConversa,
+  listAssistenteConversas,
+  sendAssistenteMessage,
+} from "@/lib/api/assistantApi";
+import type { AssistenteConversaResponse } from "@/lib/api/types";
+import { formatChatTime, type ChatMessage, type Conversation } from "@/lib/dashboard/assistantChat";
 
 type AssistantChatContextValue = {
   conversations: Conversation[];
@@ -36,18 +34,37 @@ type AssistantChatContextValue = {
 
 const AssistantChatContext = createContext<AssistantChatContextValue | null>(null);
 
+function toTimestamp(value: string) {
+  const time = new Date(value).getTime();
+  return Number.isFinite(time) ? time : Date.now();
+}
+
+function mapConversation(conversa: AssistenteConversaResponse): Conversation {
+  return {
+    id: String(conversa.idConversa),
+    title: conversa.titulo,
+    createdAt: toTimestamp(conversa.dataCriacao),
+    updatedAt: toTimestamp(conversa.dataAtualizacao),
+    messages: conversa.mensagens.map((mensagem) => ({
+      id: String(mensagem.idMensagem),
+      role: mensagem.papel === "user" ? "user" : "assistant",
+      content: mensagem.conteudo,
+      time: formatChatTime(new Date(mensagem.dataMensagem)),
+    })),
+  };
+}
+
 export function AssistantChatProvider({
   children,
-  farmName,
+  idUsuario,
+  propertyName,
 }: {
   children: ReactNode;
-  farmName: string;
+  idUsuario: number | null;
+  propertyName: string;
 }) {
-  const [initialData] = useState(() => loadConversations());
-  const [conversations, setConversations] = useState<Conversation[]>(initialData.conversations);
-  const [activeId, setActiveId] = useState<string>(
-    initialData.activeId ?? initialData.conversations[0].id,
-  );
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeId, setActiveId] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const location = useLocation();
@@ -56,84 +73,56 @@ export function AssistantChatProvider({
     setIsHistoryOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!idUsuario) return;
+    let cancelled = false;
+
+    void listAssistenteConversas(idUsuario)
+      .then((items) => {
+        if (cancelled) return;
+        const mapped = items.map(mapConversation);
+        setConversations(mapped);
+        setActiveId((current) =>
+          current && mapped.some((conversation) => conversation.id === current)
+            ? current
+            : mapped[0]?.id ?? "",
+        );
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setConversations([]);
+        setActiveId("");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [idUsuario]);
+
   const activeConversation = useMemo(
-    () => conversations.find((c) => c.id === activeId) ?? conversations[0],
+    () => conversations.find((c) => c.id === activeId) ?? null,
     [conversations, activeId],
   );
 
   const messages = activeConversation?.messages ?? [];
   const isEmpty = messages.length === 0;
 
-  useEffect(() => {
-    saveConversations(conversations, activeId);
-  }, [conversations, activeId]);
-
-  const updateConversation = useCallback(
-    (id: string, updater: (conv: Conversation) => Conversation) => {
-      setConversations((prev) => prev.map((c) => (c.id === id ? updater(c) : c)));
-    },
-    [],
-  );
-
-  const sendMessage = useCallback(
-    (text: string) => {
-      const trimmed = text.trim();
-      if (!trimmed || isTyping || !activeConversation) return;
-
-      const userMsg: ChatMessage = {
-        id: `user-${Date.now()}`,
-        role: "user",
-        content: trimmed,
-        time: formatChatTime(new Date()),
-      };
-
-      const isFirstMessage = activeConversation.messages.length === 0;
-
-      updateConversation(activeConversation.id, (conv) => ({
-        ...conv,
-        title: isFirstMessage ? conversationTitleFromMessage(trimmed) : conv.title,
-        updatedAt: Date.now(),
-        messages: [...conv.messages, userMsg],
-      }));
-
-      setIsTyping(true);
-
-      void (async () => {
-        let content = "Nao consegui consultar a IA agora. Tente novamente em instantes.";
-        try {
-          const response = await chatIa({
-            pergunta: trimmed,
-            contexto: `Fazenda: ${farmName}`,
-          });
-          content = response.resposta;
-        } catch {
-          content = "Nao consegui consultar a IA agora. Verifique se o backend e o servico de IA estao ativos.";
-        }
-
-        const reply: ChatMessage = {
-          id: `assistant-${Date.now()}`,
-          role: "assistant",
-          content,
-          time: formatChatTime(new Date()),
-        };
-        updateConversation(activeConversation.id, (conv) => ({
-          ...conv,
-          updatedAt: Date.now(),
-          messages: [...conv.messages, reply],
-        }));
-        setIsTyping(false);
-      })();
-    },
-    [activeConversation, farmName, isTyping, updateConversation],
-  );
+  const upsertConversation = useCallback((conversation: Conversation) => {
+    setConversations((prev) => {
+      const withoutCurrent = prev.filter((item) => item.id !== conversation.id);
+      return [conversation, ...withoutCurrent].sort((a, b) => b.updatedAt - a.updatedAt);
+    });
+    setActiveId(conversation.id);
+  }, []);
 
   const startNewConversation = useCallback(() => {
-    const next = createConversation();
-    setConversations((prev) => [next, ...prev]);
-    setActiveId(next.id);
+    if (!idUsuario) return;
     setIsTyping(false);
     setIsHistoryOpen(false);
-  }, []);
+    void createAssistenteConversa(idUsuario, { titulo: "Nova conversa" }).then((created) => {
+      upsertConversation(mapConversation(created));
+    });
+  }, [idUsuario, upsertConversation]);
 
   const selectConversation = useCallback((id: string) => {
     setActiveId(id);
@@ -143,21 +132,62 @@ export function AssistantChatProvider({
 
   const deleteConversation = useCallback(
     (id: string) => {
-      setConversations((prev) => {
-        const next = prev.filter((c) => c.id !== id);
-        if (next.length === 0) {
-          const fresh = createConversation();
-          setActiveId(fresh.id);
-          return [fresh];
-        }
-        if (activeId === id) {
-          setActiveId(next[0].id);
-        }
-        return next;
+      const numericId = Number(id);
+      if (!Number.isFinite(numericId)) return;
+      void deleteAssistenteConversa(numericId).then(() => {
+        setConversations((prev) => {
+          const next = prev.filter((c) => c.id !== id);
+          if (activeId === id) setActiveId(next[0]?.id ?? "");
+          return next;
+        });
       });
       setIsTyping(false);
     },
     [activeId],
+  );
+
+  const sendMessage = useCallback(
+    (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed || isTyping || !idUsuario) return;
+
+      setIsTyping(true);
+
+      void (async () => {
+        try {
+          let conversation = activeConversation;
+          if (!conversation) {
+            const created = await createAssistenteConversa(idUsuario, { titulo: "Nova conversa" });
+            conversation = mapConversation(created);
+            upsertConversation(conversation);
+          }
+
+          const optimistic: Conversation = {
+            ...conversation,
+            updatedAt: Date.now(),
+            messages: [
+              ...conversation.messages,
+              {
+                id: `pending-${Date.now()}`,
+                role: "user",
+                content: trimmed,
+                time: formatChatTime(new Date()),
+              },
+            ],
+          };
+          upsertConversation(optimistic);
+
+          const response = await sendAssistenteMessage(Number(conversation.id), {
+            pergunta: trimmed,
+            contexto: `Propriedade: ${propertyName}`,
+          });
+          upsertConversation(mapConversation(response));
+        } finally {
+          setIsTyping(false);
+        }
+      })();
+    },
+    [activeConversation, idUsuario, isTyping, propertyName, upsertConversation],
   );
 
   const value = useMemo(

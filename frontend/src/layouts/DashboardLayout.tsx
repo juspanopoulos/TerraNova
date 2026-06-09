@@ -85,6 +85,7 @@ function DashboardShell() {
           initialCompany={registerCompanyDraft}
           onBack={backFromRegisterCompany}
           onSubmit={completeRegistration}
+          errorMessage={loginError}
         />
       ) : (
         <LoginScreen
@@ -153,7 +154,10 @@ function DashboardShell() {
       >
         <div className={`${dashboardContentShell} py-5 sm:py-7 ${contentPad}`}>
           {isAssistant ? (
-            <AssistantChatProvider farmName={company.farmName || "sua fazenda"}>
+            <AssistantChatProvider
+              idUsuario={company.idUsuario}
+              propertyName={company.nomePropriedade || "sua propriedade"}
+            >
               {mainContent}
               <AssistantHistorySlideover />
             </AssistantChatProvider>

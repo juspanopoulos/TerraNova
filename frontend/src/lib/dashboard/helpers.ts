@@ -1,6 +1,7 @@
-import { DEFAULT_MONTH, TIME_FILTERS } from "@/constants/dashboard";
+import { TIME_FILTERS } from "@/constants/dashboard";
 import {
   DEFAULT_DATE_RANGE,
+  DEFAULT_MONTH,
   DEFAULT_PAGE_FILTERS,
   type PageFilters,
 } from "@/components/dashboard/FilterSlideover";

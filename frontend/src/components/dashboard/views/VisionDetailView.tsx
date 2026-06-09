@@ -13,7 +13,6 @@ import { AlertsKanbanBoard } from "@/components/dashboard/AlertsKanbanBoard";
 import {
   ClimateAreaChart,
   CropHorizontalChart,
-  DonutChart,
   WaterBarChart,
 } from "@/components/dashboard/charts";
 import { DashboardCard, DataTable, MetricTile } from "@/components/dashboard/ui";
@@ -84,7 +83,6 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
   const [climateMetric, setClimateMetric] = useState<"temperature" | "humidity" | "wind">(
     "temperature",
   );
-  const [selectedWater, setSelectedWater] = useState<string | null>(null);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [barIndex, setBarIndex] = useState<number | null>(null);
 
@@ -210,33 +208,16 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
           />
           <MetricTile label="Origem" value={water.current.origin} icon={Gauge} />
         </div>
-        <div className={gridSplit2}>
-          <DashboardCard>
-            <p className={`${labelMuted} mb-4`}>Distribuicao por tipo</p>
-            {water.distribution.length > 0 ? (
-              <DonutChart
-                segments={water.distribution}
-                centerValue={`${water.current.consumptionMm.toLocaleString("pt-BR")} mm`}
-                centerLabel="Consumo atual"
-                selectedId={selectedWater}
-                onSelect={setSelectedWater}
-                legendLayout="horizontal"
-              />
-            ) : (
-              <p className={`text-sm ${textMuted}`}>Nenhuma irrigacao registrada para distribuir.</p>
-            )}
-          </DashboardCard>
-          <DashboardCard>
-            <p className={`${labelMuted} mb-4`}>Historico - {periodLabel}</p>
-            <WaterBarChart
-              values={waterHistory.values}
-              labels={waterHistory.labels}
-              unit="mm"
-              selectedIndex={barIndex}
-              onSelect={setBarIndex}
-            />
-          </DashboardCard>
-        </div>
+        <DashboardCard>
+          <p className={`${labelMuted} mb-4`}>Historico - {periodLabel}</p>
+          <WaterBarChart
+            values={waterHistory.values}
+            labels={waterHistory.labels}
+            unit="mm"
+            selectedIndex={barIndex}
+            onSelect={setBarIndex}
+          />
+        </DashboardCard>
         <DashboardCard>
           <p className={`${labelMuted} mb-4`}>Irrigacao por setor - {periodLabel}</p>
           <DataTable caption="Irrigacao por setor">
@@ -321,13 +302,12 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
                 <th className={thClass}>Umidade</th>
                 <th className={thClass}>Tipo de solo</th>
                 <th className={thClass}>Fonte</th>
-                <th className={thClass}>Status</th>
               </tr>
             </thead>
             <tbody>
               {soil.sectors.length === 0 ? (
                 <tr>
-                  <td className={tdClass} colSpan={5}>
+                  <td className={tdClass} colSpan={4}>
                     Nenhuma leitura de solo encontrada.
                   </td>
                 </tr>
@@ -348,7 +328,6 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
                     </td>
                     <td className={tdClass}>{row.soilType}</td>
                     <td className={tdClass}>{row.source}</td>
-                    <td className={`${tdClass} ${textMuted}`}>{row.status}</td>
                   </tr>
                 ))
               )}

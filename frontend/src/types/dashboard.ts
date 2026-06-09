@@ -51,24 +51,23 @@ export type DashboardLoadError = {
 export type DashboardLoadStatus = "idle" | "loading" | "success" | "error";
 
 export type CompanyProfile = {
-  legalName: string;
-  tradeName: string;
+  idEmpresa: number | null;
+  idPropriedade: number | null;
+  idUsuario: number | null;
+  nomeEmpresa: string;
   cnpj: string;
+  emailEmpresa: string;
+  telefoneEmpresa: string;
+  nomePropriedade: string;
+  localizacao: string;
+  latitude: number | null;
+  longitude: number | null;
+  areaTotalHectares: number;
+  nomeUsuario: string;
+  emailUsuario: string;
   cpf: string;
-  email: string;
-  phone: string;
-  mobile: string;
-  street: string;
-  streetNumber: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  farmName: string;
-  farmRegion: string;
-  totalAreaHa: number;
-  activeSectors: number;
-  responsibleName: string;
+  perfil: string;
+  status: string;
 };
 
 export type BreadcrumbItem = {
@@ -126,7 +125,6 @@ export type SoilSectorState = SoilCurrentState & {
   id: string;
   idArea: number;
   sector: string;
-  status: string;
 };
 
 export type SoilSeries = {
@@ -175,7 +173,6 @@ export type WaterHistoryState = Record<TimeFilter, WaterSeries>;
 export type WaterState = {
   current: WaterCurrentState;
   history: WaterHistoryState;
-  distribution: ChartSegment[];
   irrigation: IrrigationRow[];
 };
 

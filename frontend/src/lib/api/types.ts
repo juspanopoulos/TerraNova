@@ -19,6 +19,16 @@ export type LoginResponse = {
   usuario: UsuarioResponse;
 };
 
+export type UsuarioRequest = {
+  idEmpresa: number;
+  nomeUsuario: string;
+  email: string;
+  senha?: string | null;
+  cpf?: string | null;
+  perfil?: string | null;
+  status?: string | null;
+};
+
 export type EmpresaResponse = {
   idEmpresa: number;
   nomeEmpresa: string;
@@ -26,6 +36,13 @@ export type EmpresaResponse = {
   email: string | null;
   telefone: string | null;
   dataCadastro: string | null;
+};
+
+export type EmpresaRequest = {
+  nomeEmpresa: string;
+  cnpj: string;
+  email: string;
+  telefone?: string | null;
 };
 
 export type PropriedadeResponse = {
@@ -36,6 +53,37 @@ export type PropriedadeResponse = {
   latitude: number | null;
   longitude: number | null;
   areaTotalHectares: number | null;
+};
+
+export type PropriedadeRequest = {
+  idEmpresa: number;
+  nomePropriedade: string;
+  localizacao: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  areaTotalHectares?: number | null;
+};
+
+export type CadastroPlataformaRequest = {
+  nomeEmpresa: string;
+  cnpj: string;
+  emailEmpresa: string;
+  telefoneEmpresa?: string | null;
+  nomePropriedade: string;
+  localizacao: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  areaTotalHectares?: number | null;
+  nomeUsuario: string;
+  emailUsuario: string;
+  senha: string;
+  cpf?: string | null;
+};
+
+export type CadastroPlataformaResponse = {
+  empresa: EmpresaResponse;
+  propriedade: PropriedadeResponse;
+  usuario: UsuarioResponse;
 };
 
 export type DashboardIndicadoresResponse = {
@@ -131,6 +179,65 @@ export type ChatIaRequest = {
 
 export type ChatIaResponse = {
   resposta: string;
+};
+
+export type UsuarioPreferenciasResponse = {
+  idUsuario: number;
+  darkMode: boolean;
+  reducedMotion: boolean;
+  emailNotifications: boolean;
+  dateRangeStart: string;
+  dateRangeEnd: string;
+  selectedMonth: string;
+  alertLevels: string[];
+  alertTypes: string[];
+  soilSector: string;
+  growthCrop: string;
+  dataAtualizacao: string | null;
+};
+
+export type UsuarioPreferenciasRequest = Partial<
+  Omit<UsuarioPreferenciasResponse, "idUsuario" | "dataAtualizacao">
+>;
+
+export type AnotacaoResponse = {
+  idAnotacao: number;
+  idUsuario: number;
+  titulo: string;
+  conteudoHtml: string | null;
+  dataCriacao: string;
+  dataAtualizacao: string;
+};
+
+export type AnotacaoRequest = {
+  titulo: string;
+  conteudoHtml?: string | null;
+};
+
+export type AssistenteMensagemResponse = {
+  idMensagem: number;
+  idConversa: number;
+  papel: "user" | "assistant" | string;
+  conteudo: string;
+  dataMensagem: string;
+};
+
+export type AssistenteConversaResponse = {
+  idConversa: number;
+  idUsuario: number;
+  titulo: string;
+  dataCriacao: string;
+  dataAtualizacao: string;
+  mensagens: AssistenteMensagemResponse[];
+};
+
+export type AssistenteConversaRequest = {
+  titulo?: string | null;
+};
+
+export type AssistenteChatPersistidoRequest = {
+  pergunta: string;
+  contexto?: string | null;
 };
 
 export type IaProdutividadeRequest = {

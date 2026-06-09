@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUp, Bot, Loader2, User } from "lucide-react";
 import { btnClick, textFaint, textMuted, textPrimary } from "@/constants/dashboard";
 import { useAssistantChat } from "@/context/AssistantChatContext";
-import { SUGGESTED_PROMPTS, type ChatMessage } from "@/lib/dashboard/assistantChat";
+import type { ChatMessage } from "@/lib/dashboard/assistantChat";
 
 const CHAT_WIDTH = "mx-auto w-full max-w-2xl";
 
@@ -37,7 +37,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
   );
 }
 
-function ChatEmptyState({ onSelectPrompt }: { onSelectPrompt: (prompt: string) => void }) {
+function ChatEmptyState() {
   return (
     <div className="flex flex-col items-center px-4 pt-2 pb-8 text-center sm:px-6 sm:pt-4">
       <Bot className="mb-4 size-12 text-laranja-solar sm:mb-5 sm:size-14" aria-hidden />
@@ -45,20 +45,8 @@ function ChatEmptyState({ onSelectPrompt }: { onSelectPrompt: (prompt: string) =
         Como posso te ajudar hoje?
       </h2>
       <p className={`mt-2 max-w-md text-sm sm:text-base ${textMuted}`}>
-        Pergunte sobre clima, solo, irrigação, alertas e colheitas.
+        Pergunte sobre clima, solo, irrigacao, alertas e colheitas.
       </p>
-      <div className="mt-8 flex w-full max-w-lg flex-col gap-2.5">
-        {SUGGESTED_PROMPTS.map((prompt) => (
-          <button
-            key={prompt}
-            type="button"
-            onClick={() => onSelectPrompt(prompt)}
-            className={`${btnClick} w-full rounded-full border border-[var(--db-border)] bg-[var(--db-surface)] px-5 py-3 text-left text-sm font-medium text-[var(--db-text)] shadow-sm hover:border-verde-floresta/30 hover:text-verde-floresta`}
-          >
-            {prompt}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
@@ -95,7 +83,7 @@ export function AssistenteView() {
     <div className={`flex flex-col ${isEmpty ? "" : "min-h-[calc(100dvh-14rem)] sm:min-h-[calc(100dvh-13rem)]"}`}>
       <div className={`flex flex-col ${isEmpty ? "" : "min-h-0 flex-1"} ${CHAT_WIDTH}`}>
         {isEmpty ? (
-          <ChatEmptyState onSelectPrompt={sendMessage} />
+          <ChatEmptyState />
         ) : (
           <div
             ref={scrollRef}
@@ -113,7 +101,7 @@ export function AssistenteView() {
                 </span>
                 <div className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-[var(--db-nested-bg)] px-4 py-2.5">
                   <Loader2 className="size-4 animate-spin text-verde-floresta" aria-hidden />
-                  <span className={`text-sm ${textMuted}`}>Digitando…</span>
+                  <span className={`text-sm ${textMuted}`}>Digitando...</span>
                 </div>
               </div>
             )}
@@ -128,7 +116,7 @@ export function AssistenteView() {
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
-            placeholder="Pergunte sobre clima, solo, irrigação ou alertas…"
+            placeholder="Pergunte sobre clima, solo, irrigacao ou alertas..."
             disabled={isTyping}
             className="max-h-28 min-h-10 flex-1 resize-none rounded-2xl bg-transparent px-3 py-2 text-sm text-[var(--db-text)] outline-none placeholder:text-[var(--db-text-faint)] disabled:opacity-60"
             aria-label="Mensagem"

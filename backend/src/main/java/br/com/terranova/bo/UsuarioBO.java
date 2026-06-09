@@ -60,6 +60,7 @@ public class UsuarioBO {
     public UsuarioResponse criar(UsuarioRequest request) {
         validarEmpresa(request.idEmpresa());
         String email = BoUtils.textoObrigatorio(request.email(), "email").toLowerCase();
+        BoUtils.textoObrigatorio(request.senha(), "senha");
         usuarioDAO.buscarPorEmail(email).ifPresent(usuario -> {
             throw new ConflitoException("Ja existe usuario cadastrado com este email.");
         });
@@ -81,6 +82,9 @@ public class UsuarioBO {
 
         Usuario usuario = toEntity(request, email);
         usuario.setIdUsuario(id);
+        if (BoUtils.normalizar(request.senha()) == null) {
+            usuario.setSenhaHash(atual.getSenhaHash());
+        }
         usuario.setDataCadastro(atual.getDataCadastro());
         usuario.setDataUltimoAcesso(atual.getDataUltimoAcesso());
         return toResponse(usuarioDAO.atualizar(usuario));
@@ -103,7 +107,9 @@ public class UsuarioBO {
         usuario.setIdEmpresa(request.idEmpresa());
         usuario.setNomeUsuario(BoUtils.textoObrigatorio(request.nomeUsuario(), "nomeUsuario"));
         usuario.setEmail(email);
-        usuario.setSenhaHash(PasswordUtils.gerarHash(request.senha()));
+        if (BoUtils.normalizar(request.senha()) != null) {
+            usuario.setSenhaHash(PasswordUtils.gerarHash(request.senha()));
+        }
         usuario.setCpf(BoUtils.normalizar(request.cpf()));
         usuario.setPerfil(request.perfil() == null ? PerfilUsuario.OPERADOR : request.perfil());
         usuario.setStatus(request.status() == null ? StatusUsuario.ATIVO : request.status());

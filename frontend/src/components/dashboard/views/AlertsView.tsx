@@ -33,7 +33,7 @@ export function AlertsView() {
               <p className={labelMuted}>Central de alertas</p>
               <p className={`mt-1 max-w-xl text-sm leading-relaxed ${textMuted}`}>
                 Alertas da{" "}
-                <strong className={textPrimary}>{company.farmName}</strong>{" "}
+                <strong className={textPrimary}>{company.nomePropriedade || "propriedade"}</strong>{" "}
                 organizados por severidade — críticos, moderados e normais.
               </p>
             </div>

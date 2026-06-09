@@ -11,7 +11,7 @@ public record UsuarioRequest(
         @NotNull Long idEmpresa,
         @NotBlank @Size(max = 100) String nomeUsuario,
         @NotBlank @Email @Size(max = 100) String email,
-        @NotBlank @Size(min = 8, max = 255) String senha,
+        @Size(min = 8, max = 255) String senha,
         @Size(max = 14) String cpf,
         PerfilUsuario perfil,
         StatusUsuario status

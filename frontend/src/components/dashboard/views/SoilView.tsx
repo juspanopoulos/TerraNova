@@ -1,6 +1,5 @@
 import { DashboardCard, DataTable } from "@/components/dashboard/ui";
 import {
-  badgeStatus,
   cardInset,
   gridCols2,
   gridSplit2,
@@ -60,13 +59,12 @@ export function SoilView() {
               <th className={thClass}>Umidade</th>
               <th className={thClass}>Tipo de solo</th>
               <th className={thClass}>Fonte</th>
-              <th className={thClass}>Status</th>
             </tr>
           </thead>
           <tbody>
             {sectors.length === 0 ? (
               <tr>
-                <td className={tdClass} colSpan={5}>
+                <td className={tdClass} colSpan={4}>
                   Nenhuma leitura de solo encontrada.
                 </td>
               </tr>
@@ -87,9 +85,6 @@ export function SoilView() {
                   </td>
                   <td className={tdClass}>{row.soilType}</td>
                   <td className={tdClass}>{row.source}</td>
-                  <td className={tdClass}>
-                    <span className={badgeStatus}>{row.status}</span>
-                  </td>
                 </tr>
               ))
             )}

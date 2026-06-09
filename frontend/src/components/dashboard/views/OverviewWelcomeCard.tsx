@@ -24,7 +24,7 @@ export function OverviewWelcomeCard() {
     dashboardAreas.reduce((sum, area) => sum + Number(area.areaHectares ?? 0), 0),
   );
   const cropCount = dashboardSummary?.indicadores.totalCulturas ?? 0;
-  const activeSectors = dashboardSummary?.indicadores.totalAreas ?? company.activeSectors;
+  const activeSectors = dashboardSummary?.indicadores.totalAreas ?? 0;
   const activePlantings = dashboardSummary?.indicadores.totalPlantiosAtivos ?? 0;
   const greeting = getGreeting();
 
@@ -35,17 +35,17 @@ export function OverviewWelcomeCard() {
           <div className="min-w-0">
             <p className={`${labelMuted} mb-2`}>Painel geral</p>
             <h2 className={`text-xl font-bold tracking-tight sm:text-2xl md:text-3xl ${textPrimary}`}>
-              {greeting}, {company.responsibleName.split(" ")[0]}!
+              {greeting}, {company.nomeUsuario.split(" ")[0] || "usuario"}!
             </h2>
             <p className={`mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm sm:text-base ${textMuted}`}>
               <span className="inline-flex items-center gap-1.5 font-semibold text-verde-floresta">
                 <MapPin className="size-4 shrink-0" aria-hidden />
-                {company.farmName}
+                {company.nomePropriedade || "Propriedade"}
               </span>
               <span className={`hidden sm:inline ${textFaint}`} aria-hidden>
                 ·
               </span>
-              <span>{company.farmRegion}</span>
+              <span>{company.localizacao}</span>
             </p>
             <p className={`mt-1 text-xs capitalize sm:text-sm ${textFaint}`}>
               {formatTodayPt()}
@@ -81,7 +81,7 @@ export function OverviewWelcomeCard() {
           <div className={cardInset}>
             <p className={labelMuted}>Área total</p>
             <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
-              {totalAreaHa > 0 ? totalAreaHa : company.totalAreaHa} ha
+              {totalAreaHa > 0 ? totalAreaHa : company.areaTotalHectares} ha
             </p>
           </div>
           <div className={cardInset}>

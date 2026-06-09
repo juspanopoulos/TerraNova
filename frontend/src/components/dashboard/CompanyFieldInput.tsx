@@ -1,30 +1,26 @@
 import { Controller, type Control, type FieldErrors, type UseFormGetValues } from "react-hook-form";
-import { CustomSelect } from "@/components/dashboard/DashboardPickers";
 import {
   authErrorClass,
   authInputClass,
   authInputErrorClass,
   authLabelClass,
 } from "@/constants/tokens/authForm";
-import { BRAZIL_UFS } from "@/lib/dashboard/brazilStates";
 import type { CompanyFieldConfig } from "@/lib/dashboard/companyFields";
 import { updateCompanyField } from "@/lib/dashboard/companyFields";
 import { validateCompanyFieldValue } from "@/lib/dashboard/authValidation";
 import { formatCompanyField } from "@/lib/dashboard/inputMasks";
 import type { CompanyProfile } from "@/types/dashboard";
 
-const UF_OPTIONS = BRAZIL_UFS.map((uf) => ({ value: uf, label: uf }));
-
 function isCompanyFieldRequired(field: CompanyFieldConfig): boolean {
   if (field.required === false) return false;
   if (field.required === true) return true;
-  if (field.kind === "cnpj" || field.kind === "number") return false;
+  if (field.kind === "number") return false;
   return true;
 }
 
 type Props = {
   field: CompanyFieldConfig;
-  value: string | number;
+  value: string | number | null;
   error?: string;
   onChange: (key: keyof CompanyProfile, value: string) => void;
   inputClassName?: string;
@@ -32,22 +28,22 @@ type Props = {
 };
 
 function handleNumberChange(
-  key: "totalAreaHa" | "activeSectors",
+  key: "areaTotalHectares" | "latitude" | "longitude",
   raw: string,
   onChange: (key: keyof CompanyProfile, value: string) => void,
 ) {
   if (raw === "") {
-    onChange(key, "0");
+    onChange(key, key === "areaTotalHectares" ? "0" : "");
     return;
   }
   const n = Number(raw);
   if (!Number.isFinite(n)) return;
-  if (key === "totalAreaHa") {
+  if (key === "areaTotalHectares") {
     if (n <= 0) return;
     onChange(key, String(n));
     return;
   }
-  onChange(key, String(Math.max(0, Math.floor(n))));
+  onChange(key, String(n));
 }
 
 export function CompanyFieldInput({
@@ -65,42 +61,21 @@ export function CompanyFieldInput({
 
   const handleChange = (raw: string) => {
     if (kind === "number") {
-      handleNumberChange(key as "totalAreaHa" | "activeSectors", raw, onChange);
+      handleNumberChange(key as "areaTotalHectares" | "latitude" | "longitude", raw, onChange);
       return;
     }
-    if (kind === "cnpj" || kind === "cpf" || kind === "phone" || kind === "cep") {
+    if (kind === "cnpj" || kind === "cpf" || kind === "phone") {
       onChange(key, formatCompanyField(key, raw));
       return;
     }
     onChange(key, raw);
   };
 
-  if (kind === "uf") {
-    return (
-      <div className="block">
-        <span className={labelClassName}>{label}</span>
-        <div className={`dashboard-root mt-1.5 ${hasError ? "rounded-lg ring-2 ring-red-400/60" : ""}`}>
-          <CustomSelect
-            id={`company-${key}`}
-            value={String(value)}
-            onChange={(uf) => onChange(key, uf)}
-            placeholder="Selecione a UF"
-            options={UF_OPTIONS}
-          />
-        </div>
-        {hasError && (
-          <p id={`${key}-error`} className={authErrorClass} role="alert">
-            {error}
-          </p>
-        )}
-      </div>
-    );
-  }
-
   const inputType =
     kind === "email" ? "email" : kind === "tel" || kind === "phone" ? "tel" : kind === "number" ? "number" : "text";
 
-  const displayValue = kind === "number" ? (Number(value) > 0 || key === "activeSectors" ? String(value) : "") : String(value);
+  const displayValue =
+    kind === "number" ? (value === null || Number(value) === 0 ? "" : String(value)) : String(value ?? "");
 
   return (
     <label className="block">
@@ -113,22 +88,18 @@ export function CompanyFieldInput({
         className={inputClass}
         placeholder={placeholder}
         inputMode={
-          kind === "cnpj" || kind === "cpf" || kind === "cep" || kind === "phone" || key === "mobile"
-            ? "numeric"
-            : undefined
+          kind === "cnpj" || kind === "cpf" || kind === "phone" ? "numeric" : undefined
         }
-        min={key === "totalAreaHa" ? 0.01 : key === "activeSectors" ? 0 : undefined}
-        step={key === "totalAreaHa" ? "any" : key === "activeSectors" ? 1 : undefined}
+        min={key === "areaTotalHectares" ? 0.01 : undefined}
+        step={kind === "number" ? "any" : undefined}
         maxLength={
           kind === "cnpj"
             ? 18
             : kind === "cpf"
               ? 14
-              : kind === "phone" || key === "mobile"
+              : kind === "phone"
                 ? 15
-                : kind === "cep"
-                  ? 9
-                  : undefined
+                : undefined
         }
         aria-invalid={hasError}
         aria-describedby={hasError ? `${key}-error` : undefined}

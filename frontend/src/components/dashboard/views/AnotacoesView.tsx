@@ -11,102 +11,130 @@ import {
   textMuted,
   textPrimary,
 } from "@/constants/dashboard";
+import { useDashboard } from "@/context/DashboardContext";
 import {
-  createNote,
-  deleteNote,
-  formatNoteDate,
-  loadActiveNoteId,
-  loadNotes,
-  notePreviewText,
-  saveActiveNoteId,
-  upsertNote,
-  type Note,
-} from "@/lib/dashboard/notesStorage";
+  createAnotacao,
+  deleteAnotacao,
+  listAnotacoes,
+  updateAnotacao,
+} from "@/lib/api/notesApi";
+import type { AnotacaoResponse } from "@/lib/api/types";
 
-function resolveInitialState() {
-  const notes = loadNotes();
-  const storedId = loadActiveNoteId();
-  const active =
-    storedId && notes.some((n) => n.id === storedId) ? storedId : (notes[0]?.id ?? null);
-  const draft = active ? (notes.find((n) => n.id === active) ?? null) : null;
-  return { notes, activeId: active, draft };
+function notePreviewText(note: AnotacaoResponse): string {
+  const plain = (note.conteudoHtml ?? "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return plain || "Sem conteudo";
+}
+
+function formatNoteDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
 }
 
 export function AnotacoesView() {
-  const [notes, setNotes] = useState<Note[]>(() => resolveInitialState().notes);
-  const [activeId, setActiveId] = useState<string | null>(() => resolveInitialState().activeId);
-  const [draft, setDraft] = useState<Note | null>(() => resolveInitialState().draft);
+  const { authUser } = useDashboard();
+  const [notes, setNotes] = useState<AnotacaoResponse[]>([]);
+  const [activeId, setActiveId] = useState<number | null>(null);
+  const [draft, setDraft] = useState<AnotacaoResponse | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const activeNote = draft;
 
-  const selectNote = useCallback((note: Note) => {
-    setActiveId(note.id);
-    saveActiveNoteId(note.id);
-    setDraft(note);
-  }, []);
-
-  const persistDraft = useCallback((next: Note) => {
-    setDraft(next);
-    const updated = upsertNote(next);
-    setNotes(updated);
-    saveActiveNoteId(next.id);
-    setActiveId(next.id);
-  }, []);
-
   useEffect(() => {
-    if (notes.length > 0) return;
-    const note = createNote();
-    const updated = upsertNote(note);
-    setNotes(updated);
-    setActiveId(note.id);
+    if (!authUser) return;
+    let cancelled = false;
+    setLoading(true);
+
+    void listAnotacoes(authUser.idUsuario)
+      .then((items) => {
+        if (cancelled) return;
+        setNotes(items);
+        setActiveId(items[0]?.idAnotacao ?? null);
+        setDraft(items[0] ?? null);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser]);
+
+  const selectNote = useCallback((note: AnotacaoResponse) => {
+    setActiveId(note.idAnotacao);
     setDraft(note);
-    saveActiveNoteId(note.id);
-  }, [notes.length]);
+  }, []);
+
+  const persistDraft = useCallback((next: AnotacaoResponse) => {
+    setDraft(next);
+    setNotes((current) =>
+      current
+        .map((note) => (note.idAnotacao === next.idAnotacao ? next : note))
+        .sort((a, b) => new Date(b.dataAtualizacao).getTime() - new Date(a.dataAtualizacao).getTime()),
+    );
+    void updateAnotacao(next.idAnotacao, {
+      titulo: next.titulo.trim() || "Sem titulo",
+      conteudoHtml: next.conteudoHtml ?? "",
+    });
+  }, []);
 
   const handleNewNote = () => {
-    const note = createNote();
-    const updated = upsertNote(note);
-    setNotes(updated);
-    selectNote(note);
+    if (!authUser) return;
+    void createAnotacao(authUser.idUsuario, {
+      titulo: "Nova anotacao",
+      conteudoHtml: "",
+    }).then((note) => {
+      setNotes((current) => [note, ...current]);
+      selectNote(note);
+    });
   };
 
   const handleDelete = () => {
     if (!activeNote) return;
-    const confirmed = window.confirm("Excluir esta anotação? Esta ação não pode ser desfeita.");
+    const confirmed = window.confirm("Excluir esta anotacao? Esta acao nao pode ser desfeita.");
     if (!confirmed) return;
-    const updated = deleteNote(activeNote.id);
-    setNotes(updated);
-    setDraft(null);
-    if (updated.length > 0) {
-      selectNote(updated[0]);
-    } else {
-      const note = createNote();
-      const fresh = upsertNote(note);
-      setNotes(fresh);
-      selectNote(note);
-    }
+
+    void deleteAnotacao(activeNote.idAnotacao).then(() => {
+      setNotes((current) => {
+        const updated = current.filter((note) => note.idAnotacao !== activeNote.idAnotacao);
+        const nextActive = updated[0] ?? null;
+        setActiveId(nextActive?.idAnotacao ?? null);
+        setDraft(nextActive);
+        return updated;
+      });
+    });
   };
 
-  const updateTitle = (title: string) => {
+  const updateTitle = (titulo: string) => {
     if (!activeNote) return;
-    persistDraft({ ...activeNote, title });
+    persistDraft({ ...activeNote, titulo, dataAtualizacao: new Date().toISOString() });
   };
 
-  const updateContent = (contentHtml: string) => {
+  const updateContent = (conteudoHtml: string) => {
     if (!activeNote) return;
-    persistDraft({ ...activeNote, contentHtml });
+    persistDraft({ ...activeNote, conteudoHtml, dataAtualizacao: new Date().toISOString() });
   };
 
   return (
     <div className="dashboard-fade-up flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-6">
       <aside className="flex w-full shrink-0 flex-col gap-3 lg:w-72 xl:w-80">
         <div className="flex items-center justify-between gap-2">
-          <p className={labelMuted}>Suas anotações</p>
+          <p className={labelMuted}>Suas anotacoes</p>
           <button
             type="button"
             onClick={handleNewNote}
             className={`${btnSecondary} ${btnClick} px-2.5 py-1.5 text-xs`}
-            aria-label="Nova anotação"
+            aria-label="Nova anotacao"
           >
             <Plus className="size-4" aria-hidden />
             Nova
@@ -115,9 +143,9 @@ export function AnotacoesView() {
 
         <ul className="flex max-h-48 flex-col gap-2 overflow-y-auto lg:max-h-[calc(100dvh-18rem)]">
           {notes.map((note) => {
-            const selected = note.id === activeId;
+            const selected = note.idAnotacao === activeId;
             return (
-              <li key={note.id}>
+              <li key={note.idAnotacao}>
                 <button
                   type="button"
                   onClick={() => selectNote(note)}
@@ -129,11 +157,11 @@ export function AnotacoesView() {
                       : "border-[var(--db-border)] bg-[var(--db-surface)] hover:bg-[var(--db-hover)]",
                   ].join(" ")}
                 >
-                  <p className={`truncate text-sm font-semibold ${textPrimary}`}>{note.title}</p>
+                  <p className={`truncate text-sm font-semibold ${textPrimary}`}>{note.titulo}</p>
                   <p className={`mt-1 line-clamp-2 text-xs leading-relaxed ${textMuted}`}>
                     {notePreviewText(note)}
                   </p>
-                  <p className={`mt-2 text-[10px] ${textFaint}`}>{formatNoteDate(note.updatedAt)}</p>
+                  <p className={`mt-2 text-[10px] ${textFaint}`}>{formatNoteDate(note.dataAtualizacao)}</p>
                 </button>
               </li>
             );
@@ -151,17 +179,17 @@ export function AnotacoesView() {
                 </span>
                 <input
                   type="text"
-                  value={activeNote.title}
+                  value={activeNote.titulo}
                   onChange={(e) => updateTitle(e.target.value)}
                   className={`${inputField} border-0 bg-transparent px-0 py-0 text-lg font-bold shadow-none focus:ring-0 sm:text-xl`}
-                  aria-label="Título da anotação"
+                  aria-label="Titulo da anotacao"
                 />
               </div>
               <button
                 type="button"
                 onClick={handleDelete}
                 className={`${btnClick} flex size-9 shrink-0 items-center justify-center rounded-lg text-[var(--db-text-muted)] hover:bg-red-500/10 hover:text-red-500`}
-                aria-label="Excluir anotação"
+                aria-label="Excluir anotacao"
               >
                 <Trash2 className="size-4" />
               </button>
@@ -169,9 +197,9 @@ export function AnotacoesView() {
 
             <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-6">
               <RichTextEditor
-                value={activeNote.contentHtml}
+                value={activeNote.conteudoHtml ?? ""}
                 onChange={updateContent}
-                placeholder="Registre observações sobre a propriedade, tarefas, colheitas ou qualquer outro assunto…"
+                placeholder="Registre observacoes sobre a propriedade, tarefas, colheitas ou qualquer outro assunto..."
                 className="min-h-0 flex-1"
               />
             </div>
@@ -179,7 +207,9 @@ export function AnotacoesView() {
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
             <NotebookPen className="size-10 text-verde-floresta/60" aria-hidden />
-            <p className={`mt-4 text-sm ${textMuted}`}>Selecione ou crie uma anotação para começar.</p>
+            <p className={`mt-4 text-sm ${textMuted}`}>
+              {loading ? "Carregando anotacoes..." : "Selecione ou crie uma anotacao para comecar."}
+            </p>
           </div>
         )}
       </DashboardCard>

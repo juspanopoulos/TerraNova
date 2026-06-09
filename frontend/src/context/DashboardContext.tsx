@@ -16,8 +16,11 @@ import {
 } from "@/components/dashboard/FilterSlideover";
 import { toDashboardLoadError } from "@/components/dashboard/DashboardLoadState";
 import { ApiRequestError } from "@/lib/api/client";
-import { loginUsuario, listUsuarios } from "@/lib/api/usersApi";
-import type { UsuarioResponse } from "@/lib/api/types";
+import { updateEmpresa } from "@/lib/api/companiesApi";
+import { updateUsuarioPreferencias, getUsuarioPreferencias } from "@/lib/api/preferencesApi";
+import { updatePropriedade } from "@/lib/api/propertiesApi";
+import { loginUsuario, listUsuarios, registerPlataforma, updateUsuario } from "@/lib/api/usersApi";
+import type { UsuarioPreferenciasRequest, UsuarioResponse } from "@/lib/api/types";
 import { clearFiltersForView } from "@/lib/dashboard/helpers";
 import {
   companyProfileFromRegister,
@@ -28,6 +31,7 @@ import {
   EMPTY_CLIMATE_HISTORY,
   EMPTY_SOIL,
   EMPTY_WATER,
+  companyProfileFromApi,
   fetchDashboardData,
 } from "@/lib/dashboard/loadDashboardData";
 import type {
@@ -41,8 +45,9 @@ import {
   saveAuthSession,
 } from "@/lib/dashboard/authSession";
 import {
-  loadStoredPreferences,
-  saveStoredPreferences,
+  DEFAULT_GENERAL_PREFERENCES,
+  filtersFromPreferences,
+  generalPreferencesFromResponse,
 } from "@/lib/dashboard/preferences";
 import type {
   AuthMode,
@@ -76,7 +81,7 @@ type DashboardContextValue = {
   reloadLoginUsers: () => Promise<void>;
   submitRegisterStep1: (credentials: RegisterCredentials) => void;
   backFromRegisterCompany: () => void;
-  completeRegistration: (company: CompanyProfile) => void;
+  completeRegistration: (company: CompanyProfile) => Promise<void>;
   registerCompanyDraft: CompanyProfile;
   logout: () => void;
 
@@ -88,7 +93,7 @@ type DashboardContextValue = {
   reloadDashboard: () => Promise<void>;
 
   company: CompanyProfile;
-  updateCompany: (data: Partial<CompanyProfile>) => void;
+  updateCompany: (data: CompanyProfile) => Promise<void>;
 
   dashboardSummary: DashboardResumoResponse | null;
   dashboardAreas: AreaMonitoradaResponse[];
@@ -106,8 +111,6 @@ type DashboardContextValue = {
   setDraftFilters: (filters: PageFilters) => void;
   isFilterOpen: boolean;
 
-  selectedWaterSeg: string | null;
-  setSelectedWaterSeg: (id: string | null) => void;
   selectedCrop: string | null;
   setSelectedCrop: (id: string | null) => void;
 
@@ -164,7 +167,6 @@ function toLoginUserOption(usuario: UsuarioResponse): LoginUserOption {
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
-  const initialPreferences = useMemo(() => loadStoredPreferences(), []);
   const initialAuthSession = useMemo(() => loadStoredAuthSession(), []);
   const [authUser, setAuthUser] = useState<UsuarioResponse | null>(
     () => initialAuthSession?.usuario ?? null,
@@ -191,11 +193,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     if (!registerCredentials) return { ...EMPTY_COMPANY_PROFILE };
     return {
       ...EMPTY_COMPANY_PROFILE,
-      responsibleName: registerCredentials.fullName,
-      email: registerCredentials.email,
+      nomeUsuario: registerCredentials.fullName,
+      emailUsuario: registerCredentials.email,
     };
   }, [registerCredentials]);
-  const [preferences, setPreferences] = useState<GeneralPreferences>(initialPreferences);
+  const [preferences, setPreferences] = useState<GeneralPreferences>({
+    ...DEFAULT_GENERAL_PREFERENCES,
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [loadStatus, setLoadStatus] = useState<DashboardLoadStatus>("idle");
@@ -221,7 +225,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [crops, setCrops] = useState<CropPlantingItem[]>([]);
   const [predictions, setPredictions] = useState<PredictionItem[]>([]);
 
-  const [selectedWaterSeg, setSelectedWaterSeg] = useState<string | null>(null);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [pageTimeFilter, setPageTimeFilter] = useState<TimeFilter>("daily");
 
@@ -309,12 +312,40 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const completeRegistration = useCallback(
-    (draft: CompanyProfile) => {
+    async (draft: CompanyProfile) => {
       if (!registerCredentials) return;
-      setCompany(companyProfileFromRegister(registerCredentials, draft));
-      setRegisterCredentials(null);
-      setAuthModeState("login");
       setLoginError(null);
+      const companyDraft = companyProfileFromRegister(registerCredentials, draft);
+      try {
+        const response = await registerPlataforma({
+          nomeEmpresa: companyDraft.nomeEmpresa.trim(),
+          cnpj: companyDraft.cnpj.trim(),
+          emailEmpresa: companyDraft.emailEmpresa.trim(),
+          telefoneEmpresa: companyDraft.telefoneEmpresa.trim() || null,
+          nomePropriedade: companyDraft.nomePropriedade.trim(),
+          localizacao: companyDraft.localizacao.trim(),
+          latitude: companyDraft.latitude,
+          longitude: companyDraft.longitude,
+          areaTotalHectares: companyDraft.areaTotalHectares || null,
+          nomeUsuario: companyDraft.nomeUsuario.trim(),
+          emailUsuario: companyDraft.emailUsuario.trim(),
+          senha: registerCredentials.password,
+          cpf: companyDraft.cpf.trim() || null,
+        });
+
+        saveAuthSession(response.usuario);
+        setAuthUser(response.usuario);
+        setIsAuthenticated(true);
+        setCompany(companyProfileFromApi(response.usuario, response.empresa, response.propriedade));
+        setRegisterCredentials(null);
+        setAuthModeState("login");
+      } catch (error) {
+        setLoginError(
+          error instanceof ApiRequestError
+            ? error.message
+            : "Nao foi possivel concluir o cadastro. Tente novamente.",
+        );
+      }
     },
     [registerCredentials],
   );
@@ -336,29 +367,84 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     setWater({ ...EMPTY_WATER });
     setCrops([]);
     setPredictions([]);
+    setPreferences({ ...DEFAULT_GENERAL_PREFERENCES });
+    setAppliedFilters(DEFAULT_PAGE_FILTERS);
+    setDraftFilters(DEFAULT_PAGE_FILTERS);
     setRegisterCredentials(null);
     setAuthModeState("login");
   }, []);
 
-  const updateCompany = useCallback((data: Partial<CompanyProfile>) => {
-    setCompany((current) => ({ ...current, ...data }));
-  }, []);
+  const updateCompany = useCallback(
+    async (data: CompanyProfile) => {
+      const idEmpresa = data.idEmpresa ?? authUser?.idEmpresa;
+      const idPropriedade = data.idPropriedade;
+      const idUsuario = data.idUsuario ?? authUser?.idUsuario;
+      if (!authUser || !idEmpresa || !idPropriedade || !idUsuario) return;
+
+      const [empresa, propriedade, usuario] = await Promise.all([
+        updateEmpresa(idEmpresa, {
+          nomeEmpresa: data.nomeEmpresa.trim(),
+          cnpj: data.cnpj.trim(),
+          email: data.emailEmpresa.trim(),
+          telefone: data.telefoneEmpresa.trim() || null,
+        }),
+        updatePropriedade(idPropriedade, {
+          idEmpresa,
+          nomePropriedade: data.nomePropriedade.trim(),
+          localizacao: data.localizacao.trim(),
+          latitude: data.latitude,
+          longitude: data.longitude,
+          areaTotalHectares: data.areaTotalHectares || null,
+        }),
+        updateUsuario(idUsuario, {
+          idEmpresa,
+          nomeUsuario: data.nomeUsuario.trim(),
+          email: data.emailUsuario.trim(),
+          senha: null,
+          cpf: data.cpf.trim() || null,
+          perfil: data.perfil,
+          status: data.status,
+        }),
+      ]);
+
+      saveAuthSession(usuario);
+      setAuthUser(usuario);
+      setCompany(companyProfileFromApi(usuario, empresa, propriedade));
+    },
+    [authUser],
+  );
+
+  const saveUserPreferences = useCallback(
+    (idUsuario: number, general: GeneralPreferences, filters: PageFilters) => {
+      const body: UsuarioPreferenciasRequest = {
+        ...general,
+        dateRangeStart: filters.dateRange.start,
+        dateRangeEnd: filters.dateRange.end,
+        selectedMonth: filters.selectedMonth,
+        alertLevels: filters.alertLevels,
+        alertTypes: filters.alertTypes,
+        soilSector: filters.soilSector,
+        growthCrop: filters.growthCrop,
+      };
+      void updateUsuarioPreferencias(idUsuario, body);
+    },
+    [],
+  );
 
   const updatePreference = useCallback(
     <K extends keyof GeneralPreferences>(key: K, value: GeneralPreferences[K]) => {
       setPreferences((current) => {
         const next = { ...current, [key]: value };
-        saveStoredPreferences(next);
+        if (authUser) saveUserPreferences(authUser.idUsuario, next, appliedFilters);
         return next;
       });
     },
-    [],
+    [appliedFilters, authUser, saveUserPreferences],
   );
 
   const toggleSidebar = useCallback(() => setIsSidebarOpen((o) => !o), []);
 
   const resetSelections = useCallback(() => {
-    setSelectedWaterSeg(null);
     setSelectedCrop(null);
   }, []);
 
@@ -370,9 +456,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const closeFilters = useCallback(() => setIsFilterOpen(false), []);
 
   const applyFilters = useCallback(() => {
-    setAppliedFilters(draftFilters);
+    const next = draftFilters;
+    setAppliedFilters(next);
     setIsFilterOpen(false);
-  }, [draftFilters]);
+    if (authUser) saveUserPreferences(authUser.idUsuario, preferences, next);
+  }, [authUser, draftFilters, preferences, saveUserPreferences]);
 
   const clearDraftFilters = useCallback(
     (view: ViewId, timeFilter: TimeFilter) => {
@@ -391,6 +479,28 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     if (isAuthenticated) return;
     void reloadLoginUsers();
   }, [isAuthenticated, reloadLoginUsers]);
+
+  useEffect(() => {
+    if (!authUser) return;
+    let cancelled = false;
+
+    void getUsuarioPreferencias(authUser.idUsuario)
+      .then((data) => {
+        if (cancelled) return;
+        const filters = filtersFromPreferences(data);
+        setPreferences(generalPreferencesFromResponse(data));
+        setAppliedFilters(filters);
+        setDraftFilters(filters);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPreferences({ ...DEFAULT_GENERAL_PREFERENCES });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -452,8 +562,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       draftFilters,
       setDraftFilters,
       isFilterOpen,
-      selectedWaterSeg,
-      setSelectedWaterSeg,
       selectedCrop,
       setSelectedCrop,
       alertTypeOptions,
@@ -505,7 +613,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       appliedFilters,
       draftFilters,
       isFilterOpen,
-      selectedWaterSeg,
       selectedCrop,
       alertTypeOptions,
       soilSectorOptions,
