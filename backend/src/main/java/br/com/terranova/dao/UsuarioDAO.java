@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -138,6 +139,18 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
             return statement.executeUpdate() > 0;
         } catch (SQLException exception) {
             throw new BancoDadosException("Erro ao deletar usuario.", exception);
+        }
+    }
+
+    public void atualizarUltimoAcesso(Long idUsuario, LocalDateTime dataUltimoAcesso) {
+        String sql = "UPDATE TN_USUARIO SET dt_ultimo_acesso = ? WHERE id_usuario = ?";
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            DaoUtils.setLocalDateTime(statement, 1, dataUltimoAcesso);
+            statement.setLong(2, idUsuario);
+            statement.executeUpdate();
+        } catch (SQLException exception) {
+            throw new BancoDadosException("Erro ao atualizar ultimo acesso do usuario.", exception);
         }
     }
 

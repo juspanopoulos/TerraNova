@@ -1,3 +1,43 @@
+export type UsuarioResponse = {
+  idUsuario: number;
+  idEmpresa: number;
+  nomeUsuario: string;
+  email: string;
+  cpf: string | null;
+  perfil: "ADMIN" | "OPERADOR" | "VISUALIZADOR" | string;
+  status: "ATIVO" | "INATIVO" | string;
+  dataCadastro: string | null;
+  dataUltimoAcesso: string | null;
+};
+
+export type LoginRequest = {
+  email: string;
+  senha: string;
+};
+
+export type LoginResponse = {
+  usuario: UsuarioResponse;
+};
+
+export type EmpresaResponse = {
+  idEmpresa: number;
+  nomeEmpresa: string;
+  cnpj: string | null;
+  email: string | null;
+  telefone: string | null;
+  dataCadastro: string | null;
+};
+
+export type PropriedadeResponse = {
+  idPropriedade: number;
+  idEmpresa: number;
+  nomePropriedade: string;
+  localizacao: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  areaTotalHectares: number | null;
+};
+
 export type DashboardIndicadoresResponse = {
   totalEmpresas: number;
   totalPropriedades: number;

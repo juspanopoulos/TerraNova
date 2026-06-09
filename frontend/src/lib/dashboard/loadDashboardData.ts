@@ -2,15 +2,18 @@ import { ApiRequestError } from "@/lib/api/client";
 import { listAlertasAbertos } from "@/lib/api/alertsApi";
 import { listAreasMonitoradas } from "@/lib/api/areasApi";
 import { listDadosClimaticos, listHistoricoClimaticoPorArea } from "@/lib/api/climateApi";
+import { listEmpresas } from "@/lib/api/companiesApi";
 import { listAreasCulturasAtivas, listCulturas } from "@/lib/api/cropsApi";
 import { getDashboardArea, getDashboardResumo } from "@/lib/api/dashboardApi";
 import { listHistoricoIrrigacaoPorArea, listIrrigacoes } from "@/lib/api/irrigationApi";
 import { listPredicoesIa, listPredicoesIaPorArea } from "@/lib/api/predictionsApi";
+import { listPropriedades } from "@/lib/api/propertiesApi";
 import {
   getUltimaLeituraSoloPorArea,
   listHistoricoSoloPorArea,
   listLeiturasSolo,
 } from "@/lib/api/soilApi";
+import { EMPTY_COMPANY_PROFILE } from "@/lib/dashboard/companyFields";
 import type {
   AlertaResponse,
   AreaCulturaResponse,
@@ -19,15 +22,20 @@ import type {
   DadoClimaticoResponse,
   DashboardAreaResumoResponse,
   DashboardResumoResponse,
+  EmpresaResponse,
   IrrigacaoResponse,
   LeituraSoloResponse,
   PredicaoIaResponse,
+  PropriedadeResponse,
+  RecomendacaoResponse,
+  UsuarioResponse,
 } from "@/lib/api/types";
 import type {
   AlertItem,
   ClimateHistoryState,
   ClimateSeries,
   ClimateState,
+  CompanyProfile,
   CropPlantingItem,
   IrrigationRow,
   PredictionItem,
@@ -41,6 +49,7 @@ import type {
 import type { DashboardLoadError, DashboardLoadErrorKind } from "@/types/dashboard";
 
 export type DashboardPayload = {
+  company: CompanyProfile;
   summary: DashboardResumoResponse;
   areas: AreaMonitoradaResponse[];
   selectedArea: DashboardAreaResumoResponse | null;
@@ -151,13 +160,26 @@ export function dashboardErrorFromKind(kind: DashboardLoadErrorKind): DashboardL
   return { kind, message: ERROR_MESSAGES[kind] };
 }
 
-export async function fetchDashboardData(): Promise<DashboardPayload> {
+export async function fetchDashboardData(usuario: UsuarioResponse): Promise<DashboardPayload> {
   try {
-    const summary = await getDashboardResumo();
-    const selectedAreaId = summary.areas[0]?.idArea;
+    const [summary, areas, propriedades, empresas] = await Promise.all([
+      getDashboardResumo(),
+      listAreasMonitoradas(),
+      listPropriedades(),
+      listEmpresas(),
+    ]);
+
+    const scopedProperties = propriedades.filter(
+      (propriedade) => propriedade.idEmpresa === usuario.idEmpresa,
+    );
+    const scopedPropertyIds = new Set(scopedProperties.map((propriedade) => propriedade.idPropriedade));
+    const scopedAreas = areas.filter((area) => scopedPropertyIds.has(area.idPropriedade));
+    const scopedAreaIds = new Set(scopedAreas.map((area) => area.idArea));
+    const selectedAreaId =
+      summary.areas.find((area) => scopedAreaIds.has(area.idArea))?.idArea ??
+      scopedAreas[0]?.idArea;
 
     const [
-      areas,
       alerts,
       climateData,
       selectedArea,
@@ -172,7 +194,6 @@ export async function fetchDashboardData(): Promise<DashboardPayload> {
       predictions,
       areaPredictions,
     ] = await Promise.all([
-      listAreasMonitoradas(),
       listAlertasAbertos(),
       listDadosClimaticos(),
       selectedAreaId ? getDashboardArea(selectedAreaId) : Promise.resolve(null),
@@ -188,30 +209,174 @@ export async function fetchDashboardData(): Promise<DashboardPayload> {
       selectedAreaId ? listPredicoesIaPorArea(selectedAreaId) : Promise.resolve([]),
     ]);
 
-    const climateSource = areaClimateHistory.length > 0 ? areaClimateHistory : climateData;
-    const climate = mapClimateCurrent(climateSource, summary, selectedArea);
-    const crops = mapCrops(activePlantings, culturas, areas, summary);
+    const scopedAlerts = alerts.filter((alert) => scopedAreaIds.has(alert.idArea));
+    const scopedClimateData = climateData.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedAreaClimateHistory = areaClimateHistory.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedSoilData = soilData.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedAreaSoilHistory = areaSoilHistory.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedIrrigationData = irrigationData.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedAreaIrrigationHistory = areaIrrigationHistory.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedActivePlantings = activePlantings.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedPredictions = predictions.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedAreaPredictions = areaPredictions.filter((item) => scopedAreaIds.has(item.idArea));
+    const scopedRecommendations = summary.recomendacoesPendentes.filter((item) =>
+      scopedAreaIds.has(item.idArea),
+    );
+    const scopedSummaryAreas = summary.areas.filter((area) => scopedAreaIds.has(area.idArea));
+    const scopedSummary = mapScopedSummary(
+      scopedProperties,
+      scopedAreas,
+      scopedSummaryAreas,
+      scopedAlerts,
+      scopedRecommendations,
+      scopedPredictions,
+      scopedClimateData,
+      scopedSoilData,
+      scopedActivePlantings,
+    );
+
+    const climateSource =
+      scopedAreaClimateHistory.length > 0 ? scopedAreaClimateHistory : scopedClimateData;
+    const climate = mapClimateCurrent(climateSource, scopedSummary, selectedArea);
+    const crops = mapCrops(scopedActivePlantings, culturas, scopedAreas, scopedSummary);
 
     return {
-      summary,
-      areas,
+      company: mapCompanyProfile(usuario, empresas, scopedProperties, scopedAreas),
+      summary: scopedSummary,
+      areas: scopedAreas,
       selectedArea,
-      alerts: mapAlerts(alerts, areas, summary),
+      alerts: mapAlerts(scopedAlerts, scopedAreas, scopedSummary),
       climate,
       climateHistory: mapClimateHistory(climateSource, climate),
-      soil: mapSoilData(summary, selectedArea, areas, soilData, areaSoilHistory, latestAreaSoil),
-      water: mapWaterData(summary, selectedArea, areas, irrigationData, areaIrrigationHistory),
+      soil: mapSoilData(
+        scopedSummary,
+        selectedArea,
+        scopedAreas,
+        scopedSoilData,
+        scopedAreaSoilHistory,
+        latestAreaSoil,
+      ),
+      water: mapWaterData(
+        scopedSummary,
+        selectedArea,
+        scopedAreas,
+        scopedIrrigationData,
+        scopedAreaIrrigationHistory,
+      ),
       crops,
       predictions: mapPredictions(
-        areaPredictions.length > 0 ? areaPredictions : predictions,
-        areas,
-        summary,
+        scopedAreaPredictions.length > 0 ? scopedAreaPredictions : scopedPredictions,
+        scopedAreas,
+        scopedSummary,
         crops,
       ),
     };
   } catch (error) {
     throw toDashboardFailure(error);
   }
+}
+
+function mapScopedSummary(
+  propriedades: PropriedadeResponse[],
+  areas: AreaMonitoradaResponse[],
+  summaryAreas: DashboardAreaResumoResponse[],
+  alertas: AlertaResponse[],
+  recomendacoes: RecomendacaoResponse[],
+  predicoes: PredicaoIaResponse[],
+  dadosClimaticos: DadoClimaticoResponse[],
+  leiturasSolo: LeituraSoloResponse[],
+  plantiosAtivos: AreaCulturaResponse[],
+): DashboardResumoResponse {
+  return {
+    indicadores: {
+      totalEmpresas: propriedades.length > 0 ? 1 : 0,
+      totalPropriedades: propriedades.length,
+      totalAreas: areas.length,
+      totalCulturas: new Set(plantiosAtivos.map((plantio) => plantio.idCultura)).size,
+      totalPlantiosAtivos: plantiosAtivos.length,
+      totalAlertasAbertos: alertas.length,
+      totalRecomendacoesPendentes: recomendacoes.length,
+      totalPredicoesIa: predicoes.length,
+      mediaTemperatura: averageValues(dadosClimaticos.map((item) => item.temperatura)),
+      mediaUmidadeSolo: averageValues(leiturasSolo.map((item) => item.umidadeSolo)),
+      aguaSugeridaPendenteMm: sumValues(
+        recomendacoes.map((item) => item.volumeAguaSugeridoMm),
+      ),
+    },
+    areas: summaryAreas,
+    alertasAbertos: alertas,
+    recomendacoesPendentes: recomendacoes,
+    ultimasPredicoesIa: latestPredictions(predicoes, 5),
+  };
+}
+
+function mapCompanyProfile(
+  usuario: UsuarioResponse,
+  empresas: EmpresaResponse[],
+  propriedades: PropriedadeResponse[],
+  areas: AreaMonitoradaResponse[],
+): CompanyProfile {
+  const empresa = empresas.find((item) => item.idEmpresa === usuario.idEmpresa);
+  const primaryProperty = propriedades[0] ?? null;
+  const locations = uniqueValues(propriedades.map((propriedade) => propriedade.localizacao));
+  const [city = "", state = ""] = (primaryProperty?.localizacao ?? "")
+    .split(",")
+    .map((part) => part.trim());
+
+  const totalAreaHa =
+    sumValues(propriedades.map((propriedade) => propriedade.areaTotalHectares)) ||
+    sumValues(areas.map((area) => area.areaHectares));
+
+  return {
+    ...EMPTY_COMPANY_PROFILE,
+    legalName: empresa?.nomeEmpresa ?? "",
+    tradeName: empresa?.nomeEmpresa ?? "",
+    cnpj: empresa?.cnpj ?? "",
+    cpf: usuario.cpf ?? "",
+    email: empresa?.email ?? usuario.email,
+    phone: empresa?.telefone ?? "",
+    city,
+    state,
+    farmName: formatFarmName(propriedades),
+    farmRegion: locations.join(" / "),
+    totalAreaHa,
+    activeSectors: areas.length,
+    responsibleName: usuario.nomeUsuario,
+  };
+}
+
+function formatFarmName(propriedades: PropriedadeResponse[]) {
+  if (propriedades.length === 0) return "";
+  if (propriedades.length === 1) return propriedades[0].nomePropriedade;
+  return propriedades.map((propriedade) => propriedade.nomePropriedade).join(", ");
+}
+
+function uniqueValues(values: Array<string | null | undefined>) {
+  return [...new Set(values.map((value) => value?.trim()).filter((value): value is string => Boolean(value)))];
+}
+
+function sumValues(values: Array<number | null | undefined>) {
+  return Number(
+    values
+      .map((value) => Number(value))
+      .filter(Number.isFinite)
+      .reduce((sum, value) => sum + value, 0)
+      .toFixed(2),
+  );
+}
+
+function averageValues(values: Array<number | null | undefined>) {
+  const validValues = values.map((value) => Number(value)).filter(Number.isFinite);
+  if (validValues.length === 0) return 0;
+  return Number(
+    (validValues.reduce((sum, value) => sum + value, 0) / validValues.length).toFixed(2),
+  );
+}
+
+function latestPredictions(predictions: PredicaoIaResponse[], limit: number) {
+  return [...predictions]
+    .sort((a, b) => dateTimeMs(b.dataPredicao) - dateTimeMs(a.dataPredicao))
+    .slice(0, limit);
 }
 
 async function optionalApi<T>(promise: Promise<T>): Promise<T | null> {

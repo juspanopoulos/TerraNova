@@ -31,6 +31,9 @@ function DashboardShell() {
     authMode,
     setAuthMode,
     login,
+    loginError,
+    loginUsers,
+    isLoadingLoginUsers,
     submitRegisterStep1,
     backFromRegisterCompany,
     completeRegistration,
@@ -88,6 +91,9 @@ function DashboardShell() {
           mode={authMode === "register" ? "register" : "login"}
           onModeChange={setAuthMode}
           onLogin={login}
+          loginError={loginError}
+          loginUsers={loginUsers}
+          isLoadingLoginUsers={isLoadingLoginUsers}
           onRegisterStep1={submitRegisterStep1}
         />
       );

@@ -8,6 +8,20 @@ export type RegisterCredentials = {
   password: string;
 };
 
+export type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+export type LoginUserOption = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  profile: string;
+  status: string;
+};
+
 export type ViewId =
   | "overview"
   | "alerts"

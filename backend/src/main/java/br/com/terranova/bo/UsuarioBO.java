@@ -7,6 +7,7 @@ import br.com.terranova.dto.response.UsuarioResponse;
 import br.com.terranova.entities.Usuario;
 import br.com.terranova.enums.PerfilUsuario;
 import br.com.terranova.enums.StatusUsuario;
+import br.com.terranova.exceptions.AutenticacaoException;
 import br.com.terranova.exceptions.ConflitoException;
 import br.com.terranova.exceptions.EntidadeNaoEncontradaException;
 import br.com.terranova.utils.PasswordUtils;
@@ -30,6 +31,25 @@ public class UsuarioBO {
 
     public UsuarioResponse buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
+    }
+
+    public UsuarioResponse autenticar(String email, String senha) {
+        String emailNormalizado = BoUtils.textoObrigatorio(email, "email").toLowerCase();
+        Usuario usuario = usuarioDAO.buscarPorEmail(emailNormalizado)
+                .orElseThrow(() -> new AutenticacaoException("Email ou senha invalidos."));
+
+        if (usuario.getStatus() != StatusUsuario.ATIVO) {
+            throw new AutenticacaoException("Usuario inativo.");
+        }
+
+        if (!PasswordUtils.verificarSenha(senha, usuario.getSenhaHash())) {
+            throw new AutenticacaoException("Email ou senha invalidos.");
+        }
+
+        LocalDateTime acesso = LocalDateTime.now();
+        usuarioDAO.atualizarUltimoAcesso(usuario.getIdUsuario(), acesso);
+        usuario.setDataUltimoAcesso(acesso);
+        return toResponse(usuario);
     }
 
     Usuario buscarEntidade(Long id) {

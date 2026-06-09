@@ -15,7 +15,9 @@ import {
   type PageFilters,
 } from "@/components/dashboard/FilterSlideover";
 import { toDashboardLoadError } from "@/components/dashboard/DashboardLoadState";
-import { DEFAULT_COMPANY_PROFILE } from "@/data/mockCompany";
+import { ApiRequestError } from "@/lib/api/client";
+import { loginUsuario, listUsuarios } from "@/lib/api/usersApi";
+import type { UsuarioResponse } from "@/lib/api/types";
 import { clearFiltersForView } from "@/lib/dashboard/helpers";
 import {
   companyProfileFromRegister,
@@ -52,6 +54,8 @@ import type {
   DashboardLoadError,
   DashboardLoadStatus,
   GeneralPreferences,
+  LoginCredentials,
+  LoginUserOption,
   PredictionItem,
   RegisterCredentials,
   SoilState,
@@ -62,9 +66,14 @@ import type {
 
 type DashboardContextValue = {
   isAuthenticated: boolean;
+  authUser: UsuarioResponse | null;
   authMode: AuthMode;
   setAuthMode: (mode: AuthMode) => void;
-  login: () => void;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  loginError: string | null;
+  loginUsers: LoginUserOption[];
+  isLoadingLoginUsers: boolean;
+  reloadLoginUsers: () => Promise<void>;
   submitRegisterStep1: (credentials: RegisterCredentials) => void;
   backFromRegisterCompany: () => void;
   completeRegistration: (company: CompanyProfile) => void;
@@ -126,14 +135,50 @@ type DashboardContextValue = {
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
 
+const LEGACY_DEMO_PASSWORD_BY_EMAIL: Record<string, string> = {
+  "carlos.mendes@agrotech.com.br": "hash_senha_001",
+  "fernanda.lima@agrotech.com.br": "hash_senha_002",
+  "roberto.souza@campoverde.com.br": "hash_senha_003",
+  "patricia.oliveira@campoverde.com.br": "hash_senha_004",
+  "marcos.alves@sertaofertil.com.br": "hash_senha_005",
+  "ana.costa@sertaofertil.com.br": "hash_senha_006",
+};
+
+function demoPasswordForUser(usuario: UsuarioResponse) {
+  return (
+    LEGACY_DEMO_PASSWORD_BY_EMAIL[usuario.email.toLowerCase()] ??
+    `hash_senha_${String(usuario.idUsuario).padStart(3, "0")}`
+  );
+}
+
+function toLoginUserOption(usuario: UsuarioResponse): LoginUserOption {
+  return {
+    id: String(usuario.idUsuario),
+    name: usuario.nomeUsuario,
+    email: usuario.email,
+    password: demoPasswordForUser(usuario),
+    profile: usuario.perfil,
+    status: usuario.status,
+  };
+}
+
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
   const initialPreferences = useMemo(() => loadStoredPreferences(), []);
-  const [isAuthenticated, setIsAuthenticated] = useState(() => loadStoredAuthSession());
+  const initialAuthSession = useMemo(() => loadStoredAuthSession(), []);
+  const [authUser, setAuthUser] = useState<UsuarioResponse | null>(
+    () => initialAuthSession?.usuario ?? null,
+  );
+  const [isAuthenticated, setIsAuthenticated] = useState(() =>
+    Boolean(initialAuthSession?.usuario),
+  );
   const [authMode, setAuthModeState] = useState<AuthMode>("login");
   const [registerCredentials, setRegisterCredentials] = useState<RegisterCredentials | null>(
     null,
   );
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginUsers, setLoginUsers] = useState<LoginUserOption[]>([]);
+  const [isLoadingLoginUsers, setIsLoadingLoginUsers] = useState(false);
 
   const setAuthMode = useCallback((mode: AuthMode) => {
     if (mode === "login") {
@@ -157,7 +202,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [loadError, setLoadError] = useState<DashboardLoadError | null>(null);
   const loadRequestRef = useRef(0);
 
-  const [company, setCompany] = useState<CompanyProfile>({ ...DEFAULT_COMPANY_PROFILE });
+  const [company, setCompany] = useState<CompanyProfile>({ ...EMPTY_COMPANY_PROFILE });
 
   const [appliedFilters, setAppliedFilters] = useState<PageFilters>(DEFAULT_PAGE_FILTERS);
   const [draftFilters, setDraftFilters] = useState<PageFilters>(DEFAULT_PAGE_FILTERS);
@@ -188,14 +233,20 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   );
 
   const reloadDashboard = useCallback(async () => {
+    if (!authUser) {
+      setLoadStatus("idle");
+      return;
+    }
+
     const requestId = ++loadRequestRef.current;
     setLoadStatus("loading");
     setLoadError(null);
 
     try {
-      const data = await fetchDashboardData();
+      const data = await fetchDashboardData(authUser);
       if (requestId !== loadRequestRef.current) return;
 
+      setCompany(data.company);
       setDashboardSummary(data.summary);
       setDashboardAreas(data.areas);
       setSelectedArea(data.selectedArea);
@@ -212,11 +263,40 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setLoadError(toDashboardLoadError(err));
       setLoadStatus("error");
     }
+  }, [authUser]);
+
+  const reloadLoginUsers = useCallback(async () => {
+    setIsLoadingLoginUsers(true);
+    try {
+      const usuarios = await listUsuarios();
+      setLoginUsers(usuarios.map(toLoginUserOption));
+    } catch {
+      setLoginUsers([]);
+    } finally {
+      setIsLoadingLoginUsers(false);
+    }
   }, []);
 
-  const login = useCallback(() => {
-    saveAuthSession();
-    setIsAuthenticated(true);
+  const login = useCallback(async (credentials: LoginCredentials) => {
+    setLoginError(null);
+
+    try {
+      const response = await loginUsuario({
+        email: credentials.email.trim(),
+        senha: credentials.password,
+      });
+
+      saveAuthSession(response.usuario);
+      setAuthUser(response.usuario);
+      setIsAuthenticated(true);
+      setAuthModeState("login");
+    } catch (error) {
+      setLoginError(
+        error instanceof ApiRequestError
+          ? error.message
+          : "Nao foi possivel fazer login. Tente novamente.",
+      );
+    }
   }, []);
 
   const submitRegisterStep1 = useCallback((credentials: RegisterCredentials) => {
@@ -234,17 +314,28 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setCompany(companyProfileFromRegister(registerCredentials, draft));
       setRegisterCredentials(null);
       setAuthModeState("login");
-      saveAuthSession();
-      setIsAuthenticated(true);
+      setLoginError(null);
     },
     [registerCredentials],
   );
 
   const logout = useCallback(() => {
     clearAuthSession();
+    setAuthUser(null);
     setIsAuthenticated(false);
     setLoadStatus("idle");
     setLoadError(null);
+    setCompany({ ...EMPTY_COMPANY_PROFILE });
+    setDashboardSummary(null);
+    setDashboardAreas([]);
+    setSelectedArea(null);
+    setAlerts([]);
+    setClimate({ ...EMPTY_CLIMATE });
+    setClimateHistory({ ...EMPTY_CLIMATE_HISTORY });
+    setSoil({ ...EMPTY_SOIL });
+    setWater({ ...EMPTY_WATER });
+    setCrops([]);
+    setPredictions([]);
     setRegisterCredentials(null);
     setAuthModeState("login");
   }, []);
@@ -297,6 +388,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
+    if (isAuthenticated) return;
+    void reloadLoginUsers();
+  }, [isAuthenticated, reloadLoginUsers]);
+
+  useEffect(() => {
     if (!isAuthenticated) return;
     void reloadDashboard();
   }, [isAuthenticated, reloadDashboard]);
@@ -322,9 +418,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     (): DashboardContextValue => ({
       isAuthenticated,
+      authUser,
       authMode,
       setAuthMode,
       login,
+      loginError,
+      loginUsers,
+      isLoadingLoginUsers,
+      reloadLoginUsers,
       submitRegisterStep1,
       backFromRegisterCompany,
       completeRegistration,
@@ -371,9 +472,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     }),
     [
       isAuthenticated,
+      authUser,
       authMode,
       setAuthMode,
       login,
+      loginError,
+      loginUsers,
+      isLoadingLoginUsers,
+      reloadLoginUsers,
       submitRegisterStep1,
       backFromRegisterCompany,
       completeRegistration,

@@ -19,7 +19,12 @@ import {
   validateFullName,
   validatePassword,
 } from "@/lib/dashboard/authValidation";
-import type { AuthMode, RegisterCredentials } from "@/types/dashboard";
+import type {
+  AuthMode,
+  LoginCredentials,
+  LoginUserOption,
+  RegisterCredentials,
+} from "@/types/dashboard";
 
 type AuthFormValues = {
   fullName: string;
@@ -43,11 +48,17 @@ export function LoginScreen({
   mode,
   onModeChange,
   onLogin,
+  loginError,
+  loginUsers,
+  isLoadingLoginUsers,
   onRegisterStep1,
 }: {
   mode: Extract<AuthMode, "login" | "register">;
   onModeChange: (m: AuthMode) => void;
-  onLogin: () => void;
+  onLogin: (credentials: LoginCredentials) => Promise<void>;
+  loginError: string | null;
+  loginUsers: LoginUserOption[];
+  isLoadingLoginUsers: boolean;
   onRegisterStep1: (credentials: RegisterCredentials) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -57,6 +68,7 @@ export function LoginScreen({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<AuthFormValues>({
     defaultValues: authFormDefaultValues,
@@ -68,7 +80,13 @@ export function LoginScreen({
     setShowPassword(false);
   }, [mode, reset]);
 
-  const onSubmit = (data: AuthFormValues) => {
+  const fillCredentials = (email: string, password: string) => {
+    setValue("email", email, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+    setValue("password", password, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+    setShowPassword(true);
+  };
+
+  const onSubmit = async (data: AuthFormValues) => {
     if (isRegister) {
       onRegisterStep1({
         fullName: data.fullName.trim(),
@@ -78,11 +96,15 @@ export function LoginScreen({
       return;
     }
 
-    onLogin();
+    await onLogin({
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return (
-    <div className="w-full max-w-md shrink-0 rounded-xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
+    <div className="flex w-full max-w-4xl flex-col items-stretch gap-4 lg:flex-row lg:justify-center">
+      <div className="w-full max-w-md shrink-0 rounded-xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
       <AuthBrandHeader />
       <h1 className="-mt-4 mb-6 text-center text-2xl font-bold text-preto-suave">
         {isRegister ? "Crie sua conta" : "Acesse sua propriedade"}
@@ -172,8 +194,19 @@ export function LoginScreen({
           disabled={isSubmitting}
           className={`${btnClick} w-full rounded-lg bg-verde-floresta px-4 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90 disabled:cursor-not-allowed disabled:opacity-60`}
         >
-          {isRegister ? "Continuar cadastro" : "Entrar no dashboard"}
+          {isSubmitting
+            ? isRegister
+              ? "Continuando..."
+              : "Entrando..."
+            : isRegister
+              ? "Continuar cadastro"
+              : "Entrar no dashboard"}
         </button>
+        {!isRegister && loginError ? (
+          <p className={authErrorClass} role="alert">
+            {loginError}
+          </p>
+        ) : null}
       </form>
       <p className="mt-6 text-center text-sm text-preto-suave/55">
         {isRegister ? "Já possui conta?" : "Ainda não tem conta?"}{" "}
@@ -192,6 +225,37 @@ export function LoginScreen({
         <ArrowLeft className="size-4" />
         Voltar ao site
       </Link>
+      </div>
+
+      {!isRegister && (
+        <aside className="w-full rounded-xl border border-neutral-200/80 bg-white/95 p-4 shadow-sm lg:max-w-xs">
+          <p className="text-xs font-bold uppercase tracking-wide text-preto-suave/45">
+            Usuarios cadastrados
+          </p>
+          <div className="mt-3 space-y-2">
+            {isLoadingLoginUsers ? (
+              <p className="text-sm text-preto-suave/55">Carregando usuarios...</p>
+            ) : loginUsers.length > 0 ? (
+              loginUsers.map((user) => (
+                <button
+                  key={user.id}
+                  type="button"
+                  onClick={() => fillCredentials(user.email, user.password)}
+                  className={`${btnClick} w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-left text-sm hover:border-verde-floresta/40 hover:bg-verde-floresta/5`}
+                >
+                  <span className="block font-semibold text-preto-suave">{user.name}</span>
+                  <span className="mt-0.5 block text-xs text-preto-suave/55">{user.email}</span>
+                  <span className="mt-1 inline-flex rounded-full bg-verde-floresta/10 px-2 py-0.5 text-[11px] font-bold uppercase text-verde-floresta">
+                    {user.profile} - {user.status}
+                  </span>
+                </button>
+              ))
+            ) : (
+              <p className="text-sm text-preto-suave/55">Nenhum usuario encontrado.</p>
+            )}
+          </div>
+        </aside>
+      )}
     </div>
   );
 }
