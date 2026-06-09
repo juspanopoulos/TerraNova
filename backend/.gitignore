@@ -1,0 +1,6 @@
+target/
+.env
+.env.*
+!.env.example
+hs_err_pid*
+replay_pid*

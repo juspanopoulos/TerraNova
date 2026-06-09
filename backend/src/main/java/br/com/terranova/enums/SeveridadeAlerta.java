@@ -1,0 +1,8 @@
+package br.com.terranova.enums;
+
+public enum SeveridadeAlerta {
+    BAIXA,
+    MEDIA,
+    ALTA,
+    CRITICA
+}
