@@ -16,13 +16,18 @@ import {
 } from "@/components/dashboard/FilterSlideover";
 import { toDashboardLoadError } from "@/components/dashboard/DashboardLoadState";
 import { DEFAULT_COMPANY_PROFILE } from "@/data/mockCompany";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
-import { clamp, clearFiltersForView } from "@/lib/dashboard/helpers";
+import { MOCK_DASHBOARD_DATA, type AlertItem } from "@/data/mockDashboard";
+import { clearFiltersForView } from "@/lib/dashboard/helpers";
 import {
   companyProfileFromRegister,
   EMPTY_COMPANY_PROFILE,
 } from "@/lib/dashboard/companyFields";
 import { fetchDashboardData } from "@/lib/dashboard/loadDashboardData";
+import type {
+  AreaMonitoradaResponse,
+  DashboardAreaResumoResponse,
+  DashboardResumoResponse,
+} from "@/lib/api/types";
 import {
   clearAuthSession,
   loadStoredAuthSession,
@@ -44,6 +49,7 @@ import type {
 } from "@/types/dashboard";
 
 type ClimateState = typeof MOCK_DASHBOARD_DATA.climate.current;
+type ClimateHistoryState = typeof MOCK_DASHBOARD_DATA.climate.history;
 type SoilState = typeof MOCK_DASHBOARD_DATA.soil.current;
 type WaterState = typeof MOCK_DASHBOARD_DATA.water.current;
 
@@ -68,7 +74,12 @@ type DashboardContextValue = {
   company: CompanyProfile;
   updateCompany: (data: Partial<CompanyProfile>) => void;
 
+  dashboardSummary: DashboardResumoResponse | null;
+  dashboardAreas: AreaMonitoradaResponse[];
+  selectedArea: DashboardAreaResumoResponse | null;
+  alerts: AlertItem[];
   climate: ClimateState;
+  climateHistory: ClimateHistoryState;
   soil: SoilState;
   water: WaterState;
 
@@ -146,18 +157,22 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [climate, setClimate] = useState<ClimateState>({ ...MOCK_DASHBOARD_DATA.climate.current });
+  const [climateHistory, setClimateHistory] = useState<ClimateHistoryState>({
+    ...MOCK_DASHBOARD_DATA.climate.history,
+  });
   const [soil, setSoil] = useState<SoilState>({ ...MOCK_DASHBOARD_DATA.soil.current });
   const [water, setWater] = useState<WaterState>({ ...MOCK_DASHBOARD_DATA.water.current });
+  const [dashboardSummary, setDashboardSummary] = useState<DashboardResumoResponse | null>(null);
+  const [dashboardAreas, setDashboardAreas] = useState<AreaMonitoradaResponse[]>([]);
+  const [selectedArea, setSelectedArea] = useState<DashboardAreaResumoResponse | null>(null);
+  const [alerts, setAlerts] = useState<AlertItem[]>([]);
 
   const [selectedNutrient, setSelectedNutrient] = useState<string | null>(null);
   const [selectedWaterSeg, setSelectedWaterSeg] = useState<string | null>(null);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [pageTimeFilter, setPageTimeFilter] = useState<TimeFilter>("daily");
 
-  const alertTypeOptions = useMemo(
-    () => [...new Set(MOCK_DASHBOARD_DATA.alerts.map((a) => a.type))],
-    [],
-  );
+  const alertTypeOptions = useMemo(() => [...new Set(alerts.map((a) => a.type))], [alerts]);
   const soilSectorOptions = useMemo(
     () => MOCK_DASHBOARD_DATA.soil.sectors.map((s) => s.sector),
     [],
@@ -176,7 +191,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       const data = await fetchDashboardData();
       if (requestId !== loadRequestRef.current) return;
 
+      setDashboardSummary(data.summary);
+      setDashboardAreas(data.areas);
+      setSelectedArea(data.selectedArea);
+      setAlerts(data.alerts);
       setClimate(data.climate);
+      setClimateHistory(data.climateHistory);
       setSoil(data.soil);
       setWater(data.water);
       setLoadStatus("success");
@@ -284,26 +304,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   }, [location.pathname, isAuthenticated, reloadDashboard]);
 
   useEffect(() => {
-    if (!isAuthenticated || loadStatus !== "success") return;
-    const id = window.setInterval(() => {
-      setClimate((p) => ({
-        temperature: clamp(p.temperature + (Math.random() - 0.5) * 0.4, 18, 36),
-        humidity: clamp(p.humidity + (Math.random() - 0.5) * 2, 40, 95),
-        wind: clamp(p.wind + (Math.random() - 0.5) * 1.2, 4, 28),
-      }));
-      setSoil((p) => ({
-        ...p,
-        moisture: clamp(p.moisture + (Math.random() - 0.5) * 1.5, 35, 85),
-      }));
-      setWater((p) => ({
-        ...p,
-        consumptionLiters: Math.round(p.consumptionLiters + (Math.random() - 0.45) * 20),
-      }));
-    }, 8000);
-    return () => window.clearInterval(id);
-  }, [isAuthenticated, loadStatus]);
-
-  useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
     const fn = () => {
       if (mq.matches) setIsSidebarOpen(false);
@@ -331,7 +331,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       reloadDashboard,
       company,
       updateCompany,
+      dashboardSummary,
+      dashboardAreas,
+      selectedArea,
+      alerts,
       climate,
+      climateHistory,
       soil,
       water,
       appliedFilters,
@@ -375,7 +380,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       reloadDashboard,
       company,
       updateCompany,
+      dashboardSummary,
+      dashboardAreas,
+      selectedArea,
+      alerts,
       climate,
+      climateHistory,
       soil,
       water,
       appliedFilters,

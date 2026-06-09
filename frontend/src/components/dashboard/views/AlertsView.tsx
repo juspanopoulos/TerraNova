@@ -3,15 +3,14 @@ import { Bell } from "lucide-react";
 import { AlertsKanbanBoard } from "@/components/dashboard/AlertsKanbanBoard";
 import type { PageFilters } from "@/components/dashboard/FilterSlideover";
 import { labelMuted, textFaint, textMuted, textPrimary } from "@/constants/dashboard";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
 import { useDashboard } from "@/context/DashboardContext";
 
 export function AlertsView() {
-  const { appliedFilters } = useDashboard();
+  const { alerts: dashboardAlerts, appliedFilters, company } = useDashboard();
   const filters: PageFilters = appliedFilters;
 
   const alerts = useMemo(() => {
-    return MOCK_DASHBOARD_DATA.alerts.filter((alert) => {
+    return dashboardAlerts.filter((alert) => {
       if (filters.alertLevels.length > 0 && !filters.alertLevels.includes(alert.level)) {
         return false;
       }
@@ -20,7 +19,7 @@ export function AlertsView() {
       }
       return true;
     });
-  }, [filters.alertLevels, filters.alertTypes]);
+  }, [dashboardAlerts, filters.alertLevels, filters.alertTypes]);
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -34,7 +33,7 @@ export function AlertsView() {
               <p className={labelMuted}>Central de alertas</p>
               <p className={`mt-1 max-w-xl text-sm leading-relaxed ${textMuted}`}>
                 Alertas da{" "}
-                <strong className={textPrimary}>{MOCK_DASHBOARD_DATA.property.name}</strong>{" "}
+                <strong className={textPrimary}>{company.farmName}</strong>{" "}
                 organizados por severidade — críticos, moderados e normais.
               </p>
             </div>

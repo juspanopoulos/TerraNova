@@ -54,6 +54,12 @@ export const ALERT_TYPE_ICONS: Record<string, LucideIcon> = {
   Solo: Leaf,
   Clima: Cloud,
   Equipamento: Bell,
+  Seca: Leaf,
+  Enchente: CloudRain,
+  Geada: Thermometer,
+  Granizo: Cloud,
+  "Excesso de irrigacao": Droplets,
+  "Deficit hidrico": Droplets,
 };
 
 export function alertTypeIcon(type: string): LucideIcon {

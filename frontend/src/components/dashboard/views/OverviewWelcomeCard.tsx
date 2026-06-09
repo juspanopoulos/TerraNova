@@ -13,19 +13,19 @@ import {
 import logoColorido from "@/assets/logos/logo-colorido.png";
 import { DashboardCard } from "@/components/dashboard/ui";
 import { cardInset, gridCols4, labelMuted, LOGO_SRC, textFaint, textMuted, textPrimary } from "@/constants/dashboard";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
 import { useDashboard } from "@/context/DashboardContext";
 import { formatTodayPt, getGreeting } from "@/lib/dashboard/loadDashboardData";
 
 export function OverviewWelcomeCard() {
-  const { company, climate, water, soil } = useDashboard();
-  const alerts = MOCK_DASHBOARD_DATA.alerts;
+  const { company, dashboardSummary, dashboardAreas, alerts, climate, water, soil } = useDashboard();
   const criticalAlerts = alerts.filter((a) => a.level === "critical").length;
   const warningAlerts = alerts.filter((a) => a.level === "warning").length;
-  const cropCount = MOCK_DASHBOARD_DATA.crops.length;
-  const avgMaturity = Math.round(
-    MOCK_DASHBOARD_DATA.crops.reduce((sum, c) => sum + c.maturity, 0) / MOCK_DASHBOARD_DATA.crops.length,
+  const totalAreaHa = Math.round(
+    dashboardAreas.reduce((sum, area) => sum + Number(area.areaHectares ?? 0), 0),
   );
+  const cropCount = dashboardSummary?.indicadores.totalCulturas ?? 0;
+  const activeSectors = dashboardSummary?.indicadores.totalAreas ?? company.activeSectors;
+  const activePlantings = dashboardSummary?.indicadores.totalPlantiosAtivos ?? 0;
   const greeting = getGreeting();
 
   return (
@@ -77,11 +77,13 @@ export function OverviewWelcomeCard() {
         <div className={`${gridCols4} lg:col-span-2`}>
           <div className={cardInset}>
             <p className={labelMuted}>Área total</p>
-            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{company.totalAreaHa} ha</p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              {totalAreaHa > 0 ? totalAreaHa : company.totalAreaHa} ha
+            </p>
           </div>
           <div className={cardInset}>
             <p className={labelMuted}>Setores ativos</p>
-            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{company.activeSectors}</p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>{activeSectors}</p>
           </div>
           <div className={cardInset}>
             <p className={labelMuted}>Culturas</p>
@@ -91,10 +93,10 @@ export function OverviewWelcomeCard() {
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Maturidade média</p>
+            <p className={labelMuted}>Plantios ativos</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Gauge className="size-4 text-verde-floresta" aria-hidden />
-              {avgMaturity}%
+              {activePlantings}
             </p>
           </div>
           <div className={cardInset}>
