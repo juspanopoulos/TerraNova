@@ -3,9 +3,10 @@ import {
   buildVisionReportData,
   visionReportFilename,
   type VisionReportData,
+  type VisionReportSource,
 } from "@/lib/dashboard/visionReportData";
 import { VisionReportDocument } from "@/lib/pdf/VisionReportDocument";
-import type { CompanyProfile, TimeFilter } from "@/types/dashboard";
+import type { TimeFilter } from "@/types/dashboard";
 
 const LOGO_PATH = "/logos/logo-colorido.png";
 
@@ -32,9 +33,9 @@ async function loadLogoDataUrl(): Promise<string> {
 
 export async function downloadVisionReport(
   timeFilter: TimeFilter,
-  company: CompanyProfile,
+  source: VisionReportSource,
 ): Promise<void> {
-  const data = buildVisionReportData(timeFilter, company);
+  const data = buildVisionReportData(timeFilter, source);
   const logoSrc = await loadLogoDataUrl();
   const blob = await pdf(<VisionReportDocument data={data} logoSrc={logoSrc} />).toBlob();
   triggerDownload(blob, visionReportFilename(data));

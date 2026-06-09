@@ -43,25 +43,6 @@ export function conversationTitleFromMessage(text: string) {
   return `${trimmed.slice(0, 42)}…`;
 }
 
-export function mockAssistantReply(userMessage: string, farmName: string): string {
-  const text = userMessage.toLowerCase();
-
-  if (text.includes("umidade") || text.includes("solo")) {
-    return `Na ${farmName}, a umidade média do solo está em 61%, dentro da faixa operacional. O setor Reserva está mais seco (49%) — há um alerta crítico aberto.`;
-  }
-  if (text.includes("alerta") || text.includes("crítico")) {
-    return "Há 3 alertas críticos no momento: risco de geada na Serra Norte, solo seco na Reserva e déficit hídrico no Talhão B. Recomendo revisar o quadro de alertas.";
-  }
-  if (text.includes("colheita") || text.includes("soja")) {
-    return "A soja no Talhão A está com 72% de maturidade. A janela ideal de colheita é entre 18 e 22 de outubro, conforme condições climáticas favoráveis.";
-  }
-  if (text.includes("água") || text.includes("hídrico") || text.includes("irriga") || text.includes("consumo")) {
-    return "O consumo hídrico de hoje está em 1.840 L com eficiência de 91%. A distribuição principal é por gotejamento (45%).";
-  }
-
-  return "Recebi sua mensagem. A integração com IA estará disponível em breve — por enquanto respondo com dados simulados da plataforma. Tente perguntar sobre solo, alertas, colheita ou consumo hídrico.";
-}
-
 export function loadConversations(): { conversations: Conversation[]; activeId: string | null } {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);

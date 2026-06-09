@@ -47,6 +47,24 @@ export type IrrigacaoResponse = {
   origem: "MANUAL" | "SENSOR" | "IA" | string;
 };
 
+export type CulturaResponse = {
+  idCultura: number;
+  nomeCultura: string;
+  descricao: string | null;
+  necessidadeHidricaMm: number | null;
+  periodoPlantio: string | null;
+};
+
+export type AreaCulturaResponse = {
+  idAreaCultura: number;
+  idArea: number;
+  idCultura: number;
+  dataPlantio: string;
+  dataColheitaPrevista: string | null;
+  status: "ATIVO" | "COLHIDO" | "PERDIDO" | string;
+  estagioCrescimento: string | null;
+};
+
 export type PredicaoIaResponse = {
   idPredicao: number;
   idArea: number;
@@ -64,6 +82,62 @@ export type PredicaoIaResponse = {
   situacao: string | null;
   status: "SUCESSO" | "ERRO" | string;
   erro: string | null;
+};
+
+export type ChatIaRequest = {
+  pergunta: string;
+  contexto?: string | null;
+};
+
+export type ChatIaResponse = {
+  resposta: string;
+};
+
+export type IaProdutividadeRequest = {
+  idArea: number;
+  idAreaCultura?: number | null;
+  idUsuario?: number | null;
+  rainfall_mm: number;
+  temperature_celsius: number;
+  fertilizer_used: number;
+  irrigation_used: number;
+  days_to_harvest: number;
+  region: string;
+  soil_type: string;
+  crop: string;
+  weather_condition: string;
+};
+
+export type IaProdutividadeResponse = {
+  status: string;
+  produtividade: number;
+  classificacao: string;
+  predicao: PredicaoIaResponse;
+};
+
+export type IaIrrigacaoRequest = {
+  idArea: number;
+  idAreaCultura?: number | null;
+  idUsuario?: number | null;
+  latitude: number;
+  longitude: number;
+  soil_type: string;
+  soil_moisture: number;
+  crop_type: string;
+  crop_growth_stage: string;
+  irrigation_type: string;
+  field_area_hectare: number;
+  mulching_used: string;
+  previous_irrigation_mm: number;
+  current_water_usage: number;
+};
+
+export type IaIrrigacaoResponse = {
+  status: string;
+  recomendado: number;
+  consumo_atual: number;
+  situacao: string;
+  predicao: PredicaoIaResponse;
 };
 
 export type RecomendacaoResponse = {

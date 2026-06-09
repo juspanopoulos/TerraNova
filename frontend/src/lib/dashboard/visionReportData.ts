@@ -1,23 +1,36 @@
 import { levelLabel, VISION_PAGE_TITLES } from "@/constants/dashboard";
-import type { CompanyProfile } from "@/types/dashboard";
-import type { TimeFilter } from "@/types/dashboard";
-import {
-  getVisionAlerts,
-  getVisionClimateSnapshot,
-  getVisionCrops,
-  getVisionIrrigationRows,
-  getVisionSoilSnapshot,
-  getVisionSummaryKpis,
-  getVisionWaterDistribution,
-  getVisionWaterHistory,
-} from "@/lib/dashboard/visionDetail";
 import { filterLabel } from "@/lib/dashboard/helpers";
+import type { AreaMonitoradaResponse, DashboardResumoResponse } from "@/lib/api/types";
+import type {
+  AlertItem,
+  ClimateHistoryState,
+  ClimateState,
+  CompanyProfile,
+  CropPlantingItem,
+  PredictionItem,
+  SoilState,
+  TimeFilter,
+  WaterState,
+} from "@/types/dashboard";
 
 const PERIOD_SLUG: Record<TimeFilter, string> = {
   daily: "visao-do-dia",
   weekly: "visao-semanal",
   monthly: "visao-do-mes",
   yearly: "visao-anual",
+};
+
+export type VisionReportSource = {
+  company: CompanyProfile;
+  dashboardSummary: DashboardResumoResponse | null;
+  dashboardAreas: AreaMonitoradaResponse[];
+  climate: ClimateState;
+  climateHistory: ClimateHistoryState;
+  soil: SoilState;
+  water: WaterState;
+  crops: CropPlantingItem[];
+  predictions: PredictionItem[];
+  alerts: AlertItem[];
 };
 
 export type VisionReportData = {
@@ -33,9 +46,10 @@ export type VisionReportData = {
   kpis: {
     temperature: number;
     soilMoisture: number;
-    avgMaturity: number;
+    activePlantings: number;
     criticalAlerts: number;
     totalAlerts: number;
+    predictions: number;
   };
   climate: {
     temperature: number;
@@ -49,28 +63,51 @@ export type VisionReportData = {
     };
   };
   water: {
-    consumptionLiters: number;
-    savingsLiters: number;
-    efficiency: number;
+    consumptionMm: number;
+    previousMm: number;
+    type: string;
+    origin: string;
     distribution: { label: string; value: number; detail: string }[];
     history: { labels: string[]; values: number[] };
-    irrigation: { sector: string; used: number; target: number; efficiency: number }[];
+    irrigation: {
+      sector: string;
+      type: string;
+      currentMm: number;
+      previousMm: number;
+      origin: string;
+    }[];
   };
   soil: {
-    nitrogen: number;
-    phosphorus: number;
-    potassium: number;
     moisture: number;
-    ph: number;
-    sectors: { sector: string; moisture: number; ph: number; status: string }[];
+    soilType: string;
+    source: string;
+    collectedAt: string;
+    sectors: {
+      sector: string;
+      moisture: number;
+      soilType: string;
+      source: string;
+      status: string;
+    }[];
   };
   crops: {
     name: string;
     zone: string;
-    maturity: number;
-    week: string;
-    estimate: string;
+    stage: string;
+    plantedAt: string;
+    harvestAt: string;
+    waterNeedMm: number | null;
     status: string;
+  }[];
+  predictions: {
+    date: string;
+    sector: string;
+    cropName: string | null;
+    type: string;
+    productivity: number | null;
+    classification: string;
+    waterVolumeMm: number | null;
+    situation: string;
   }[];
   alerts: {
     level: string;
@@ -85,18 +122,13 @@ export type VisionReportData = {
 
 export function buildVisionReportData(
   timeFilter: TimeFilter,
-  company: CompanyProfile,
+  source: VisionReportSource,
 ): VisionReportData {
-  const kpis = getVisionSummaryKpis(timeFilter);
-  const climate = getVisionClimateSnapshot(timeFilter);
-  const water = kpis.water;
-  const waterHistory = getVisionWaterHistory(timeFilter);
-  const waterDistribution = getVisionWaterDistribution(timeFilter);
-  const soil = getVisionSoilSnapshot(timeFilter);
-  const crops = getVisionCrops(timeFilter);
-  const alerts = getVisionAlerts(timeFilter);
-  const irrigation = getVisionIrrigationRows(timeFilter);
   const periodLabel = filterLabel(timeFilter);
+  const totalAreaHa = Math.round(
+    source.dashboardAreas.reduce((sum, area) => sum + Number(area.areaHectares ?? 0), 0),
+  );
+  const criticalAlerts = source.alerts.filter((alert) => alert.level === "critical").length;
 
   return {
     periodTitle: VISION_PAGE_TITLES[timeFilter],
@@ -109,60 +141,84 @@ export function buildVisionReportData(
       hour: "2-digit",
       minute: "2-digit",
     }),
-    farmName: company.farmName,
-    farmRegion: company.farmRegion,
-    responsibleName: company.responsibleName,
-    totalAreaHa: company.totalAreaHa,
-    activeSectors: company.activeSectors,
+    farmName: source.company.farmName,
+    farmRegion: source.company.farmRegion,
+    responsibleName: source.company.responsibleName,
+    totalAreaHa: totalAreaHa > 0 ? totalAreaHa : source.company.totalAreaHa,
+    activeSectors: source.dashboardSummary?.indicadores.totalAreas ?? source.company.activeSectors,
     kpis: {
-      temperature: climate.temperature,
-      soilMoisture: soil.moisture,
-      avgMaturity: kpis.avgMaturity,
-      criticalAlerts: kpis.criticalCount,
-      totalAlerts: kpis.alertTotal,
+      temperature: source.climate.temperature,
+      soilMoisture: source.soil.current.moisture,
+      activePlantings: source.crops.length,
+      criticalAlerts,
+      totalAlerts: source.alerts.length,
+      predictions: source.predictions.length,
     },
     climate: {
-      temperature: climate.temperature,
-      humidity: climate.humidity,
-      wind: climate.wind,
-      history: climate.history,
+      temperature: source.climate.temperature,
+      humidity: source.climate.humidity,
+      wind: source.climate.wind,
+      history: source.climateHistory[timeFilter],
     },
     water: {
-      consumptionLiters: water.consumptionLiters,
-      savingsLiters: water.savingsLiters,
-      efficiency: water.efficiency,
-      distribution: waterDistribution.map((d) => ({
+      consumptionMm: source.water.current.consumptionMm,
+      previousMm: source.water.current.previousMm,
+      type: source.water.current.type,
+      origin: source.water.current.origin,
+      distribution: source.water.distribution.map((d) => ({
         label: d.label,
         value: d.value,
         detail: d.detail,
       })),
-      history: waterHistory,
-      irrigation,
+      history: source.water.history[timeFilter],
+      irrigation: source.water.irrigation.map((row) => ({
+        sector: row.sector,
+        type: row.type,
+        currentMm: row.currentMm,
+        previousMm: row.previousMm,
+        origin: row.origin,
+      })),
     },
     soil: {
-      nitrogen: soil.nitrogen,
-      phosphorus: soil.phosphorus,
-      potassium: soil.potassium,
-      moisture: soil.moisture,
-      ph: soil.ph,
-      sectors: soil.sectors,
+      moisture: source.soil.current.moisture,
+      soilType: source.soil.current.soilType,
+      source: source.soil.current.source,
+      collectedAt: source.soil.current.collectedAt,
+      sectors: source.soil.sectors.map((sector) => ({
+        sector: sector.sector,
+        moisture: sector.moisture,
+        soilType: sector.soilType,
+        source: sector.source,
+        status: sector.status,
+      })),
     },
-    crops: crops.map((c) => ({
-      name: c.name,
-      zone: c.zone,
-      maturity: c.maturity,
-      week: c.week,
-      estimate: c.estimate,
-      status: c.status,
+    crops: source.crops.map((crop) => ({
+      name: crop.name,
+      zone: crop.zone,
+      stage: crop.stage,
+      plantedAt: crop.plantedAt,
+      harvestAt: crop.harvestAt,
+      waterNeedMm: crop.waterNeedMm,
+      status: crop.status,
     })),
-    alerts: alerts.map((a) => ({
-      level: a.level,
-      levelLabel: levelLabel[a.level],
-      title: a.title,
-      type: a.type,
-      sector: a.sector,
-      time: a.time,
-      summary: a.summary,
+    predictions: source.predictions.map((prediction) => ({
+      date: prediction.date,
+      sector: prediction.sector,
+      cropName: prediction.cropName,
+      type: prediction.type,
+      productivity: prediction.productivity,
+      classification: prediction.classification,
+      waterVolumeMm: prediction.waterVolumeMm,
+      situation: prediction.situation,
+    })),
+    alerts: source.alerts.map((alert) => ({
+      level: alert.level,
+      levelLabel: levelLabel[alert.level],
+      title: alert.title,
+      type: alert.type,
+      sector: alert.sector,
+      time: alert.time,
+      summary: alert.summary,
     })),
   };
 }

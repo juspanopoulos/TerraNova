@@ -5,7 +5,18 @@ import { downloadVisionReport } from "@/lib/pdf/downloadVisionReport";
 import type { TimeFilter } from "@/types/dashboard";
 
 export function VisionPdfDownloadButton({ timeFilter }: { timeFilter: TimeFilter }) {
-  const { company } = useDashboard();
+  const {
+    company,
+    dashboardSummary,
+    dashboardAreas,
+    climate,
+    climateHistory,
+    soil,
+    water,
+    crops,
+    predictions,
+    alerts,
+  } = useDashboard();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,7 +25,18 @@ export function VisionPdfDownloadButton({ timeFilter }: { timeFilter: TimeFilter
     setError(null);
     setLoading(true);
     try {
-      await downloadVisionReport(timeFilter, company);
+      await downloadVisionReport(timeFilter, {
+        company,
+        dashboardSummary,
+        dashboardAreas,
+        climate,
+        climateHistory,
+        soil,
+        water,
+        crops,
+        predictions,
+        alerts,
+      });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Não foi possível gerar o PDF. Tente novamente.";

@@ -1,26 +1,44 @@
 import { ApiRequestError } from "@/lib/api/client";
 import { listAlertasAbertos } from "@/lib/api/alertsApi";
 import { listAreasMonitoradas } from "@/lib/api/areasApi";
-import {
-  listDadosClimaticos,
-  listHistoricoClimaticoPorArea,
-} from "@/lib/api/climateApi";
+import { listDadosClimaticos, listHistoricoClimaticoPorArea } from "@/lib/api/climateApi";
+import { listAreasCulturasAtivas, listCulturas } from "@/lib/api/cropsApi";
 import { getDashboardArea, getDashboardResumo } from "@/lib/api/dashboardApi";
+import { listHistoricoIrrigacaoPorArea, listIrrigacoes } from "@/lib/api/irrigationApi";
+import { listPredicoesIa, listPredicoesIaPorArea } from "@/lib/api/predictionsApi";
+import {
+  getUltimaLeituraSoloPorArea,
+  listHistoricoSoloPorArea,
+  listLeiturasSolo,
+} from "@/lib/api/soilApi";
 import type {
   AlertaResponse,
+  AreaCulturaResponse,
   AreaMonitoradaResponse,
+  CulturaResponse,
   DadoClimaticoResponse,
   DashboardAreaResumoResponse,
   DashboardResumoResponse,
+  IrrigacaoResponse,
   LeituraSoloResponse,
+  PredicaoIaResponse,
 } from "@/lib/api/types";
-import { MOCK_DASHBOARD_DATA, type AlertItem } from "@/data/mockDashboard";
+import type {
+  AlertItem,
+  ClimateHistoryState,
+  ClimateSeries,
+  ClimateState,
+  CropPlantingItem,
+  IrrigationRow,
+  PredictionItem,
+  SoilHistoryState,
+  SoilSeries,
+  SoilState,
+  WaterHistoryState,
+  WaterSeries,
+  WaterState,
+} from "@/types/dashboard";
 import type { DashboardLoadError, DashboardLoadErrorKind } from "@/types/dashboard";
-
-type ClimateState = typeof MOCK_DASHBOARD_DATA.climate.current;
-type SoilState = typeof MOCK_DASHBOARD_DATA.soil.current;
-type WaterState = typeof MOCK_DASHBOARD_DATA.water.current;
-type ClimateHistoryState = typeof MOCK_DASHBOARD_DATA.climate.history;
 
 export type DashboardPayload = {
   summary: DashboardResumoResponse;
@@ -31,6 +49,8 @@ export type DashboardPayload = {
   climateHistory: ClimateHistoryState;
   soil: SoilState;
   water: WaterState;
+  crops: CropPlantingItem[];
+  predictions: PredictionItem[];
 };
 
 const ERROR_MESSAGES: Record<DashboardLoadErrorKind, string> = {
@@ -47,6 +67,74 @@ const ALERT_TYPE_LABELS: Record<string, string> = {
   GRANIZO: "Granizo",
   EXCESSO_IRRIGACAO: "Excesso de irrigacao",
   DEFICIT_HIDRICO: "Deficit hidrico",
+};
+
+const WATER_SEGMENT_COLORS = ["#3F6B4B", "#A8C7A1", "#E59B3A", "#94a3b8", "#64748b"];
+
+export const EMPTY_CLIMATE: ClimateState = {
+  temperature: 0,
+  humidity: 0,
+  wind: 0,
+};
+
+const EMPTY_CLIMATE_SERIES: ClimateSeries = {
+  labels: ["Atual"],
+  temperature: [0],
+  humidity: [0],
+  wind: [0],
+};
+
+export const EMPTY_CLIMATE_HISTORY: ClimateHistoryState = {
+  daily: { ...EMPTY_CLIMATE_SERIES },
+  weekly: { ...EMPTY_CLIMATE_SERIES },
+  monthly: { ...EMPTY_CLIMATE_SERIES },
+  yearly: { ...EMPTY_CLIMATE_SERIES },
+};
+
+const EMPTY_SOIL_SERIES: SoilSeries = {
+  labels: ["Atual"],
+  moisture: [0],
+};
+
+export const EMPTY_SOIL: SoilState = {
+  current: {
+    moisture: 0,
+    soilType: "Nao informado",
+    source: "Nao informado",
+    collectedAt: "",
+  },
+  sectors: [],
+  history: {
+    daily: { ...EMPTY_SOIL_SERIES },
+    weekly: { ...EMPTY_SOIL_SERIES },
+    monthly: { ...EMPTY_SOIL_SERIES },
+    yearly: { ...EMPTY_SOIL_SERIES },
+  },
+};
+
+const EMPTY_WATER_SERIES: WaterSeries = {
+  labels: ["Atual"],
+  values: [0],
+};
+
+export const EMPTY_WATER: WaterState = {
+  current: {
+    consumptionMm: 0,
+    previousMm: 0,
+    areaHa: null,
+    type: "Nao informado",
+    coverage: "Nao informado",
+    origin: "Nao informado",
+    date: "",
+  },
+  history: {
+    daily: { ...EMPTY_WATER_SERIES },
+    weekly: { ...EMPTY_WATER_SERIES },
+    monthly: { ...EMPTY_WATER_SERIES },
+    yearly: { ...EMPTY_WATER_SERIES },
+  },
+  distribution: [],
+  irrigation: [],
 };
 
 export class DashboardLoadFailure extends Error {
@@ -68,16 +156,41 @@ export async function fetchDashboardData(): Promise<DashboardPayload> {
     const summary = await getDashboardResumo();
     const selectedAreaId = summary.areas[0]?.idArea;
 
-    const [areas, alerts, climateData, selectedArea, areaClimateHistory] = await Promise.all([
+    const [
+      areas,
+      alerts,
+      climateData,
+      selectedArea,
+      areaClimateHistory,
+      soilData,
+      areaSoilHistory,
+      latestAreaSoil,
+      irrigationData,
+      areaIrrigationHistory,
+      culturas,
+      activePlantings,
+      predictions,
+      areaPredictions,
+    ] = await Promise.all([
       listAreasMonitoradas(),
       listAlertasAbertos(),
       listDadosClimaticos(),
       selectedAreaId ? getDashboardArea(selectedAreaId) : Promise.resolve(null),
       selectedAreaId ? listHistoricoClimaticoPorArea(selectedAreaId) : Promise.resolve([]),
+      listLeiturasSolo(),
+      selectedAreaId ? listHistoricoSoloPorArea(selectedAreaId) : Promise.resolve([]),
+      selectedAreaId ? optionalApi(getUltimaLeituraSoloPorArea(selectedAreaId)) : Promise.resolve(null),
+      listIrrigacoes(),
+      selectedAreaId ? listHistoricoIrrigacaoPorArea(selectedAreaId) : Promise.resolve([]),
+      listCulturas(),
+      listAreasCulturasAtivas(),
+      listPredicoesIa(),
+      selectedAreaId ? listPredicoesIaPorArea(selectedAreaId) : Promise.resolve([]),
     ]);
 
     const climateSource = areaClimateHistory.length > 0 ? areaClimateHistory : climateData;
     const climate = mapClimateCurrent(climateSource, summary, selectedArea);
+    const crops = mapCrops(activePlantings, culturas, areas, summary);
 
     return {
       summary,
@@ -86,11 +199,27 @@ export async function fetchDashboardData(): Promise<DashboardPayload> {
       alerts: mapAlerts(alerts, areas, summary),
       climate,
       climateHistory: mapClimateHistory(climateSource, climate),
-      soil: mapSoilCurrent(summary, selectedArea),
-      water: { ...MOCK_DASHBOARD_DATA.water.current },
+      soil: mapSoilData(summary, selectedArea, areas, soilData, areaSoilHistory, latestAreaSoil),
+      water: mapWaterData(summary, selectedArea, areas, irrigationData, areaIrrigationHistory),
+      crops,
+      predictions: mapPredictions(
+        areaPredictions.length > 0 ? areaPredictions : predictions,
+        areas,
+        summary,
+        crops,
+      ),
     };
   } catch (error) {
     throw toDashboardFailure(error);
+  }
+}
+
+async function optionalApi<T>(promise: Promise<T>): Promise<T | null> {
+  try {
+    return await promise;
+  } catch (error) {
+    if (error instanceof ApiRequestError && error.status === 404) return null;
+    throw error;
   }
 }
 
@@ -123,15 +252,110 @@ function dateTimeMs(value: string | null | undefined) {
   return parseDate(value)?.getTime() ?? 0;
 }
 
-function latestClimate(data: DadoClimaticoResponse[]) {
-  return [...data].sort((a, b) => dateTimeMs(b.dataColeta) - dateTimeMs(a.dataColeta))[0] ?? null;
+function latestByDate<T>(data: T[], dateOf: (item: T) => string | null | undefined) {
+  return [...data].sort((a, b) => dateTimeMs(dateOf(b)) - dateTimeMs(dateOf(a)))[0] ?? null;
 }
 
-function latestSoilFromAreas(areas: DashboardAreaResumoResponse[]) {
-  return areas
-    .map((area) => area.ultimaLeituraSolo)
-    .filter((soil): soil is LeituraSoloResponse => Boolean(soil))
-    .sort((a, b) => dateTimeMs(b.dataColeta) - dateTimeMs(a.dataColeta))[0] ?? null;
+function latestClimate(data: DadoClimaticoResponse[]) {
+  return latestByDate(data, (item) => item.dataColeta);
+}
+
+function latestSoil(data: LeituraSoloResponse[]) {
+  return latestByDate(data, (item) => item.dataColeta);
+}
+
+function latestIrrigation(data: IrrigacaoResponse[]) {
+  return latestByDate(data, (item) => item.dataRegistro);
+}
+
+function formatDateLabel(date: Date) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+  }).format(date);
+}
+
+function formatDateOnly(value: string | null | undefined) {
+  const date = parseDate(value);
+  if (!date) return "";
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
+
+function formatDateTimeLabel(date: Date) {
+  const dateLabel = formatDateLabel(date);
+  const hourLabel = new Intl.DateTimeFormat("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+  return `${dateLabel} ${hourLabel}`;
+}
+
+function formatMonthLabel(date: Date) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    month: "short",
+  }).format(date);
+}
+
+function dateKey(date: Date) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function monthKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function weekOfMonth(date: Date) {
+  return Math.floor((date.getDate() - 1) / 7) + 1;
+}
+
+function humanizeEnum(value: string | null | undefined, fallback = "Nao informado") {
+  if (!value) return fallback;
+  return value
+    .toLowerCase()
+    .split("_")
+    .filter(Boolean)
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
+function areaLookup(areas: AreaMonitoradaResponse[], summary: DashboardResumoResponse) {
+  const entries = [
+    ...summary.areas.map((area) => [area.idArea, area.nomeArea] as const),
+    ...areas.map((area) => [area.idArea, area.nomeArea] as const),
+  ];
+  return new Map(entries);
+}
+
+function knownAreas(areas: AreaMonitoradaResponse[], summary: DashboardResumoResponse) {
+  const map = new Map<number, { idArea: number; nomeArea: string; tipoSolo: string | null; areaHectares: number | null }>();
+
+  summary.areas.forEach((area) => {
+    map.set(area.idArea, {
+      idArea: area.idArea,
+      nomeArea: area.nomeArea,
+      tipoSolo: area.tipoSolo,
+      areaHectares: area.areaHectares,
+    });
+  });
+
+  areas.forEach((area) => {
+    map.set(area.idArea, {
+      idArea: area.idArea,
+      nomeArea: area.nomeArea,
+      tipoSolo: area.tipoSolo,
+      areaHectares: area.areaHectares,
+    });
+  });
+
+  return [...map.values()].sort((a, b) => a.nomeArea.localeCompare(b.nomeArea));
 }
 
 function mapClimateCurrent(
@@ -148,29 +372,6 @@ function mapClimateCurrent(
   };
 }
 
-function mapSoilCurrent(
-  summary: DashboardResumoResponse,
-  selectedArea: DashboardAreaResumoResponse | null,
-): SoilState {
-  const latest = selectedArea?.ultimaLeituraSolo ?? latestSoilFromAreas(summary.areas);
-
-  return {
-    ...MOCK_DASHBOARD_DATA.soil.current,
-    moisture: toNumber(latest?.umidadeSolo, toNumber(summary.indicadores.mediaUmidadeSolo)),
-  };
-}
-
-function areaLookup(
-  areas: AreaMonitoradaResponse[],
-  summary: DashboardResumoResponse,
-) {
-  const entries = [
-    ...summary.areas.map((area) => [area.idArea, area.nomeArea] as const),
-    ...areas.map((area) => [area.idArea, area.nomeArea] as const),
-  ];
-  return new Map(entries);
-}
-
 function mapAlertLevel(severidade: string): AlertItem["level"] {
   if (severidade === "CRITICA") return "critical";
   if (severidade === "ALTA" || severidade === "MEDIA") return "warning";
@@ -178,7 +379,7 @@ function mapAlertLevel(severidade: string): AlertItem["level"] {
 }
 
 function labelFromAlertType(tipoAlerta: string) {
-  return ALERT_TYPE_LABELS[tipoAlerta] ?? tipoAlerta.replace(/_/g, " ").toLowerCase();
+  return ALERT_TYPE_LABELS[tipoAlerta] ?? humanizeEnum(tipoAlerta);
 }
 
 function formatAlertTime(value: string) {
@@ -223,51 +424,6 @@ type ClimateSample = {
   wind: number;
 };
 
-type ClimateSeries = {
-  labels: string[];
-  temperature: number[];
-  humidity: number[];
-  wind: number[];
-};
-
-function dateKey(date: Date) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, "0"),
-    String(date.getDate()).padStart(2, "0"),
-  ].join("-");
-}
-
-function monthKey(date: Date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-}
-
-function formatDateLabel(date: Date) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-  }).format(date);
-}
-
-function formatDateTimeLabel(date: Date) {
-  const dateLabel = formatDateLabel(date);
-  const hourLabel = new Intl.DateTimeFormat("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
-  return `${dateLabel} ${hourLabel}`;
-}
-
-function formatMonthLabel(date: Date) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    month: "short",
-  }).format(date);
-}
-
-function weekOfMonth(date: Date) {
-  return Math.floor((date.getDate() - 1) / 7) + 1;
-}
-
 function sampleFromClimate(dado: DadoClimaticoResponse): ClimateSample | null {
   const date = parseDate(dado.dataReferencia ?? dado.dataColeta);
   if (!date) return null;
@@ -281,7 +437,7 @@ function sampleFromClimate(dado: DadoClimaticoResponse): ClimateSample | null {
   };
 }
 
-function toSeries(samples: ClimateSample[]): ClimateSeries {
+function toClimateSeries(samples: ClimateSample[]): ClimateSeries {
   return {
     labels: samples.map((sample) => sample.label),
     temperature: samples.map((sample) => sample.temperature),
@@ -290,7 +446,7 @@ function toSeries(samples: ClimateSample[]): ClimateSeries {
   };
 }
 
-function averageSamples(samples: ClimateSample[], key: string, label: string): ClimateSample {
+function averageClimateSamples(samples: ClimateSample[], key: string, label: string): ClimateSample {
   const count = Math.max(samples.length, 1);
   return {
     key,
@@ -301,7 +457,7 @@ function averageSamples(samples: ClimateSample[], key: string, label: string): C
   };
 }
 
-function groupSamples(
+function groupClimateSamples(
   data: DadoClimaticoResponse[],
   keyForDate: (date: Date) => string,
   labelForDate: (date: Date) => string,
@@ -321,7 +477,7 @@ function groupSamples(
 
   return [...groups.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, group]) => averageSamples(group.samples, key, group.label));
+    .map(([key, group]) => averageClimateSamples(group.samples, key, group.label));
 }
 
 function singleClimatePoint(current: ClimateState): ClimateSeries {
@@ -333,40 +489,376 @@ function singleClimatePoint(current: ClimateState): ClimateSeries {
   };
 }
 
-function ensureSeries(series: ClimateSeries, current: ClimateState): ClimateSeries {
+function ensureClimateSeries(series: ClimateSeries, current: ClimateState): ClimateSeries {
   return series.labels.length > 0 ? series : singleClimatePoint(current);
 }
 
-function mapClimateHistory(
-  data: DadoClimaticoResponse[],
-  current: ClimateState,
-): ClimateHistoryState {
+function mapClimateHistory(data: DadoClimaticoResponse[], current: ClimateState): ClimateHistoryState {
   const sorted = [...data].sort((a, b) => dateTimeMs(a.dataColeta) - dateTimeMs(b.dataColeta));
   const samples = sorted
     .map(sampleFromClimate)
     .filter((sample): sample is ClimateSample => Boolean(sample));
 
-  const daily = toSeries(samples.slice(-13));
-  const weekly = toSeries(
-    groupSamples(sorted, dateKey, formatDateLabel).slice(-7),
-  );
-  const monthly = toSeries(
-    groupSamples(
-      sorted,
-      (date) => `${monthKey(date)}-${weekOfMonth(date)}`,
-      (date) => `Sem ${weekOfMonth(date)}`,
-    ).slice(-6),
-  );
-  const yearly = toSeries(
-    groupSamples(sorted, monthKey, formatMonthLabel).slice(-12),
-  );
+  return {
+    daily: ensureClimateSeries(toClimateSeries(samples.slice(-13)), current),
+    weekly: ensureClimateSeries(toClimateSeries(groupClimateSamples(sorted, dateKey, formatDateLabel).slice(-7)), current),
+    monthly: ensureClimateSeries(
+      toClimateSeries(
+        groupClimateSamples(
+          sorted,
+          (date) => `${monthKey(date)}-${weekOfMonth(date)}`,
+          (date) => `Sem ${weekOfMonth(date)}`,
+        ).slice(-6),
+      ),
+      current,
+    ),
+    yearly: ensureClimateSeries(toClimateSeries(groupClimateSamples(sorted, monthKey, formatMonthLabel).slice(-12)), current),
+  };
+}
+
+function soilStatus(moisture: number, hasReading: boolean) {
+  if (!hasReading) return "Sem leitura";
+  if (moisture >= 70) return "Umido";
+  if (moisture >= 55) return "Normal";
+  if (moisture >= 45) return "Atencao";
+  return "Seco";
+}
+
+function latestSoilByArea(
+  summary: DashboardResumoResponse,
+  readings: LeituraSoloResponse[],
+  selectedArea: DashboardAreaResumoResponse | null,
+  latestAreaSoil: LeituraSoloResponse | null,
+) {
+  const items = [
+    ...readings,
+    ...summary.areas.map((area) => area.ultimaLeituraSolo).filter((soil): soil is LeituraSoloResponse => Boolean(soil)),
+    selectedArea?.ultimaLeituraSolo,
+    latestAreaSoil,
+  ].filter((soil): soil is LeituraSoloResponse => Boolean(soil));
+
+  const map = new Map<number, LeituraSoloResponse>();
+  items.forEach((soil) => {
+    const current = map.get(soil.idArea);
+    if (!current || dateTimeMs(soil.dataColeta) > dateTimeMs(current.dataColeta)) {
+      map.set(soil.idArea, soil);
+    }
+  });
+  return map;
+}
+
+function mapSoilData(
+  summary: DashboardResumoResponse,
+  selectedArea: DashboardAreaResumoResponse | null,
+  areas: AreaMonitoradaResponse[],
+  soilData: LeituraSoloResponse[],
+  areaSoilHistory: LeituraSoloResponse[],
+  latestAreaSoil: LeituraSoloResponse | null,
+): SoilState {
+  const latestByArea = latestSoilByArea(summary, [...soilData, ...areaSoilHistory], selectedArea, latestAreaSoil);
+  const latest =
+    latestAreaSoil ??
+    selectedArea?.ultimaLeituraSolo ??
+    latestSoil(areaSoilHistory) ??
+    latestSoil(soilData);
+
+  const currentMoisture = toNumber(latest?.umidadeSolo, toNumber(summary.indicadores.mediaUmidadeSolo));
+  const current = {
+    moisture: currentMoisture,
+    soilType: latest?.tipoSolo ?? selectedArea?.tipoSolo ?? "Nao informado",
+    source: humanizeEnum(latest?.fonte),
+    collectedAt: formatDateOnly(latest?.dataColeta),
+  };
+
+  const sectors = knownAreas(areas, summary).map((area) => {
+    const areaSoil = latestByArea.get(area.idArea);
+    const moisture = toNumber(areaSoil?.umidadeSolo);
+    return {
+      id: String(area.idArea),
+      idArea: area.idArea,
+      sector: area.nomeArea,
+      moisture,
+      soilType: areaSoil?.tipoSolo ?? area.tipoSolo ?? "Nao informado",
+      source: humanizeEnum(areaSoil?.fonte),
+      collectedAt: formatDateOnly(areaSoil?.dataColeta),
+      status: soilStatus(moisture, Boolean(areaSoil)),
+    };
+  });
 
   return {
-    daily: ensureSeries(daily, current),
-    weekly: ensureSeries(weekly, current),
-    monthly: ensureSeries(monthly, current),
-    yearly: ensureSeries(yearly, current),
+    current,
+    sectors,
+    history: mapSoilHistory(areaSoilHistory.length > 0 ? areaSoilHistory : soilData, current.moisture),
   };
+}
+
+type NumericSample = {
+  key: string;
+  label: string;
+  value: number;
+};
+
+function groupNumericSamples<T>(
+  data: T[],
+  dateOf: (item: T) => string | null | undefined,
+  valueOf: (item: T) => number,
+  keyForDate: (date: Date) => string,
+  labelForDate: (date: Date) => string,
+): NumericSample[] {
+  const groups = new Map<string, { label: string; values: number[] }>();
+
+  data.forEach((item) => {
+    const date = parseDate(dateOf(item));
+    if (!date) return;
+
+    const key = keyForDate(date);
+    const current = groups.get(key) ?? { label: labelForDate(date), values: [] };
+    current.values.push(valueOf(item));
+    groups.set(key, current);
+  });
+
+  return [...groups.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, group]) => ({
+      key,
+      label: group.label,
+      value: Number((group.values.reduce((sum, value) => sum + value, 0) / Math.max(group.values.length, 1)).toFixed(2)),
+    }));
+}
+
+function mapSoilHistory(data: LeituraSoloResponse[], currentMoisture: number): SoilHistoryState {
+  const sorted = [...data].sort((a, b) => dateTimeMs(a.dataColeta) - dateTimeMs(b.dataColeta));
+  const direct = sorted.map((item) => ({
+    key: item.dataColeta,
+    label: formatDateTimeLabel(parseDate(item.dataColeta) ?? new Date()),
+    value: toNumber(item.umidadeSolo),
+  }));
+
+  return {
+    daily: ensureSoilSeries(toSoilSeries(direct.slice(-13)), currentMoisture),
+    weekly: ensureSoilSeries(
+      toSoilSeries(groupNumericSamples(sorted, (item) => item.dataColeta, (item) => toNumber(item.umidadeSolo), dateKey, formatDateLabel).slice(-7)),
+      currentMoisture,
+    ),
+    monthly: ensureSoilSeries(
+      toSoilSeries(
+        groupNumericSamples(
+          sorted,
+          (item) => item.dataColeta,
+          (item) => toNumber(item.umidadeSolo),
+          (date) => `${monthKey(date)}-${weekOfMonth(date)}`,
+          (date) => `Sem ${weekOfMonth(date)}`,
+        ).slice(-6),
+      ),
+      currentMoisture,
+    ),
+    yearly: ensureSoilSeries(
+      toSoilSeries(groupNumericSamples(sorted, (item) => item.dataColeta, (item) => toNumber(item.umidadeSolo), monthKey, formatMonthLabel).slice(-12)),
+      currentMoisture,
+    ),
+  };
+}
+
+function toSoilSeries(samples: NumericSample[]): SoilSeries {
+  return {
+    labels: samples.map((sample) => sample.label),
+    moisture: samples.map((sample) => sample.value),
+  };
+}
+
+function ensureSoilSeries(series: SoilSeries, currentMoisture: number): SoilSeries {
+  return series.labels.length > 0 ? series : { labels: ["Atual"], moisture: [currentMoisture] };
+}
+
+function latestIrrigationByArea(
+  summary: DashboardResumoResponse,
+  data: IrrigacaoResponse[],
+  selectedArea: DashboardAreaResumoResponse | null,
+) {
+  const items = [
+    ...data,
+    ...summary.areas.map((area) => area.ultimaIrrigacao).filter((item): item is IrrigacaoResponse => Boolean(item)),
+    selectedArea?.ultimaIrrigacao,
+  ].filter((item): item is IrrigacaoResponse => Boolean(item));
+
+  const map = new Map<number, IrrigacaoResponse>();
+  items.forEach((item) => {
+    const current = map.get(item.idArea);
+    if (!current || dateTimeMs(item.dataRegistro) > dateTimeMs(current.dataRegistro)) {
+      map.set(item.idArea, item);
+    }
+  });
+  return map;
+}
+
+function mapWaterData(
+  summary: DashboardResumoResponse,
+  selectedArea: DashboardAreaResumoResponse | null,
+  areas: AreaMonitoradaResponse[],
+  irrigationData: IrrigacaoResponse[],
+  areaIrrigationHistory: IrrigacaoResponse[],
+): WaterState {
+  const source = areaIrrigationHistory.length > 0 ? areaIrrigationHistory : irrigationData;
+  const latest = selectedArea?.ultimaIrrigacao ?? latestIrrigation(source);
+  const latestByArea = latestIrrigationByArea(summary, [...irrigationData, ...areaIrrigationHistory], selectedArea);
+  const namesByArea = areaLookup(areas, summary);
+
+  return {
+    current: {
+      consumptionMm: toNumber(latest?.consumoAtualMm),
+      previousMm: toNumber(latest?.irrigacaoAnteriorMm),
+      areaHa: latest?.areaCampoHectare ?? null,
+      type: humanizeEnum(latest?.tipoIrrigacao),
+      coverage: humanizeEnum(latest?.usouCoberturaSolo),
+      origin: humanizeEnum(latest?.origem),
+      date: formatDateOnly(latest?.dataRegistro),
+    },
+    history: mapWaterHistory(source, toNumber(latest?.consumoAtualMm)),
+    distribution: mapWaterDistribution(source),
+    irrigation: knownAreas(areas, summary)
+      .map((area): IrrigationRow | null => {
+        const row = latestByArea.get(area.idArea);
+        if (!row) return null;
+        return {
+          id: String(row.idIrrigacao),
+          idArea: row.idArea,
+          sector: namesByArea.get(row.idArea) ?? area.nomeArea,
+          date: formatDateOnly(row.dataRegistro),
+          type: humanizeEnum(row.tipoIrrigacao),
+          previousMm: toNumber(row.irrigacaoAnteriorMm),
+          currentMm: toNumber(row.consumoAtualMm),
+          areaHa: row.areaCampoHectare,
+          coverage: humanizeEnum(row.usouCoberturaSolo),
+          origin: humanizeEnum(row.origem),
+        };
+      })
+      .filter((row): row is IrrigationRow => Boolean(row)),
+  };
+}
+
+function mapWaterHistory(data: IrrigacaoResponse[], currentValue: number): WaterHistoryState {
+  const sorted = [...data].sort((a, b) => dateTimeMs(a.dataRegistro) - dateTimeMs(b.dataRegistro));
+  const direct = sorted.map((item) => ({
+    key: item.dataRegistro,
+    label: formatDateTimeLabel(parseDate(item.dataRegistro) ?? new Date()),
+    value: toNumber(item.consumoAtualMm),
+  }));
+
+  return {
+    daily: ensureWaterSeries(toWaterSeries(direct.slice(-13)), currentValue),
+    weekly: ensureWaterSeries(
+      toWaterSeries(groupNumericSamples(sorted, (item) => item.dataRegistro, (item) => toNumber(item.consumoAtualMm), dateKey, formatDateLabel).slice(-7)),
+      currentValue,
+    ),
+    monthly: ensureWaterSeries(
+      toWaterSeries(
+        groupNumericSamples(
+          sorted,
+          (item) => item.dataRegistro,
+          (item) => toNumber(item.consumoAtualMm),
+          (date) => `${monthKey(date)}-${weekOfMonth(date)}`,
+          (date) => `Sem ${weekOfMonth(date)}`,
+        ).slice(-6),
+      ),
+      currentValue,
+    ),
+    yearly: ensureWaterSeries(
+      toWaterSeries(groupNumericSamples(sorted, (item) => item.dataRegistro, (item) => toNumber(item.consumoAtualMm), monthKey, formatMonthLabel).slice(-12)),
+      currentValue,
+    ),
+  };
+}
+
+function toWaterSeries(samples: NumericSample[]): WaterSeries {
+  return {
+    labels: samples.map((sample) => sample.label),
+    values: samples.map((sample) => sample.value),
+  };
+}
+
+function ensureWaterSeries(series: WaterSeries, currentValue: number): WaterSeries {
+  return series.labels.length > 0 ? series : { labels: ["Atual"], values: [currentValue] };
+}
+
+function mapWaterDistribution(data: IrrigacaoResponse[]) {
+  const totals = new Map<string, number>();
+
+  data.forEach((item) => {
+    const type = humanizeEnum(item.tipoIrrigacao);
+    totals.set(type, (totals.get(type) ?? 0) + toNumber(item.consumoAtualMm));
+  });
+
+  return [...totals.entries()]
+    .filter(([, value]) => value > 0)
+    .sort((a, b) => b[1] - a[1])
+    .map(([type, value], index) => ({
+      id: type.toLowerCase().replace(/\s+/g, "-"),
+      value,
+      color: WATER_SEGMENT_COLORS[index % WATER_SEGMENT_COLORS.length],
+      label: type,
+      detail: `${value.toLocaleString("pt-BR")} mm registrados para ${type.toLowerCase()}.`,
+    }));
+}
+
+function mapCrops(
+  activePlantings: AreaCulturaResponse[],
+  culturas: CulturaResponse[],
+  areas: AreaMonitoradaResponse[],
+  summary: DashboardResumoResponse,
+): CropPlantingItem[] {
+  const cultureById = new Map(culturas.map((cultura) => [cultura.idCultura, cultura]));
+  const namesByArea = areaLookup(areas, summary);
+
+  return [...activePlantings]
+    .sort((a, b) => dateTimeMs(a.dataColheitaPrevista) - dateTimeMs(b.dataColheitaPrevista))
+    .map((planting) => {
+      const cultura = cultureById.get(planting.idCultura);
+      return {
+        id: String(planting.idAreaCultura),
+        idAreaCultura: planting.idAreaCultura,
+        idArea: planting.idArea,
+        idCultura: planting.idCultura,
+        name: cultura?.nomeCultura ?? `Cultura ${planting.idCultura}`,
+        zone: namesByArea.get(planting.idArea) ?? `Area ${planting.idArea}`,
+        status: humanizeEnum(planting.status),
+        stage: planting.estagioCrescimento ?? "Nao informado",
+        plantedAt: formatDateOnly(planting.dataPlantio),
+        harvestAt: formatDateOnly(planting.dataColheitaPrevista),
+        waterNeedMm: cultura?.necessidadeHidricaMm ?? null,
+        plantingPeriod: cultura?.periodoPlantio ?? null,
+        description: cultura?.descricao ?? null,
+      };
+    });
+}
+
+function mapPredictions(
+  predictions: PredicaoIaResponse[],
+  areas: AreaMonitoradaResponse[],
+  summary: DashboardResumoResponse,
+  crops: CropPlantingItem[],
+): PredictionItem[] {
+  const namesByArea = areaLookup(areas, summary);
+  const cropByPlantingId = new Map(crops.map((crop) => [crop.idAreaCultura, crop.name]));
+
+  return [...predictions]
+    .sort((a, b) => dateTimeMs(b.dataPredicao) - dateTimeMs(a.dataPredicao))
+    .map((prediction) => ({
+      id: String(prediction.idPredicao),
+      idArea: prediction.idArea,
+      idAreaCultura: prediction.idAreaCultura,
+      sector: namesByArea.get(prediction.idArea) ?? `Area ${prediction.idArea}`,
+      cropName: prediction.idAreaCultura ? cropByPlantingId.get(prediction.idAreaCultura) ?? null : null,
+      date: formatDateOnly(prediction.dataPredicao),
+      type: humanizeEnum(prediction.tipoModelo),
+      model: prediction.nomeModelo ?? "Nao informado",
+      version: prediction.versaoModelo ?? "Nao informado",
+      status: humanizeEnum(prediction.status),
+      productivity: prediction.produtividadePrevista,
+      classification: prediction.classificacao ?? "Nao informado",
+      waterVolumeMm: prediction.volumeAguaSugeridoMm,
+      situation: prediction.situacao ?? "Nao informado",
+      error: prediction.erro,
+    }));
 }
 
 export { getGreeting, formatTodayPt } from "@/utils/format/date";

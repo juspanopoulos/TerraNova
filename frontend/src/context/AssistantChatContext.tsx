@@ -13,11 +13,11 @@ import {
   createConversation,
   formatChatTime,
   loadConversations,
-  mockAssistantReply,
   saveConversations,
   type ChatMessage,
   type Conversation,
 } from "@/lib/dashboard/assistantChat";
+import { chatIa } from "@/lib/api/iaApi";
 
 type AssistantChatContextValue = {
   conversations: Conversation[];
@@ -98,11 +98,22 @@ export function AssistantChatProvider({
 
       setIsTyping(true);
 
-      window.setTimeout(() => {
+      void (async () => {
+        let content = "Nao consegui consultar a IA agora. Tente novamente em instantes.";
+        try {
+          const response = await chatIa({
+            pergunta: trimmed,
+            contexto: `Fazenda: ${farmName}`,
+          });
+          content = response.resposta;
+        } catch {
+          content = "Nao consegui consultar a IA agora. Verifique se o backend e o servico de IA estao ativos.";
+        }
+
         const reply: ChatMessage = {
           id: `assistant-${Date.now()}`,
           role: "assistant",
-          content: mockAssistantReply(trimmed, farmName),
+          content,
           time: formatChatTime(new Date()),
         };
         updateConversation(activeConversation.id, (conv) => ({
@@ -111,7 +122,7 @@ export function AssistantChatProvider({
           messages: [...conv.messages, reply],
         }));
         setIsTyping(false);
-      }, 900);
+      })();
     },
     [activeConversation, farmName, isTyping, updateConversation],
   );

@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { CalendarRange, Droplets, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import { Droplets, Gauge, Waves } from "lucide-react";
 import {
   ChartDetailPanel,
   DonutChart,
@@ -10,127 +10,112 @@ import {
   gridCols3,
   gridSplit2,
   labelMuted,
-  nestedCard,
   rowHover,
   tdClass,
   textMuted,
-  textPrimary,
   thClass,
 } from "@/constants/dashboard";
-import { MOCK_DASHBOARD_DATA } from "@/data/mockDashboard";
 import { useDashboard } from "@/context/DashboardContext";
-import {
-  filterLabel,
-  getAdjustedWaterHistory,
-  getAdjustedWaterMetrics,
-  getWaterComparativeLabel,
-  hasWaterComparativeFilter,
-} from "@/lib/dashboard/helpers";
-import type { ChartSegment } from "@/types/dashboard";
+import { filterLabel } from "@/lib/dashboard/helpers";
 
 export function WaterView() {
   const {
     water,
     selectedWaterSeg,
     setSelectedWaterSeg,
-    appliedFilters,
     pageTimeFilter,
   } = useDashboard();
-
-  const metrics = useMemo(
-    () => getAdjustedWaterMetrics(pageTimeFilter, appliedFilters, water),
-    [pageTimeFilter, appliedFilters, water],
-  );
-  const history = useMemo(
-    () => getAdjustedWaterHistory(pageTimeFilter, appliedFilters),
-    [pageTimeFilter, appliedFilters],
-  );
-  const comparativeLabel = getWaterComparativeLabel(pageTimeFilter, appliedFilters);
-  const segments: ChartSegment[] = MOCK_DASHBOARD_DATA.water.distribution.map((d) => ({ ...d }));
+  const history = water.history[pageTimeFilter];
   const [barIndex, setBarIndex] = useState<number | null>(null);
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {hasWaterComparativeFilter(pageTimeFilter, appliedFilters) && comparativeLabel && (
-        <div className={`flex items-start gap-3 ${nestedCard}`}>
-          <CalendarRange className="mt-0.5 size-4 shrink-0 text-verde-floresta" aria-hidden />
-          <div>
-            <p className={labelMuted}>Comparativo ativo</p>
-            <p className={`mt-1 text-sm font-semibold ${textPrimary}`}>{comparativeLabel}</p>
-            <p className={`mt-1 text-xs ${textMuted}`}>
-              Métricas e histórico ajustados ao período selecionado nos filtros.
-            </p>
-          </div>
-        </div>
-      )}
-
       <div className={gridCols3}>
         <MetricTile
-          label="Consumo"
-          value={metrics.consumptionLiters.toLocaleString("pt-BR")}
-          unit="L"
+          label="Consumo atual"
+          value={water.current.consumptionMm.toLocaleString("pt-BR")}
+          unit="mm"
           icon={Droplets}
         />
         <MetricTile
-          label="Economia"
-          value={`${(metrics.savingsLiters / 1000).toFixed(0)} mil`}
-          unit="L"
-          icon={TrendingUp}
+          label="Irrigacao anterior"
+          value={water.current.previousMm.toLocaleString("pt-BR")}
+          unit="mm"
+          icon={Waves}
         />
-        <MetricTile label="Eficiência" value={String(metrics.efficiency)} unit="%" icon={Droplets} />
+        <MetricTile label="Origem" value={water.current.origin} icon={Gauge} />
       </div>
 
       <div className={gridSplit2}>
         <DashboardCard>
-          <p className={`${labelMuted} mb-4`}>Distribuição do consumo</p>
-          <DonutChart
-            segments={segments}
-            centerValue={`${metrics.efficiency}%`}
-            centerLabel="Eficiência"
-            selectedId={selectedWaterSeg}
-            onSelect={setSelectedWaterSeg}
-            legendLayout="horizontal"
-          />
+          <p className={`${labelMuted} mb-4`}>Distribuicao por tipo</p>
+          {water.distribution.length > 0 ? (
+            <DonutChart
+              segments={water.distribution}
+              centerValue={`${water.current.consumptionMm.toLocaleString("pt-BR")} mm`}
+              centerLabel="Consumo atual"
+              selectedId={selectedWaterSeg}
+              onSelect={setSelectedWaterSeg}
+              legendLayout="horizontal"
+            />
+          ) : (
+            <p className={`text-sm ${textMuted}`}>Nenhuma irrigacao registrada para distribuir.</p>
+          )}
         </DashboardCard>
         <DashboardCard>
-          <p className={`${labelMuted} mb-4`}>Histórico — {filterLabel(pageTimeFilter)}</p>
+          <p className={`${labelMuted} mb-4`}>Historico - {filterLabel(pageTimeFilter)}</p>
           <WaterBarChart
             values={history.values}
             labels={history.labels}
+            unit="mm"
             selectedIndex={barIndex}
             onSelect={setBarIndex}
           />
           {barIndex !== null && (
             <ChartDetailPanel
-              title={`${history.labels[barIndex]} — consumo`}
-              detail={`${history.values[barIndex].toLocaleString("pt-BR")} litros no período ${filterLabel(pageTimeFilter).toLowerCase()}.`}
+              title={`${history.labels[barIndex]} - consumo`}
+              detail={`${history.values[barIndex].toLocaleString("pt-BR")} mm no periodo ${filterLabel(pageTimeFilter).toLowerCase()}.`}
             />
           )}
         </DashboardCard>
       </div>
 
       <DashboardCard>
-        <p className={`${labelMuted} mb-4`}>Irrigação por setor</p>
-        <DataTable caption="Irrigação">
+        <p className={`${labelMuted} mb-4`}>Irrigacao por setor</p>
+        <DataTable caption="Irrigacao">
           <thead>
             <tr>
               <th className={thClass}>Setor</th>
-              <th className={thClass}>Consumo</th>
-              <th className={thClass}>Meta</th>
-              <th className={thClass}>Economia</th>
-              <th className={thClass}>Eficiência</th>
+              <th className={thClass}>Tipo</th>
+              <th className={thClass}>Consumo atual</th>
+              <th className={thClass}>Irrigacao anterior</th>
+              <th className={thClass}>Cobertura</th>
+              <th className={thClass}>Origem</th>
             </tr>
           </thead>
           <tbody>
-            {MOCK_DASHBOARD_DATA.water.irrigationBySector.map((row) => (
-              <tr key={row.sector} className={rowHover}>
-                <td className={`${tdClass} font-medium`}>{row.sector}</td>
-                <td className={`${tdClass} tabular-nums`}>{row.used} L</td>
-                <td className={`${tdClass} tabular-nums ${textMuted}`}>{row.target} L</td>
-                <td className={`${tdClass} font-semibold text-verde-floresta`}>{row.save}</td>
-                <td className={`${tdClass} font-bold tabular-nums`}>{row.efficiency}%</td>
+            {water.irrigation.length === 0 ? (
+              <tr>
+                <td className={tdClass} colSpan={6}>
+                  Nenhuma irrigacao registrada.
+                </td>
               </tr>
-            ))}
+            ) : (
+              water.irrigation.map((row) => (
+                <tr key={row.id} className={rowHover}>
+                  <td className={`${tdClass} font-medium`}>{row.sector}</td>
+                  <td className={tdClass}>{row.type}</td>
+                  <td className={`${tdClass} tabular-nums`}>
+                    {row.currentMm.toLocaleString("pt-BR")} mm
+                  </td>
+                  <td className={`${tdClass} tabular-nums ${textMuted}`}>
+                    {row.previousMm.toLocaleString("pt-BR")} mm
+                  </td>
+                  <td className={tdClass}>{row.coverage}</td>
+                  <td className={tdClass}>{row.origin}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </DataTable>
       </DashboardCard>

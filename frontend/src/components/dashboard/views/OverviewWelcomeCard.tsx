@@ -68,8 +68,11 @@ export function OverviewWelcomeCard() {
           <strong className={`font-semibold ${textPrimary}`}>
             {climate.temperature.toFixed(1)}°C
           </strong>
-          , com eficiência hídrica de{" "}
-          <strong className={`font-semibold ${textPrimary}`}>{water.efficiency}%</strong> e{" "}
+          , com consumo hidrico atual de{" "}
+          <strong className={`font-semibold ${textPrimary}`}>
+            {water.current.consumptionMm.toLocaleString("pt-BR")} mm
+          </strong>{" "}
+          e{" "}
           <strong className={`font-semibold ${textPrimary}`}>{criticalAlerts}</strong>{" "}
           {criticalAlerts === 1 ? "alerta crítico" : "alertas críticos"} ativos.
         </p>
@@ -117,7 +120,7 @@ export function OverviewWelcomeCard() {
             <p className={labelMuted}>Umidade do solo</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Leaf className="size-4 text-verde-floresta" aria-hidden />
-              {Math.round(soil.moisture)}%
+              {Math.round(soil.current.moisture)}%
             </p>
           </div>
           <div className={cardInset}>
@@ -128,23 +131,23 @@ export function OverviewWelcomeCard() {
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Consumo hídrico hoje</p>
+            <p className={labelMuted}>Consumo hidrico atual</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Droplets className="size-4 text-verde-floresta" aria-hidden />
-              {water.consumptionLiters.toLocaleString("pt-BR")} L
+              {water.current.consumptionMm.toLocaleString("pt-BR")} mm
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Eficiência hídrica</p>
+            <p className={labelMuted}>Irrigacao anterior</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Droplets className="size-4 text-verde-claro" aria-hidden />
-              {water.efficiency}%
+              {water.current.previousMm.toLocaleString("pt-BR")} mm
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Economia acumulada</p>
-            <p className="mt-1 text-lg font-bold text-verde-claro sm:text-xl">
-              {water.savingsLiters.toLocaleString("pt-BR")} L
+            <p className={labelMuted}>Tipo de irrigacao</p>
+            <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
+              {water.current.type}
             </p>
           </div>
           <div className={cardInset}>

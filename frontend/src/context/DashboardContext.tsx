@@ -16,13 +16,18 @@ import {
 } from "@/components/dashboard/FilterSlideover";
 import { toDashboardLoadError } from "@/components/dashboard/DashboardLoadState";
 import { DEFAULT_COMPANY_PROFILE } from "@/data/mockCompany";
-import { MOCK_DASHBOARD_DATA, type AlertItem } from "@/data/mockDashboard";
 import { clearFiltersForView } from "@/lib/dashboard/helpers";
 import {
   companyProfileFromRegister,
   EMPTY_COMPANY_PROFILE,
 } from "@/lib/dashboard/companyFields";
-import { fetchDashboardData } from "@/lib/dashboard/loadDashboardData";
+import {
+  EMPTY_CLIMATE,
+  EMPTY_CLIMATE_HISTORY,
+  EMPTY_SOIL,
+  EMPTY_WATER,
+  fetchDashboardData,
+} from "@/lib/dashboard/loadDashboardData";
 import type {
   AreaMonitoradaResponse,
   DashboardAreaResumoResponse,
@@ -39,19 +44,21 @@ import {
 } from "@/lib/dashboard/preferences";
 import type {
   AuthMode,
+  AlertItem,
+  ClimateHistoryState,
+  ClimateState,
   CompanyProfile,
+  CropPlantingItem,
   DashboardLoadError,
   DashboardLoadStatus,
   GeneralPreferences,
+  PredictionItem,
   RegisterCredentials,
+  SoilState,
   TimeFilter,
   ViewId,
+  WaterState,
 } from "@/types/dashboard";
-
-type ClimateState = typeof MOCK_DASHBOARD_DATA.climate.current;
-type ClimateHistoryState = typeof MOCK_DASHBOARD_DATA.climate.history;
-type SoilState = typeof MOCK_DASHBOARD_DATA.soil.current;
-type WaterState = typeof MOCK_DASHBOARD_DATA.water.current;
 
 type DashboardContextValue = {
   isAuthenticated: boolean;
@@ -82,14 +89,14 @@ type DashboardContextValue = {
   climateHistory: ClimateHistoryState;
   soil: SoilState;
   water: WaterState;
+  crops: CropPlantingItem[];
+  predictions: PredictionItem[];
 
   appliedFilters: PageFilters;
   draftFilters: PageFilters;
   setDraftFilters: (filters: PageFilters) => void;
   isFilterOpen: boolean;
 
-  selectedNutrient: string | null;
-  setSelectedNutrient: (id: string | null) => void;
   selectedWaterSeg: string | null;
   setSelectedWaterSeg: (id: string | null) => void;
   selectedCrop: string | null;
@@ -156,30 +163,28 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [draftFilters, setDraftFilters] = useState<PageFilters>(DEFAULT_PAGE_FILTERS);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const [climate, setClimate] = useState<ClimateState>({ ...MOCK_DASHBOARD_DATA.climate.current });
+  const [climate, setClimate] = useState<ClimateState>({ ...EMPTY_CLIMATE });
   const [climateHistory, setClimateHistory] = useState<ClimateHistoryState>({
-    ...MOCK_DASHBOARD_DATA.climate.history,
+    ...EMPTY_CLIMATE_HISTORY,
   });
-  const [soil, setSoil] = useState<SoilState>({ ...MOCK_DASHBOARD_DATA.soil.current });
-  const [water, setWater] = useState<WaterState>({ ...MOCK_DASHBOARD_DATA.water.current });
+  const [soil, setSoil] = useState<SoilState>({ ...EMPTY_SOIL });
+  const [water, setWater] = useState<WaterState>({ ...EMPTY_WATER });
   const [dashboardSummary, setDashboardSummary] = useState<DashboardResumoResponse | null>(null);
   const [dashboardAreas, setDashboardAreas] = useState<AreaMonitoradaResponse[]>([]);
   const [selectedArea, setSelectedArea] = useState<DashboardAreaResumoResponse | null>(null);
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
+  const [crops, setCrops] = useState<CropPlantingItem[]>([]);
+  const [predictions, setPredictions] = useState<PredictionItem[]>([]);
 
-  const [selectedNutrient, setSelectedNutrient] = useState<string | null>(null);
   const [selectedWaterSeg, setSelectedWaterSeg] = useState<string | null>(null);
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [pageTimeFilter, setPageTimeFilter] = useState<TimeFilter>("daily");
 
   const alertTypeOptions = useMemo(() => [...new Set(alerts.map((a) => a.type))], [alerts]);
-  const soilSectorOptions = useMemo(
-    () => MOCK_DASHBOARD_DATA.soil.sectors.map((s) => s.sector),
-    [],
-  );
+  const soilSectorOptions = useMemo(() => soil.sectors.map((s) => s.sector), [soil.sectors]);
   const growthCropOptions = useMemo(
-    () => MOCK_DASHBOARD_DATA.crops.map((c) => ({ id: c.id, label: c.name })),
-    [],
+    () => crops.map((crop) => ({ id: crop.id, label: crop.name })),
+    [crops],
   );
 
   const reloadDashboard = useCallback(async () => {
@@ -199,6 +204,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setClimateHistory(data.climateHistory);
       setSoil(data.soil);
       setWater(data.water);
+      setCrops(data.crops);
+      setPredictions(data.predictions);
       setLoadStatus("success");
     } catch (err) {
       if (requestId !== loadRequestRef.current) return;
@@ -260,7 +267,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const toggleSidebar = useCallback(() => setIsSidebarOpen((o) => !o), []);
 
   const resetSelections = useCallback(() => {
-    setSelectedNutrient(null);
     setSelectedWaterSeg(null);
     setSelectedCrop(null);
   }, []);
@@ -339,12 +345,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       climateHistory,
       soil,
       water,
+      crops,
+      predictions,
       appliedFilters,
       draftFilters,
       setDraftFilters,
       isFilterOpen,
-      selectedNutrient,
-      setSelectedNutrient,
       selectedWaterSeg,
       setSelectedWaterSeg,
       selectedCrop,
@@ -388,10 +394,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       climateHistory,
       soil,
       water,
+      crops,
+      predictions,
       appliedFilters,
       draftFilters,
       isFilterOpen,
-      selectedNutrient,
       selectedWaterSeg,
       selectedCrop,
       alertTypeOptions,

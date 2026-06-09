@@ -10,11 +10,11 @@ type VisionReportDocumentProps = {
 function PdfFooter({ generatedAt }: { generatedAt: string }) {
   return (
     <View style={pdfStyles.footer} fixed>
-      <Text style={pdfStyles.footerBrand}>TerraNova — Gestão inteligente da propriedade</Text>
+      <Text style={pdfStyles.footerBrand}>TerraNova - Gestao inteligente da propriedade</Text>
       <Text style={pdfStyles.footerText}>Gerado em {generatedAt}</Text>
       <Text
         style={pdfStyles.footerText}
-        render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`}
+        render={({ pageNumber, totalPages }) => `Pagina ${pageNumber} de ${totalPages}`}
       />
     </View>
   );
@@ -81,53 +81,72 @@ function alertBorderColor(level: string) {
   return PDF_COLORS.normal;
 }
 
+function formatOptionalNumber(value: number | null, unit: string) {
+  if (value === null) return "Nao informado";
+  return `${value.toLocaleString("pt-BR")} ${unit}`;
+}
+
 export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProps) {
   const climateRows = data.climate.history.labels.map((label, i) => [
     label,
-    `${data.climate.history.temperature[i]?.toFixed(1) ?? "—"}°C`,
+    `${data.climate.history.temperature[i]?.toFixed(1) ?? "-"} C`,
     `${Math.round(data.climate.history.humidity[i] ?? 0)}%`,
-    `${data.climate.history.wind[i]?.toFixed(1) ?? "—"} km/h`,
+    `${data.climate.history.wind[i]?.toFixed(1) ?? "-"} km/h`,
   ]);
 
   const waterHistoryRows = data.water.history.labels.map((label, i) => [
     label,
-    `${(data.water.history.values[i] ?? 0).toLocaleString("pt-BR")} L`,
+    `${(data.water.history.values[i] ?? 0).toLocaleString("pt-BR")} mm`,
   ]);
 
   const irrigationRows = data.water.irrigation.map((row) => [
     row.sector,
-    `${row.used.toLocaleString("pt-BR")} L`,
-    `${row.target.toLocaleString("pt-BR")} L`,
-    `${row.efficiency}%`,
+    row.type,
+    `${row.currentMm.toLocaleString("pt-BR")} mm`,
+    `${row.previousMm.toLocaleString("pt-BR")} mm`,
+    row.origin,
   ]);
 
   const distributionRows = data.water.distribution.map((d) => [
     d.label,
-    `${d.value}%`,
+    `${d.value.toLocaleString("pt-BR")} mm`,
     d.detail,
   ]);
 
   const soilRows = data.soil.sectors.map((s) => [
     s.sector,
-    `${s.moisture}%`,
-    String(s.ph),
+    `${Math.round(s.moisture)}%`,
+    s.soilType,
+    s.source,
     s.status,
   ]);
 
   const cropRows = data.crops.map((c) => [
     c.name,
     c.zone,
-    `${c.maturity}%`,
-    c.week,
-    c.estimate,
+    c.stage,
+    c.plantedAt || "Nao informado",
+    c.harvestAt || "Nao informada",
+    formatOptionalNumber(c.waterNeedMm, "mm"),
     c.status,
+  ]);
+
+  const predictionRows = data.predictions.map((prediction) => [
+    prediction.date || "Nao informada",
+    prediction.sector,
+    prediction.cropName ?? "Nao informada",
+    prediction.type,
+    formatOptionalNumber(prediction.productivity, "t/ha"),
+    prediction.classification,
+    formatOptionalNumber(prediction.waterVolumeMm, "mm"),
+    prediction.situation,
   ]);
 
   return (
     <Document
-      title={`${data.periodTitle} — ${data.farmName}`}
+      title={`${data.periodTitle} - ${data.farmName}`}
       author="TerraNova"
-      subject={`Relatório ${data.periodLabel}`}
+      subject={`Relatorio ${data.periodLabel}`}
     >
       <Page size="A4" style={pdfStyles.page}>
         <View style={pdfStyles.header}>
@@ -137,46 +156,46 @@ export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProp
               <Text style={pdfStyles.brandName}>TerraNova</Text>
               <Text style={pdfStyles.reportTitle}>{data.periodTitle}</Text>
               <Text style={pdfStyles.farmMeta}>
-                {data.farmName} · {data.farmRegion}
+                {data.farmName} - {data.farmRegion}
                 {"\n"}
-                {data.totalAreaHa} ha · {data.activeSectors} setores · {data.responsibleName}
+                {data.totalAreaHa} ha - {data.activeSectors} setores - {data.responsibleName}
               </Text>
             </View>
           </View>
           <View style={pdfStyles.headerBadge}>
-            <Text style={pdfStyles.badgeLabel}>Período</Text>
+            <Text style={pdfStyles.badgeLabel}>Periodo</Text>
             <Text style={pdfStyles.badgeValue}>{data.periodLabel}</Text>
-            <Text style={[pdfStyles.badgeLabel, { marginTop: 6 }]}>Referência</Text>
+            <Text style={[pdfStyles.badgeLabel, { marginTop: 6 }]}>Referencia</Text>
             <Text style={pdfStyles.badgeValue}>{data.generatedAt}</Text>
           </View>
         </View>
 
         <View style={pdfStyles.introBox}>
           <Text style={pdfStyles.introText}>
-            Relatório consolidado da propriedade referente ao período {data.periodLabel.toLowerCase()}
-            . Este documento reúne indicadores de clima, consumo hídrico, solo, colheitas e alertas
-            ativos — os mesmos dados apresentados no painel TerraNova para esta visão.
+            Relatorio consolidado da propriedade referente ao periodo {data.periodLabel.toLowerCase()}.
+            Este documento usa os mesmos dados reais apresentados no painel TerraNova.
           </Text>
         </View>
 
         <View style={pdfStyles.section}>
           <SectionTitle title="Resumo executivo" />
           <View style={pdfStyles.kpiGrid}>
-            <KpiCard label="Temperatura" value={data.kpis.temperature.toFixed(1)} unit="°C" />
+            <KpiCard label="Temperatura" value={data.kpis.temperature.toFixed(1)} unit="C" />
             <KpiCard label="Umidade do solo" value={String(Math.round(data.kpis.soilMoisture))} unit="%" />
-            <KpiCard label="Maturidade média" value={data.kpis.avgMaturity.toFixed(0)} unit="%" />
-            <KpiCard label="Alertas críticos" value={String(data.kpis.criticalAlerts)} />
+            <KpiCard label="Plantios ativos" value={String(data.kpis.activePlantings)} />
+            <KpiCard label="Predicoes IA" value={String(data.kpis.predictions)} />
+            <KpiCard label="Alertas criticos" value={String(data.kpis.criticalAlerts)} />
           </View>
         </View>
 
         <View style={pdfStyles.section}>
-          <SectionTitle title="Controle climático" />
+          <SectionTitle title="Controle climatico" />
           <Text style={pdfStyles.sectionDesc}>
-            Leituras atuais: {data.climate.temperature.toFixed(1)}°C ·{" "}
-            {Math.round(data.climate.humidity)}% umidade · {data.climate.wind.toFixed(1)} km/h vento
+            Leituras atuais: {data.climate.temperature.toFixed(1)} C -{" "}
+            {Math.round(data.climate.humidity)}% umidade - {data.climate.wind.toFixed(1)} km/h vento
           </Text>
           <DataTable
-            headers={["Período", "Temperatura", "Umidade", "Vento"]}
+            headers={["Periodo", "Temperatura", "Umidade", "Vento"]}
             rows={climateRows}
             boldFirstColumn
           />
@@ -187,42 +206,43 @@ export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProp
 
       <Page size="A4" style={pdfStyles.page}>
         <View style={pdfStyles.section}>
-          <SectionTitle title="Consumo hídrico" />
+          <SectionTitle title="Consumo hidrico" />
           <View style={pdfStyles.kpiGrid}>
             <KpiCard
-              label="Consumo"
-              value={data.water.consumptionLiters.toLocaleString("pt-BR")}
-              unit="L"
+              label="Consumo atual"
+              value={data.water.consumptionMm.toLocaleString("pt-BR")}
+              unit="mm"
             />
             <KpiCard
-              label="Economia acumulada"
-              value={(data.water.savingsLiters / 1000).toFixed(0)}
-              unit="mil L"
+              label="Irrigacao anterior"
+              value={data.water.previousMm.toLocaleString("pt-BR")}
+              unit="mm"
             />
-            <KpiCard label="Eficiência" value={String(data.water.efficiency)} unit="%" />
+            <KpiCard label="Tipo" value={data.water.type} />
+            <KpiCard label="Origem" value={data.water.origin} />
           </View>
         </View>
 
         <View style={pdfStyles.section}>
           <Text style={[pdfStyles.sectionTitle, { fontSize: 10, marginBottom: 6 }]}>
-            Distribuição do consumo
+            Distribuicao por tipo
           </Text>
-          <DataTable headers={["Método", "Participação", "Detalhe"]} rows={distributionRows} boldFirstColumn />
+          <DataTable headers={["Tipo", "Volume", "Detalhe"]} rows={distributionRows} boldFirstColumn />
         </View>
 
         <View style={pdfStyles.section}>
           <Text style={[pdfStyles.sectionTitle, { fontSize: 10, marginBottom: 6 }]}>
-            Histórico — {data.periodLabel}
+            Historico - {data.periodLabel}
           </Text>
-          <DataTable headers={["Período", "Consumo"]} rows={waterHistoryRows} boldFirstColumn />
+          <DataTable headers={["Periodo", "Consumo"]} rows={waterHistoryRows} boldFirstColumn />
         </View>
 
         <View style={pdfStyles.section}>
           <Text style={[pdfStyles.sectionTitle, { fontSize: 10, marginBottom: 6 }]}>
-            Irrigação por setor
+            Irrigacao por setor
           </Text>
           <DataTable
-            headers={["Setor", "Consumo", "Meta", "Eficiência"]}
+            headers={["Setor", "Tipo", "Consumo atual", "Irrigacao anterior", "Origem"]}
             rows={irrigationRows}
             boldFirstColumn
           />
@@ -236,10 +256,10 @@ export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProp
           <SectionTitle title="Controle do solo" />
           <View style={pdfStyles.metricPairRow}>
             {[
-              { l: "Nitrogênio (N)", v: `${data.soil.nitrogen}%` },
-              { l: "Fósforo (P)", v: `${data.soil.phosphorus}%` },
-              { l: "Potássio (K)", v: `${data.soil.potassium}%` },
-              { l: "pH médio", v: data.soil.ph.toFixed(1) },
+              { l: "Umidade", v: `${Math.round(data.soil.moisture)}%` },
+              { l: "Tipo", v: data.soil.soilType },
+              { l: "Fonte", v: data.soil.source },
+              { l: "Coleta", v: data.soil.collectedAt || "Nao informada" },
             ].map((item) => (
               <View key={item.l} style={pdfStyles.metricPairCard}>
                 <Text style={pdfStyles.kpiLabel}>{item.l}</Text>
@@ -247,20 +267,17 @@ export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProp
               </View>
             ))}
           </View>
-          <Text style={[pdfStyles.sectionDesc, { marginTop: 4 }]}>
-            Umidade média do solo: {Math.round(data.soil.moisture)}%
-          </Text>
           <DataTable
-            headers={["Setor", "Umidade", "pH", "Status"]}
+            headers={["Setor", "Umidade", "Tipo de solo", "Fonte", "Status"]}
             rows={soilRows}
             boldFirstColumn
           />
         </View>
 
         <View style={pdfStyles.section}>
-          <SectionTitle title="Previsão de colheitas" />
+          <SectionTitle title="Previsao de colheitas" />
           <DataTable
-            headers={["Cultura", "Zona", "Maturidade", "Referência", "Colheita prevista", "Status"]}
+            headers={["Cultura", "Zona", "Estagio", "Plantio", "Colheita prevista", "Nec. hidrica", "Status"]}
             rows={cropRows}
             boldFirstColumn
           />
@@ -271,10 +288,19 @@ export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProp
 
       <Page size="A4" style={pdfStyles.page}>
         <View style={pdfStyles.section}>
+          <SectionTitle title="Predicoes IA" />
+          <DataTable
+            headers={["Data", "Area", "Cultura", "Modelo", "Produtividade", "Classificacao", "Agua", "Situacao"]}
+            rows={predictionRows}
+            boldFirstColumn
+          />
+        </View>
+
+        <View style={pdfStyles.section}>
           <SectionTitle title="Alertas" />
           <Text style={pdfStyles.sectionDesc}>
-            {data.alerts.length} alertas relevantes para o período {data.periodLabel.toLowerCase()} (
-            {data.kpis.criticalAlerts} críticos).
+            {data.alerts.length} alertas relevantes para o periodo {data.periodLabel.toLowerCase()} (
+            {data.kpis.criticalAlerts} criticos).
           </Text>
           {data.alerts.map((alert) => (
             <View
@@ -283,7 +309,7 @@ export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProp
             >
               <Text style={pdfStyles.alertTitle}>{alert.title}</Text>
               <Text style={pdfStyles.alertMeta}>
-                {alert.levelLabel} · {alert.type} · {alert.sector} · {alert.time}
+                {alert.levelLabel} - {alert.type} - {alert.sector} - {alert.time}
               </Text>
               <Text style={pdfStyles.alertSummary}>{alert.summary}</Text>
             </View>
@@ -301,9 +327,9 @@ export function VisionReportDocument({ data, logoSrc }: VisionReportDocumentProp
           }}
         >
           <Text style={{ fontSize: 8, color: PDF_COLORS.inkMuted, lineHeight: 1.5 }}>
-            Documento gerado automaticamente pela plataforma TerraNova. Os dados refletem o período
-            selecionado ({data.periodLabel}) e devem ser validados junto às fontes de campo e sensores
-            da propriedade antes de decisões operacionais.
+            Documento gerado automaticamente pela plataforma TerraNova. Os dados refletem o periodo
+            selecionado ({data.periodLabel}) e devem ser validados junto as fontes de campo e sensores
+            da propriedade antes de decisoes operacionais.
           </Text>
         </View>
 
