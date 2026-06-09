@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -107,7 +106,7 @@ public class LeituraSoloDAO implements CrudDAO<LeituraSolo> {
                 VALUES (?, ?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_leitura_solo"})) {
             statement.setLong(1, leitura.getIdArea());
             DaoUtils.setLocalDateTime(statement, 2, leitura.getDataColeta());
             statement.setBigDecimal(3, leitura.getUmidadeSolo());

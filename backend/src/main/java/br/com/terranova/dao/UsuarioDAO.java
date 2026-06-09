@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +87,7 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_usuario"})) {
             statement.setLong(1, usuario.getIdEmpresa());
             statement.setString(2, usuario.getNomeUsuario());
             statement.setString(3, usuario.getEmail());

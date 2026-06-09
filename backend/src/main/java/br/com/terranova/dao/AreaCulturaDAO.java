@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +89,7 @@ public class AreaCulturaDAO implements CrudDAO<AreaCultura> {
                 VALUES (?, ?, ?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_area_cultura"})) {
             statement.setLong(1, plantio.getIdArea());
             statement.setLong(2, plantio.getIdCultura());
             DaoUtils.setLocalDate(statement, 3, plantio.getDataPlantio());

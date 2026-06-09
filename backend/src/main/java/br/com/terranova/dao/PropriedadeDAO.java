@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +67,7 @@ public class PropriedadeDAO implements CrudDAO<Propriedade> {
                 VALUES (?, ?, ?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_propriedade"})) {
             statement.setLong(1, propriedade.getIdEmpresa());
             statement.setString(2, propriedade.getNomePropriedade());
             statement.setString(3, propriedade.getLocalizacao());

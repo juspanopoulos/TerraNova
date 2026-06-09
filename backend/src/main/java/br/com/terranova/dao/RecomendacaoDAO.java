@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +89,7 @@ public class RecomendacaoDAO implements CrudDAO<Recomendacao> {
                 VALUES (?, ?, ?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_recomendacao"})) {
             statement.setLong(1, recomendacao.getIdArea());
             if (recomendacao.getIdAlerta() == null) {
                 statement.setObject(2, null);

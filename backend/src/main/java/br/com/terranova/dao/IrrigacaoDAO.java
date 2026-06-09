@@ -12,7 +12,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -95,7 +94,7 @@ public class IrrigacaoDAO implements CrudDAO<Irrigacao> {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_irrigacao"})) {
             statement.setLong(1, irrigacao.getIdArea());
             DaoUtils.setLocalDateTime(statement, 2, irrigacao.getDataRegistro());
             DaoUtils.setEnum(statement, 3, irrigacao.getTipoIrrigacao());

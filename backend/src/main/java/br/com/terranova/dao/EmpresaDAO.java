@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +64,7 @@ public class EmpresaDAO implements CrudDAO<Empresa> {
                 VALUES (?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_empresa"})) {
             statement.setString(1, empresa.getNomeEmpresa());
             statement.setString(2, empresa.getCnpj());
             statement.setString(3, empresa.getEmail());

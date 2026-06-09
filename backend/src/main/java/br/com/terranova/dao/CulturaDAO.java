@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +64,7 @@ public class CulturaDAO implements CrudDAO<Cultura> {
                 VALUES (?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_cultura"})) {
             statement.setString(1, cultura.getNomeCultura());
             statement.setString(2, cultura.getDescricao());
             statement.setBigDecimal(3, cultura.getNecessidadeHidricaMm());

@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +64,7 @@ public class AreaMonitoradaDAO implements CrudDAO<AreaMonitorada> {
                 VALUES (?, ?, ?, ?)
                 """;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id_area"})) {
             statement.setLong(1, area.getIdPropriedade());
             statement.setString(2, area.getNomeArea());
             statement.setBigDecimal(3, area.getAreaHectares());
