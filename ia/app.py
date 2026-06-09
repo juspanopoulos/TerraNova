@@ -2,7 +2,6 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from services.service_ml import (preparar_dados_modelo1, preparar_dados_modelo2, gerar_recomendacao)
-from services.service_chat import (processar_chat)
 
 
 app = Flask(__name__)
@@ -62,23 +61,6 @@ def modelo2_predict():
     except Exception as e:
         return jsonify({'message': 'Error processing request', 'error': str(e)}), 500
     
-@app.route('/chat', methods=['POST'])
-def chat():
-
-    data = request.get_json()
-    if data:
-        pergunta = data.get("pergunta")
-
-        resposta = processar_chat(
-            pergunta,
-            data
-        )
-        return jsonify({
-            "resposta": resposta
-        })
-    return jsonify({'message': 'No data provided'}), 400
-
-
 if __name__ == '__main__':
     app.run(
         host=os.getenv("HOST", "0.0.0.0"),

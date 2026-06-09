@@ -6,9 +6,9 @@ INTEGRANTES DO GRUPO - TerraNova
 -- Julia Silva Spanopoulos - RM: 566754 - 1TDSPA
 -- Julia Valério Guimarães da Silva - RM: 568275 - 1TDSPA
 
-INFORMACOES ADICIONAIS
+INFORMAÇÕES ADICIONAIS
 
-Este diretório contém os entregáveis do componente de IA & Chatbot do projeto TerraNova.
+Este diretório contém os entregáveis do componente de IA preditiva do projeto TerraNova.
 
 Dados utilizados:
 -- Models/data/crop_yield.csv
@@ -27,10 +27,8 @@ API REST:
 -- Endpoint de saúde: GET /health
 -- Modelo 1 - previsão de produtividade: POST /modelo1/predict
 -- Modelo 2 - recomendação de irrigação: POST /modelo2/predict
--- Assistente GAIA: POST /chat
 
 Observações de execução:
 -- Instalar as dependências listadas em requirements.txt antes de iniciar a API.
 -- Para executar localmente: python app.py
--- O endpoint /chat utiliza Gemini e depende da variável de ambiente GEMINI_API_KEY.
 -- O Modelo 2 consulta a NASA POWER API para obter dados climáticos. Caso essa API falhe ou retorne dados incompletos, o serviço usa valores de fallback baseados no dataset de treinamento para manter a predição operacional.

@@ -172,28 +172,6 @@
 
 </section>
 
-<!-- CHAT -->
-
-<section>
-
-    <h2>GAIA Chat</h2>
-
-    <textarea id="pergunta"
-              rows="4"
-              placeholder="Digite sua pergunta"></textarea>
-
-    <textarea id="contexto"
-              rows="6"
-              placeholder="Contexto opcional"></textarea>
-
-    <button onclick="testarChat()">
-        Enviar
-    </button>
-
-    <pre id="resultado_chat"></pre>
-
-</section>
-
 <script>
 
 const API = "http://localhost:5000";
@@ -302,36 +280,6 @@ async function testarML2() {
 
     document.getElementById(
         "resultado_ml2"
-    ).textContent =
-        JSON.stringify(data, null, 2);
-}
-
-async function testarChat() {
-
-    const payload = {
-
-        pergunta:
-            document.getElementById("pergunta").value,
-
-        contexto:
-            document.getElementById("contexto").value
-    };
-
-    const response = await fetch(
-        `${API}/chat`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type":"application/json"
-            },
-            body: JSON.stringify(payload)
-        }
-    );
-
-    const data = await response.json();
-
-    document.getElementById(
-        "resultado_chat"
     ).textContent =
         JSON.stringify(data, null, 2);
 }

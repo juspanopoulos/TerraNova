@@ -29,7 +29,6 @@ export type ViewId =
   | "soil"
   | "growth"
   | "water"
-  | "assistant"
   | "settings";
 
 export type SettingsTabId = "geral" | "empresa" | "integracoes";

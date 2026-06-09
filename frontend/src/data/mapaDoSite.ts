@@ -1,6 +1,5 @@
 import {
   Bell,
-  Bot,
   Building2,
   Calendar,
   CalendarDays,
@@ -125,12 +124,6 @@ export const sitemapSections: SitemapSection[] = [
         to: DASHBOARD_ROUTES.visaoAnual,
         description: "Evolução e metas ao longo do ano.",
         icon: TrendingUp,
-      },
-      {
-        label: "Assistente TerraNova",
-        to: DASHBOARD_ROUTES.assistente,
-        description: "Apoio inteligente no dia a dia no campo.",
-        icon: Bot,
       },
       {
         label: "Alertas",

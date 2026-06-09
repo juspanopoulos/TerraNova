@@ -23,9 +23,7 @@ public class OpenApiResponseFilter implements OASFilter {
     private static final List<String> SUCCESS_CODES = List.of("200", "201", "202", "204");
     private static final Set<String> POST_OK_PATHS = Set.of(
             "/auth/login",
-            "/ia/funcionando",
-            "/ia/chat",
-            "/assistente/conversas/{idConversa}/chat"
+            "/ia/funcionando"
     );
     private static final Set<String> BODY_REFERENCE_PATHS = Set.of(
             "/alertas",
@@ -50,9 +48,7 @@ public class OpenApiResponseFilter implements OASFilter {
             "/clima/nasa/areas/{idArea}/coletar",
             "/ia/funcionando",
             "/ia/produtividade",
-            "/ia/irrigacao",
-            "/ia/chat",
-            "/assistente/conversas/{idConversa}/chat"
+            "/ia/irrigacao"
     );
 
     @Override

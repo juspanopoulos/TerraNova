@@ -1,6 +1,5 @@
 import {
   Bell,
-  Bot,
   Building2,
   Calendar,
   CalendarDays,
@@ -98,7 +97,6 @@ export const PAGE_TITLES: Record<ViewId, string> = {
   soil: "Controle do Solo",
   growth: "Previsão de Colheitas",
   water: "Consumo Hídrico",
-  assistant: "Assistente TerraNova",
   settings: "Configurações",
 };
 
@@ -116,7 +114,6 @@ export const SETTINGS_NAV_ITEMS: { id: SettingsTabId; label: string; icon: typeo
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "overview", label: "Visão Geral", icon: LayoutDashboard },
-  { id: "assistant", label: "Assistente TerraNova", icon: Bot },
   { id: "alerts", label: "Alertas", icon: Bell },
   { id: "climate", label: "Controle Climático", icon: Cloud },
   { id: "soil", label: "Controle do Solo", icon: Leaf },
@@ -171,7 +168,6 @@ export const DASHBOARD_ROUTES = {
   solo: "/plataforma/solo",
   colheitas: "/plataforma/colheitas",
   agua: "/plataforma/agua",
-  assistente: "/plataforma/assistente",
   configuracoes: "/plataforma/configuracoes",
   configuracoesGeral: "/plataforma/configuracoes/geral",
   configuracoesEmpresa: "/plataforma/configuracoes/empresa",
@@ -211,7 +207,6 @@ export function showsPagePeriodFilter(view: ViewId): boolean {
   return (
     view !== "overview" &&
     view !== "alerts" &&
-    view !== "assistant" &&
     view !== "settings"
   );
 }
@@ -234,7 +229,6 @@ export const VIEW_ROUTE_BY_ID: Record<ViewId, string> = {
   soil: DASHBOARD_ROUTES.solo,
   growth: DASHBOARD_ROUTES.colheitas,
   water: DASHBOARD_ROUTES.agua,
-  assistant: DASHBOARD_ROUTES.assistente,
   settings: DASHBOARD_ROUTES.configuracoesGeral,
 };
 
@@ -259,7 +253,6 @@ export function isSettingsPath(pathname: string): boolean {
 
 export function pathToViewId(pathname: string): ViewId {
   if (isSettingsPath(pathname)) return "settings";
-  if (pathname.startsWith(DASHBOARD_ROUTES.assistente)) return "assistant";
   if (pathname.startsWith(DASHBOARD_ROUTES.alertas)) return "alerts";
   if (pathname.startsWith(DASHBOARD_ROUTES.clima)) return "climate";
   if (pathname.startsWith(DASHBOARD_ROUTES.solo)) return "soil";

@@ -1,8 +1,6 @@
 package br.com.terranova.resources;
 
 import br.com.terranova.bo.IaBO;
-import br.com.terranova.dto.integration.ia.ChatIaRequest;
-import br.com.terranova.dto.integration.ia.ChatIaResponse;
 import br.com.terranova.dto.integration.ia.IaFuncionandoResponse;
 import br.com.terranova.dto.request.ia.IaIrrigacaoRequest;
 import br.com.terranova.dto.request.ia.IaProdutividadeRequest;
@@ -48,9 +46,4 @@ public class IaResource {
         return iaBO.predizerIrrigacao(request);
     }
 
-    @POST
-    @Path("/chat")
-    public ChatIaResponse conversar(@Valid ChatIaRequest request) {
-        return iaBO.conversar(request);
-    }
 }

@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Bell,
-  Bot,
   Cloud,
   Droplets,
   LayoutDashboard,
@@ -29,13 +28,6 @@ export const platformModules: PlatformModule[] = [
     description:
       "Painel unificado com indicadores da propriedade, clima, solo, água e alertas em um só lugar.",
     icon: LayoutDashboard,
-  },
-  {
-    id: "assistant",
-    title: "Assistente TerraNova",
-    description:
-      "Converse com a plataforma para interpretar dados, tirar dúvidas e apoiar decisões no campo.",
-    icon: Bot,
   },
   {
     id: "alerts",
@@ -85,9 +77,9 @@ export const platformHighlights: {
     detail: "Compare hoje, esta semana, o mês passado ou o ano anterior sem montar relatório na mão.",
   },
   {
-    value: "7+",
+    value: "6",
     label: "Ferramentas juntas",
-    detail: "Cultivo, água, alertas e assistente convivem na mesma tela, sem app extra.",
+    detail: "Cultivo, água, solo e alertas convivem na mesma tela, sem app extra.",
   },
   {
     value: "1",

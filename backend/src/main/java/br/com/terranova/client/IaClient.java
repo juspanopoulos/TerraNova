@@ -1,7 +1,5 @@
 package br.com.terranova.client;
 
-import br.com.terranova.dto.integration.ia.ChatIaRequest;
-import br.com.terranova.dto.integration.ia.ChatIaResponse;
 import br.com.terranova.dto.integration.ia.IaFuncionandoResponse;
 import br.com.terranova.dto.integration.ia.ModeloIrrigacaoPayload;
 import br.com.terranova.dto.integration.ia.ModeloIrrigacaoResponse;
@@ -32,7 +30,4 @@ public interface IaClient {
     @Path("/modelo2/predict")
     ModeloIrrigacaoResponse predizerIrrigacao(ModeloIrrigacaoPayload payload);
 
-    @POST
-    @Path("/chat")
-    ChatIaResponse conversar(ChatIaRequest request);
 }

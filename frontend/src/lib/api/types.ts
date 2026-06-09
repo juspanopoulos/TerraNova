@@ -215,15 +215,6 @@ export type PredicaoIaResponse = {
   erro: string | null;
 };
 
-export type ChatIaRequest = {
-  pergunta: string;
-  contexto?: string | null;
-};
-
-export type ChatIaResponse = {
-  resposta: string;
-};
-
 export type UsuarioPreferenciasResponse = {
   idUsuario: number;
   darkMode: boolean;
@@ -242,32 +233,6 @@ export type UsuarioPreferenciasResponse = {
 export type UsuarioPreferenciasRequest = Partial<
   Omit<UsuarioPreferenciasResponse, "idUsuario" | "dataAtualizacao">
 >;
-
-export type AssistenteMensagemResponse = {
-  idMensagem: number;
-  idConversa: number;
-  papel: "user" | "assistant" | string;
-  conteudo: string;
-  dataMensagem: string;
-};
-
-export type AssistenteConversaResponse = {
-  idConversa: number;
-  idUsuario: number;
-  titulo: string;
-  dataCriacao: string;
-  dataAtualizacao: string;
-  mensagens: AssistenteMensagemResponse[];
-};
-
-export type AssistenteConversaRequest = {
-  titulo?: string | null;
-};
-
-export type AssistenteChatPersistidoRequest = {
-  pergunta: string;
-  contexto?: string | null;
-};
 
 export type IaProdutividadeRequest = {
   idArea: number;

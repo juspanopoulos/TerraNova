@@ -63,12 +63,6 @@ export const faqCategories: FaqCategory[] = [
           "É a porta de entrada do dashboard: um resumo com indicadores da propriedade, clima atual, estado do solo, consumo hídrico e alertas recentes. A ideia é que você saiba, em poucos segundos, onde focar antes de mergulhar nos detalhes.",
       },
       {
-        id: "assistente",
-        question: "Como funciona o Assistente TerraNova?",
-        answer:
-          "É um assiste de conversa integrado à plataforma. Você pode perguntar sobre os dados da propriedade, pedir interpretações de gráficos ou tirar dúvidas sobre manejo, sempre com base no contexto do que está monitorado no painel.",
-      },
-      {
         id: "alertas",
         question: "Que tipo de alertas a plataforma envia?",
         answer:

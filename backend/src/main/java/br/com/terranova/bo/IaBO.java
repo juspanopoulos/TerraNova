@@ -1,8 +1,6 @@
 package br.com.terranova.bo;
 
 import br.com.terranova.client.IaClient;
-import br.com.terranova.dto.integration.ia.ChatIaRequest;
-import br.com.terranova.dto.integration.ia.ChatIaResponse;
 import br.com.terranova.dto.integration.ia.IaFuncionandoResponse;
 import br.com.terranova.dto.integration.ia.ModeloIrrigacaoPayload;
 import br.com.terranova.dto.integration.ia.ModeloIrrigacaoResponse;
@@ -144,14 +142,6 @@ public class IaBO {
                 resultado.situacao(),
                 predicao
         );
-    }
-
-    public ChatIaResponse conversar(ChatIaRequest request) {
-        try {
-            return iaClient.conversar(request);
-        } catch (ProcessingException | WebApplicationException exception) {
-            throw new IntegracaoIaException("Falha ao consultar o assistente GAIA.", exception);
-        }
     }
 
     private void validarStatusIa(String status, String modelo) {

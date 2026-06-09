@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Bell,
-  Bot,
   Cloud,
   CloudRain,
   Droplets,
@@ -214,13 +213,6 @@ export const homeModules: HomeModule[] = [
     description:
       "Abra o dia com um panorama completo da propriedade: clima atual, alertas ativos, leituras de solo e água, e o que pede atenção primeiro. Compare dia, semana, mês ou ano sem montar relatório na mão.",
     icon: LayoutDashboard,
-  },
-  {
-    id: "assistant",
-    title: "Assistente TerraNova",
-    description:
-      "Converse com a plataforma para entender o que os números significam no campo. Tire dúvidas sobre clima, irrigação ou alertas e receba respostas diretas, como falar com quem conhece a sua propriedade.",
-    icon: Bot,
   },
   {
     id: "alerts",

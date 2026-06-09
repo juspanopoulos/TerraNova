@@ -7,7 +7,6 @@ import {
   DashboardLoadingState,
 } from "@/components/dashboard/DashboardLoadState";
 import { FilterSlideover } from "@/components/dashboard/FilterSlideover";
-import { AssistantHistorySlideover } from "@/components/dashboard/AssistantHistorySlideover";
 import { LoginScreen } from "@/components/dashboard/LoginScreen";
 import { RegisterCompanyScreen } from "@/components/dashboard/RegisterCompanyScreen";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -21,7 +20,6 @@ import {
   shellBg,
   DASHBOARD_ROUTES,
 } from "@/constants/dashboard";
-import { AssistantChatProvider } from "@/context/AssistantChatContext";
 import { DashboardProvider, useDashboard } from "@/context/DashboardContext";
 
 function DashboardShell() {
@@ -61,13 +59,11 @@ function DashboardShell() {
     preferences,
     pageTimeFilter,
     setPageTimeFilter,
-    company,
   } = useDashboard();
 
   const view = pathToViewId(location.pathname);
   const timeFilter = resolvePageTimeFilter(view, location.pathname, pageTimeFilter);
   const breadcrumbs = breadcrumbsFromPath(location.pathname);
-  const isAssistant = view === "assistant";
 
   useEffect(() => {
     if (isAuthenticated) return;
@@ -167,17 +163,7 @@ function DashboardShell() {
         role="main"
       >
         <div className={`${dashboardContentShell} py-5 sm:py-7 ${contentPad}`}>
-          {isAssistant ? (
-            <AssistantChatProvider
-              idUsuario={company.idUsuario}
-              propertyName={company.nomePropriedade || "sua propriedade"}
-            >
-              {mainContent}
-              <AssistantHistorySlideover />
-            </AssistantChatProvider>
-          ) : (
-            mainContent
-          )}
+          {mainContent}
         </div>
       </div>
 

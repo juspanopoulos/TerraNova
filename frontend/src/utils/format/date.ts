@@ -39,13 +39,3 @@ export function formatTodayPt(): string {
   }).format(new Date());
 }
 
-export function formatChatTime(date: Date) {
-  return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-}
-
-export function formatConversationDate(timestamp: number) {
-  return new Date(timestamp).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-  });
-}

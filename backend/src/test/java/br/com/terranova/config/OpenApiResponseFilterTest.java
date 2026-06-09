@@ -49,12 +49,12 @@ class OpenApiResponseFilterTest {
 
     @Test
     void deveDiferenciarPostDeProcessamentoEPostComPersistencia() {
-        APIResponses chatResponses = responsesFor("/ia/chat", pathItem().POST(operation()), PathItem::getPOST);
+        APIResponses healthResponses = responsesFor("/ia/funcionando", pathItem().POST(operation()), PathItem::getPOST);
         APIResponses predictionResponses = responsesFor("/ia/produtividade", pathItem().POST(operation()), PathItem::getPOST);
 
-        assertNotNull(chatResponses.getAPIResponse("200"));
-        assertNull(chatResponses.getAPIResponse("201"));
-        assertNotNull(chatResponses.getAPIResponse("502"));
+        assertNotNull(healthResponses.getAPIResponse("200"));
+        assertNull(healthResponses.getAPIResponse("201"));
+        assertNotNull(healthResponses.getAPIResponse("502"));
 
         assertNotNull(predictionResponses.getAPIResponse("201"));
         assertNull(predictionResponses.getAPIResponse("200"));

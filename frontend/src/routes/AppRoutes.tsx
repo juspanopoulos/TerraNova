@@ -16,7 +16,6 @@ import AguaPage from "@/pages/plataforma/AguaPage";
 import AlertasPage from "@/pages/plataforma/AlertasPage";
 import ClimaPage from "@/pages/plataforma/ClimaPage";
 import ColheitasPage from "@/pages/plataforma/ColheitasPage";
-import AssistentePage from "@/pages/plataforma/AssistentePage";
 import EmpresaPage from "@/pages/plataforma/EmpresaPage";
 import GeralPage from "@/pages/plataforma/GeralPage";
 import IntegracoesPage from "@/pages/plataforma/IntegracoesPage";
@@ -58,7 +57,6 @@ export const AppRoutes = () => {
             <Route path="visao/semana" element={<VisaoSemanaPage />} />
             <Route path="visao/mes" element={<VisaoMesPage />} />
             <Route path="visao/anual" element={<VisaoAnualPage />} />
-            <Route path="assistente" element={<AssistentePage />} />
             <Route path="alertas" element={<AlertasPage />} />
             <Route path="clima" element={<ClimaPage />} />
             <Route path="solo" element={<SoloPage />} />

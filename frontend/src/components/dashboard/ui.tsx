@@ -1,10 +1,7 @@
 import type { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import type { Thermometer } from "lucide-react";
-import { History, MessageSquarePlus } from "lucide-react";
-import { ToolbarActionButton } from "@/components/dashboard/AssistantHistorySlideover";
 import { VisionExcelExportButton } from "@/components/dashboard/VisionExcelExportButton";
-import { useAssistantChatOptional } from "@/context/AssistantChatContext";
 import {
   FilterTriggerButton,
   hasFiltersForView,
@@ -45,13 +42,11 @@ export function PageToolbar({
   onPeriodChange: (filter: TimeFilter) => void;
   pathname: string;
 }) {
-  const assistantChat = useAssistantChatOptional();
   const showPeriodFilter = showsPagePeriodFilter(view);
   const showFilters = hasFiltersForView(view, timeFilter);
-  const showAssistantActions = view === "assistant" && assistantChat;
   const visionTimeFilter = TIME_FILTER_FROM_PATH(pathname);
   const showVisionExport = visionTimeFilter !== null;
-  const showActions = showPeriodFilter || showFilters || showAssistantActions || showVisionExport;
+  const showActions = showPeriodFilter || showFilters || showVisionExport;
 
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-4 sm:mb-8">
@@ -63,20 +58,6 @@ export function PageToolbar({
           )}
           {showPeriodFilter && (
             <PeriodFilterTabs value={timeFilter} onChange={onPeriodChange} inline />
-          )}
-          {showAssistantActions && (
-            <>
-              <ToolbarActionButton
-                label="Histórico"
-                icon={History}
-                onClick={assistantChat.openHistory}
-              />
-              <ToolbarActionButton
-                label="Nova conversa"
-                icon={MessageSquarePlus}
-                onClick={assistantChat.startNewConversation}
-              />
-            </>
           )}
           {showFilters && (
             <FilterTriggerButton activeCount={activeFilterCount} onClick={onOpenFilters} />

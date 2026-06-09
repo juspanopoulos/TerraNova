@@ -14,11 +14,8 @@ Configure estas variaveis no Render. Nao coloque segredos no Git.
 ### terranova-ia
 
 ```text
-GEMINI_API_KEY=sua_chave_gemini
 PORT=10000
 ```
-
-`GEMINI_API_KEY` so e obrigatoria para o endpoint de chat. Os modelos de produtividade e irrigacao funcionam sem ela.
 
 ### terranova-api
 
@@ -43,7 +40,6 @@ IA_BASE_URL=https://url-do-terranova-ia.onrender.com
 1. Suba o codigo para o GitHub.
 2. No Render, use **Blueprint** apontando para o `render.yaml` na raiz do repositorio.
 3. Preencha manualmente os valores marcados como `sync: false`:
-   - `GEMINI_API_KEY`, se for usar chat;
    - `ORACLE_USER`;
    - `ORACLE_PASSWORD`;
    - `CORS_ALLOWED_ORIGINS` com a URL exata do Vercel.
