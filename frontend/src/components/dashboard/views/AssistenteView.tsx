@@ -52,7 +52,7 @@ function ChatEmptyState() {
 }
 
 export function AssistenteView() {
-  const { messages, isEmpty, isTyping, sendMessage } = useAssistantChat();
+  const { messages, isEmpty, isTyping, errorMessage, sendMessage } = useAssistantChat();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [draft, setDraft] = useState("");
 
@@ -131,6 +131,11 @@ export function AssistenteView() {
             <ArrowUp className="size-4" strokeWidth={2.5} />
           </button>
         </div>
+        {errorMessage ? (
+          <p className="mt-2 text-sm font-semibold text-red-600" role="alert">
+            {errorMessage}
+          </p>
+        ) : null}
       </div>
     </div>
   );

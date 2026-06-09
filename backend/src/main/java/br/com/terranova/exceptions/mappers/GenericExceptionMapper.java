@@ -43,12 +43,12 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 
     private String mensagemHttp(int status) {
         return switch (status) {
-            case 400 -> "Requisicao invalida.";
-            case 401 -> "Autenticacao necessaria.";
+            case 400 -> "Requisição inválida.";
+            case 401 -> "Autenticação necessária.";
             case 403 -> "Acesso negado.";
-            case 404 -> "Recurso nao encontrado.";
-            case 405 -> "Metodo HTTP nao permitido para este recurso.";
-            default -> "Erro HTTP ao processar a requisicao.";
+            case 404 -> "Recurso não encontrado.";
+            case 405 -> "Método HTTP não permitido para este recurso.";
+            default -> "Erro HTTP ao processar a requisição.";
         };
     }
 

@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { useLocation } from "react-router-dom";
+import { ApiRequestError } from "@/lib/api/client";
 import {
   createAssistenteConversa,
   deleteAssistenteConversa,
@@ -23,6 +24,7 @@ type AssistantChatContextValue = {
   messages: ChatMessage[];
   isEmpty: boolean;
   isTyping: boolean;
+  errorMessage: string | null;
   isHistoryOpen: boolean;
   openHistory: () => void;
   closeHistory: () => void;
@@ -54,6 +56,11 @@ function mapConversation(conversa: AssistenteConversaResponse): Conversation {
   };
 }
 
+function assistantErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof ApiRequestError) return error.message;
+  return fallback;
+}
+
 export function AssistantChatProvider({
   children,
   idUsuario,
@@ -66,6 +73,7 @@ export function AssistantChatProvider({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const location = useLocation();
 
@@ -80,6 +88,7 @@ export function AssistantChatProvider({
     void listAssistenteConversas(idUsuario)
       .then((items) => {
         if (cancelled) return;
+        setErrorMessage(null);
         const mapped = items.map(mapConversation);
         setConversations(mapped);
         setActiveId((current) =>
@@ -92,6 +101,7 @@ export function AssistantChatProvider({
         if (cancelled) return;
         setConversations([]);
         setActiveId("");
+        setErrorMessage("Não foi possível carregar o histórico do assistente.");
       });
 
     return () => {
@@ -119,14 +129,20 @@ export function AssistantChatProvider({
     if (!idUsuario) return;
     setIsTyping(false);
     setIsHistoryOpen(false);
-    void createAssistenteConversa(idUsuario, { titulo: "Nova conversa" }).then((created) => {
-      upsertConversation(mapConversation(created));
-    });
+    setErrorMessage(null);
+    void createAssistenteConversa(idUsuario, { titulo: "Nova conversa" })
+      .then((created) => {
+        upsertConversation(mapConversation(created));
+      })
+      .catch((error) => {
+        setErrorMessage(assistantErrorMessage(error, "Não foi possível criar uma nova conversa."));
+      });
   }, [idUsuario, upsertConversation]);
 
   const selectConversation = useCallback((id: string) => {
     setActiveId(id);
     setIsTyping(false);
+    setErrorMessage(null);
     setIsHistoryOpen(false);
   }, []);
 
@@ -134,13 +150,18 @@ export function AssistantChatProvider({
     (id: string) => {
       const numericId = Number(id);
       if (!Number.isFinite(numericId)) return;
-      void deleteAssistenteConversa(numericId).then(() => {
-        setConversations((prev) => {
-          const next = prev.filter((c) => c.id !== id);
-          if (activeId === id) setActiveId(next[0]?.id ?? "");
-          return next;
+      setErrorMessage(null);
+      void deleteAssistenteConversa(numericId)
+        .then(() => {
+          setConversations((prev) => {
+            const next = prev.filter((c) => c.id !== id);
+            if (activeId === id) setActiveId(next[0]?.id ?? "");
+            return next;
+          });
+        })
+        .catch((error) => {
+          setErrorMessage(assistantErrorMessage(error, "Não foi possível excluir a conversa."));
         });
-      });
       setIsTyping(false);
     },
     [activeId],
@@ -152,6 +173,7 @@ export function AssistantChatProvider({
       if (!trimmed || isTyping || !idUsuario) return;
 
       setIsTyping(true);
+      setErrorMessage(null);
 
       void (async () => {
         try {
@@ -182,6 +204,8 @@ export function AssistantChatProvider({
             contexto: `Propriedade: ${propertyName}`,
           });
           upsertConversation(mapConversation(response));
+        } catch (error) {
+          setErrorMessage(assistantErrorMessage(error, "Não foi possível enviar a mensagem."));
         } finally {
           setIsTyping(false);
         }
@@ -197,6 +221,7 @@ export function AssistantChatProvider({
       messages,
       isEmpty,
       isTyping,
+      errorMessage,
       isHistoryOpen,
       openHistory: () => setIsHistoryOpen(true),
       closeHistory: () => setIsHistoryOpen(false),
@@ -211,6 +236,7 @@ export function AssistantChatProvider({
       messages,
       isEmpty,
       isTyping,
+      errorMessage,
       isHistoryOpen,
       startNewConversation,
       selectConversation,
