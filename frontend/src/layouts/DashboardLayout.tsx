@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import authBackground from "@/assets/images/login/background6.jpeg";
 import { DashboardBreadcrumb } from "@/components/dashboard/DashboardBreadcrumb";
 import {
@@ -19,13 +19,16 @@ import {
   pathToViewId,
   resolvePageTimeFilter,
   shellBg,
+  DASHBOARD_ROUTES,
 } from "@/constants/dashboard";
 import { AssistantChatProvider } from "@/context/AssistantChatContext";
 import { DashboardProvider, useDashboard } from "@/context/DashboardContext";
 
 function DashboardShell() {
   const location = useLocation();
+  const navigate = useNavigate();
   const authScrollRef = useRef<HTMLDivElement>(null);
+  const wasAuthenticatedRef = useRef(false);
   const {
     isAuthenticated,
     authMode,
@@ -70,6 +73,13 @@ function DashboardShell() {
     if (isAuthenticated) return;
     authScrollRef.current?.scrollTo(0, 0);
   }, [isAuthenticated, location.pathname, authMode]);
+
+  useEffect(() => {
+    if (!wasAuthenticatedRef.current && isAuthenticated) {
+      navigate(DASHBOARD_ROUTES.visaoGeral, { replace: true });
+    }
+    wasAuthenticatedRef.current = isAuthenticated;
+  }, [isAuthenticated, navigate]);
 
   const rootClass = [
     "dashboard-root flex h-full min-h-0 w-full overflow-hidden",

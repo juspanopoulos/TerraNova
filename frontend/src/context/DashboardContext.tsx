@@ -48,6 +48,8 @@ import {
   DEFAULT_GENERAL_PREFERENCES,
   filtersFromPreferences,
   generalPreferencesFromResponse,
+  preferencesWithStoredDarkMode,
+  saveStoredDarkMode,
 } from "@/lib/dashboard/preferences";
 import type {
   AuthMode,
@@ -199,9 +201,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       emailUsuario: registerCredentials.email,
     };
   }, [registerCredentials]);
-  const [preferences, setPreferences] = useState<GeneralPreferences>({
-    ...DEFAULT_GENERAL_PREFERENCES,
-  });
+  const [preferences, setPreferences] = useState<GeneralPreferences>(() =>
+    preferencesWithStoredDarkMode(DEFAULT_GENERAL_PREFERENCES),
+  );
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [loadStatus, setLoadStatus] = useState<DashboardLoadStatus>("idle");
@@ -375,7 +377,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     setWater({ ...EMPTY_WATER });
     setCrops([]);
     setPredictions([]);
-    setPreferences({ ...DEFAULT_GENERAL_PREFERENCES });
+    setPreferences(preferencesWithStoredDarkMode(DEFAULT_GENERAL_PREFERENCES));
     setAppliedFilters(DEFAULT_PAGE_FILTERS);
     setDraftFilters(DEFAULT_PAGE_FILTERS);
     setRegisterCredentials(null);
@@ -443,6 +445,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     <K extends keyof GeneralPreferences>(key: K, value: GeneralPreferences[K]) => {
       setPreferences((current) => {
         const next = { ...current, [key]: value };
+        if (key === "darkMode") saveStoredDarkMode(Boolean(value));
         if (authUser) saveUserPreferences(authUser.idUsuario, next, appliedFilters);
         return next;
       });
@@ -496,13 +499,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       .then((data) => {
         if (cancelled) return;
         const filters = filtersFromPreferences(data);
-        setPreferences(generalPreferencesFromResponse(data));
+        setPreferences(preferencesWithStoredDarkMode(generalPreferencesFromResponse(data)));
         setAppliedFilters(filters);
         setDraftFilters(filters);
       })
       .catch(() => {
         if (cancelled) return;
-        setPreferences({ ...DEFAULT_GENERAL_PREFERENCES });
+        setPreferences(preferencesWithStoredDarkMode(DEFAULT_GENERAL_PREFERENCES));
       });
 
     return () => {

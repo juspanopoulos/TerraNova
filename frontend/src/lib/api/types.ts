@@ -114,6 +114,21 @@ export type DadoClimaticoResponse = {
   fonteApi: "NASA" | "ESA" | "INMET" | "MANUAL" | string;
 };
 
+export type ColetaNasaResponse = {
+  idArea: number;
+  dataReferencia: string;
+  latitude: number;
+  longitude: number;
+  dadoClimatico: DadoClimaticoResponse;
+};
+
+export type AreaMonitoradaRequest = {
+  idPropriedade: number;
+  nomeArea: string;
+  areaHectares?: number | null;
+  tipoSolo?: string | null;
+};
+
 export type LeituraSoloResponse = {
   idLeituraSolo: number;
   idArea: number;
@@ -121,6 +136,14 @@ export type LeituraSoloResponse = {
   umidadeSolo: number;
   tipoSolo: string | null;
   fonte: "MANUAL" | "SENSOR" | "NASA" | "IA" | string;
+};
+
+export type LeituraSoloRequest = {
+  idArea: number;
+  dataColeta?: string | null;
+  umidadeSolo: number;
+  tipoSolo?: string | null;
+  fonte?: "MANUAL" | "SENSOR" | "NASA" | "IA" | string | null;
 };
 
 export type IrrigacaoResponse = {
@@ -135,12 +158,30 @@ export type IrrigacaoResponse = {
   origem: "MANUAL" | "SENSOR" | "IA" | string;
 };
 
+export type IrrigacaoRequest = {
+  idArea: number;
+  dataRegistro?: string | null;
+  tipoIrrigacao: string;
+  irrigacaoAnteriorMm?: number | null;
+  consumoAtualMm?: number | null;
+  areaCampoHectare?: number | null;
+  usouCoberturaSolo?: "SIM" | "NAO" | string | null;
+  origem?: "MANUAL" | "SENSOR" | "IA" | string | null;
+};
+
 export type CulturaResponse = {
   idCultura: number;
   nomeCultura: string;
   descricao: string | null;
   necessidadeHidricaMm: number | null;
   periodoPlantio: string | null;
+};
+
+export type CulturaRequest = {
+  nomeCultura: string;
+  descricao?: string | null;
+  necessidadeHidricaMm: number;
+  periodoPlantio?: string | null;
 };
 
 export type AreaCulturaResponse = {
@@ -151,6 +192,15 @@ export type AreaCulturaResponse = {
   dataColheitaPrevista: string | null;
   status: "ATIVO" | "COLHIDO" | "PERDIDO" | string;
   estagioCrescimento: string | null;
+};
+
+export type AreaCulturaRequest = {
+  idArea: number;
+  idCultura: number;
+  dataPlantio: string;
+  dataColheitaPrevista?: string | null;
+  status?: "ATIVO" | "COLHIDO" | "PERDIDO" | string | null;
+  estagioCrescimento?: string | null;
 };
 
 export type PredicaoIaResponse = {

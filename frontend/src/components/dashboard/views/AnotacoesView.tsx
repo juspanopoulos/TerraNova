@@ -18,6 +18,7 @@ import {
   listAnotacoes,
   updateAnotacao,
 } from "@/lib/api/notesApi";
+import { ApiRequestError } from "@/lib/api/client";
 import type { AnotacaoResponse } from "@/lib/api/types";
 
 function notePreviewText(note: AnotacaoResponse): string {
@@ -46,6 +47,8 @@ export function AnotacoesView() {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [draft, setDraft] = useState<AnotacaoResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const activeNote = draft;
 
@@ -53,6 +56,7 @@ export function AnotacoesView() {
     if (!authUser) return;
     let cancelled = false;
     setLoading(true);
+    setErrorMessage(null);
 
     void listAnotacoes(authUser.idUsuario)
       .then((items) => {
@@ -60,6 +64,13 @@ export function AnotacoesView() {
         setNotes(items);
         setActiveId(items[0]?.idAnotacao ?? null);
         setDraft(items[0] ?? null);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setNotes([]);
+        setActiveId(null);
+        setDraft(null);
+        setErrorMessage(errorMessageFromApi(error, "Não foi possível carregar as anotações."));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -82,21 +93,33 @@ export function AnotacoesView() {
         .map((note) => (note.idAnotacao === next.idAnotacao ? next : note))
         .sort((a, b) => new Date(b.dataAtualizacao).getTime() - new Date(a.dataAtualizacao).getTime()),
     );
+    setErrorMessage(null);
     void updateAnotacao(next.idAnotacao, {
       titulo: next.titulo.trim() || "Sem título",
       conteudoHtml: next.conteudoHtml ?? "",
+    }).catch((error) => {
+      setErrorMessage(errorMessageFromApi(error, "Não foi possível salvar a anotação."));
     });
   }, []);
 
   const handleNewNote = () => {
     if (!authUser) return;
+    setSaving(true);
+    setErrorMessage(null);
     void createAnotacao(authUser.idUsuario, {
       titulo: "Nova anotação",
       conteudoHtml: "",
-    }).then((note) => {
-      setNotes((current) => [note, ...current]);
-      selectNote(note);
-    });
+    })
+      .then((note) => {
+        setNotes((current) => [note, ...current]);
+        selectNote(note);
+      })
+      .catch((error) => {
+        setErrorMessage(errorMessageFromApi(error, "Não foi possível criar a anotação."));
+      })
+      .finally(() => {
+        setSaving(false);
+      });
   };
 
   const handleDelete = () => {
@@ -104,15 +127,24 @@ export function AnotacoesView() {
     const confirmed = window.confirm("Excluir esta anotação? Esta ação não pode ser desfeita.");
     if (!confirmed) return;
 
-    void deleteAnotacao(activeNote.idAnotacao).then(() => {
-      setNotes((current) => {
-        const updated = current.filter((note) => note.idAnotacao !== activeNote.idAnotacao);
-        const nextActive = updated[0] ?? null;
-        setActiveId(nextActive?.idAnotacao ?? null);
-        setDraft(nextActive);
-        return updated;
+    setSaving(true);
+    setErrorMessage(null);
+    void deleteAnotacao(activeNote.idAnotacao)
+      .then(() => {
+        setNotes((current) => {
+          const updated = current.filter((note) => note.idAnotacao !== activeNote.idAnotacao);
+          const nextActive = updated[0] ?? null;
+          setActiveId(nextActive?.idAnotacao ?? null);
+          setDraft(nextActive);
+          return updated;
+        });
+      })
+      .catch((error) => {
+        setErrorMessage(errorMessageFromApi(error, "Não foi possível excluir a anotação."));
+      })
+      .finally(() => {
+        setSaving(false);
       });
-    });
   };
 
   const updateTitle = (titulo: string) => {
@@ -133,6 +165,7 @@ export function AnotacoesView() {
           <button
             type="button"
             onClick={handleNewNote}
+            disabled={saving}
             className={`${btnSecondary} ${btnClick} px-2.5 py-1.5 text-xs`}
             aria-label="Nova anotação"
           >
@@ -167,6 +200,11 @@ export function AnotacoesView() {
             );
           })}
         </ul>
+        {errorMessage ? (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700" role="alert">
+            {errorMessage}
+          </p>
+        ) : null}
       </aside>
 
       <DashboardCard className="flex min-h-[28rem] flex-1 flex-col p-0 sm:min-h-[32rem]">
@@ -188,6 +226,7 @@ export function AnotacoesView() {
               <button
                 type="button"
                 onClick={handleDelete}
+                disabled={saving}
                 className={`${btnClick} flex size-9 shrink-0 items-center justify-center rounded-lg text-[var(--db-text-muted)] hover:bg-red-500/10 hover:text-red-500`}
                 aria-label="Excluir anotação"
               >
@@ -210,9 +249,19 @@ export function AnotacoesView() {
             <p className={`mt-4 text-sm ${textMuted}`}>
               {loading ? "Carregando anotações..." : "Selecione ou crie uma anotação para começar."}
             </p>
+            {errorMessage ? (
+              <p className="mt-3 max-w-sm text-sm font-semibold text-red-600" role="alert">
+                {errorMessage}
+              </p>
+            ) : null}
           </div>
         )}
       </DashboardCard>
     </div>
   );
+}
+
+function errorMessageFromApi(error: unknown, fallback: string) {
+  if (error instanceof ApiRequestError) return error.message;
+  return fallback;
 }

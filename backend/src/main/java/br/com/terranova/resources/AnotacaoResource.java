@@ -28,25 +28,25 @@ public class AnotacaoResource {
     AnotacaoBO anotacaoBO;
 
     @GET
-    @Path("/usuarios/{idUsuario:[0-9]+}/anotacoes")
+    @Path("usuarios/{idUsuario:[0-9]+}/anotacoes")
     public List<AnotacaoResponse> listar(@PathParam("idUsuario") Long idUsuario) {
         return anotacaoBO.listarPorUsuario(idUsuario);
     }
 
     @POST
-    @Path("/usuarios/{idUsuario:[0-9]+}/anotacoes")
+    @Path("usuarios/{idUsuario:[0-9]+}/anotacoes")
     public Response criar(@PathParam("idUsuario") Long idUsuario, @Valid AnotacaoRequest request) {
         return ResourceUtils.created(anotacaoBO.criar(idUsuario, request));
     }
 
     @PUT
-    @Path("/anotacoes/{id:[0-9]+}")
+    @Path("anotacoes/{id:[0-9]+}")
     public AnotacaoResponse atualizar(@PathParam("id") Long id, @Valid AnotacaoRequest request) {
         return anotacaoBO.atualizar(id, request);
     }
 
     @DELETE
-    @Path("/anotacoes/{id:[0-9]+}")
+    @Path("anotacoes/{id:[0-9]+}")
     public Response deletar(@PathParam("id") Long id) {
         anotacaoBO.deletar(id);
         return ResourceUtils.noContent();

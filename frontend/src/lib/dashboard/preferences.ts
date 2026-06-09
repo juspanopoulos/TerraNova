@@ -8,6 +8,35 @@ export const DEFAULT_GENERAL_PREFERENCES: GeneralPreferences = {
   emailNotifications: true,
 };
 
+const DARK_MODE_STORAGE_KEY = "terranova:dashboard:dark-mode";
+
+export function loadStoredDarkMode(): boolean | null {
+  try {
+    const raw = localStorage.getItem(DARK_MODE_STORAGE_KEY);
+    if (raw === "true") return true;
+    if (raw === "false") return false;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveStoredDarkMode(enabled: boolean) {
+  try {
+    localStorage.setItem(DARK_MODE_STORAGE_KEY, String(enabled));
+  } catch {
+    // A preferência no backend continua sendo a fonte secundária se o navegador bloquear localStorage.
+  }
+}
+
+export function preferencesWithStoredDarkMode(preferences: GeneralPreferences): GeneralPreferences {
+  const storedDarkMode = loadStoredDarkMode();
+  return {
+    ...preferences,
+    darkMode: storedDarkMode ?? preferences.darkMode,
+  };
+}
+
 export function filtersFromPreferences(
   preferencias: UsuarioPreferenciasResponse,
 ): PageFilters {
