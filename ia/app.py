@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from services.service_ml import (preparar_dados_modelo1, preparar_dados_modelo2, gerar_recomendacao)
@@ -6,6 +7,10 @@ from services.service_chat import (processar_chat)
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'UP', 'service': 'terranova-ia'}), 200
 
 @app.route('/api/funcionando', methods=['POST'])
 def funcionando():
@@ -76,8 +81,8 @@ def chat():
 
 if __name__ == '__main__':
     app.run(
-        host="0.0.0.0",
-        port=5000,
+        host=os.getenv("HOST", "0.0.0.0"),
+        port=int(os.getenv("PORT", "5000")),
         debug=False
     )
 

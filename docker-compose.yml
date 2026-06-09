@@ -1,0 +1,22 @@
+services:
+  terranova-ia:
+    build:
+      context: ./ia
+    environment:
+      PORT: 5000
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    ports:
+      - "5000:5000"
+
+  terranova-api:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      PORT: 8080
+      IA_BASE_URL: http://terranova-ia:5000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - terranova-ia

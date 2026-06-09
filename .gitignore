@@ -1,1 +1,3 @@
 .vscode/
+.codex-deps/
+__pycache__/

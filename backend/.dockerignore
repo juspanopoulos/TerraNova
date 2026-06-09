@@ -1,0 +1,12 @@
+target/
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+
+hs_err_pid*
+replay_pid*
+
+README.md

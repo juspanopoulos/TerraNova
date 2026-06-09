@@ -36,6 +36,13 @@ mvn quarkus:dev
 mvn clean package
 ```
 
+## Docker
+
+```bash
+docker build -t terranova-api .
+docker run --env-file .env -p 8080:8080 terranova-api
+```
+
 ## Variaveis de ambiente
 
 Crie um `.env` local a partir de [.env.example](.env.example), ou configure as variaveis no servidor:
@@ -46,6 +53,7 @@ ORACLE_USER=seu_usuario_oracle
 ORACLE_PASSWORD=sua_senha_oracle
 IA_BASE_URL=http://localhost:5000
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:4173
+PORT=8080
 ```
 
 ## OpenAPI
@@ -89,5 +97,4 @@ Resposta esperada:
 ## Observacoes
 
 - O `pom.xml` bloqueia compilacao fora do Java 25.
-- Nesta sessao, o JDK 25 existe em `C:\Program Files\Java\jdk-25.0.2`, mas o PATH ainda aponta para Java 17.
-- Maven ainda nao esta disponivel no PATH, entao a validacao de build deve ser feita depois de instalar/configurar Maven.
+- O deploy no Render usa Docker e deve receber as variaveis de ambiente pelo painel/Blueprint.
