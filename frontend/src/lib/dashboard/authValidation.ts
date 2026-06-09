@@ -9,7 +9,7 @@ const HAS_NUMBER = /\d/;
 const HAS_SPECIAL = /[^A-Za-z0-9]/;
 
 export const PASSWORD_RULES_HINT =
-  "Minimo 8 caracteres, com letra maiuscula, minuscula, numero e caractere especial.";
+  "Mínimo 8 caracteres, com letra maiúscula, minúscula, número e caractere especial.";
 
 export type AuthFieldErrors = {
   fullName?: string;
@@ -24,16 +24,16 @@ export function validateEmail(email: string): string | undefined {
   if (!trimmed) return "Informe seu e-mail.";
   if (trimmed.length > 254) return "E-mail muito longo.";
   const at = trimmed.indexOf("@");
-  if (at <= 0 || at === trimmed.length - 1) return "E-mail invalido. Ex.: nome@empresa.com.br";
+  if (at <= 0 || at === trimmed.length - 1) return "E-mail inválido. Ex.: nome@empresa.com.br";
   const local = trimmed.slice(0, at);
   const domain = trimmed.slice(at + 1);
   if (local.startsWith(".") || local.endsWith(".") || local.includes("..")) {
-    return "E-mail invalido. Ex.: nome@empresa.com.br";
+    return "E-mail inválido. Ex.: nome@empresa.com.br";
   }
   if (!domain.includes(".") || domain.startsWith(".") || domain.endsWith(".")) {
-    return "E-mail invalido. Ex.: nome@empresa.com.br";
+    return "E-mail inválido. Ex.: nome@empresa.com.br";
   }
-  if (!EMAIL_RE.test(trimmed)) return "E-mail invalido. Ex.: nome@empresa.com.br";
+  if (!EMAIL_RE.test(trimmed)) return "E-mail inválido. Ex.: nome@empresa.com.br";
   return undefined;
 }
 
@@ -44,9 +44,9 @@ export function validatePassword(
   if (!password) return "Informe sua senha.";
   if (!options.strict) return undefined;
   if (password.length < 8) return "A senha deve ter pelo menos 8 caracteres.";
-  if (!HAS_UPPER.test(password)) return "Inclua pelo menos uma letra maiuscula.";
-  if (!HAS_LOWER.test(password)) return "Inclua pelo menos uma letra minuscula.";
-  if (!HAS_NUMBER.test(password)) return "Inclua pelo menos um numero.";
+  if (!HAS_UPPER.test(password)) return "Inclua pelo menos uma letra maiúscula.";
+  if (!HAS_LOWER.test(password)) return "Inclua pelo menos uma letra minúscula.";
+  if (!HAS_NUMBER.test(password)) return "Inclua pelo menos um número.";
   if (!HAS_SPECIAL.test(password)) return "Inclua pelo menos um caractere especial (ex.: ! @ # $ %).";
   return undefined;
 }
@@ -85,14 +85,14 @@ export function validateRegisterStep1(
 function validateCnpj(value: string): string | undefined {
   const d = digitsOnly(value);
   if (!d) return "Informe o CNPJ.";
-  if (d.length !== 14) return "CNPJ deve ter 14 digitos.";
+  if (d.length !== 14) return "CNPJ deve ter 14 dígitos.";
   return undefined;
 }
 
 function validateCpfOptional(value: string): string | undefined {
   const d = digitsOnly(value);
   if (!d) return undefined;
-  if (d.length !== 11) return "CPF deve ter 11 digitos.";
+  if (d.length !== 11) return "CPF deve ter 11 dígitos.";
   return undefined;
 }
 
@@ -128,7 +128,7 @@ export function validateCompanyProfile(company: CompanyProfile): CompanyFieldErr
   const phoneError = validatePhoneOptional(company.telefoneEmpresa);
   if (phoneError) errors.telefoneEmpresa = phoneError;
 
-  if (!company.nomeUsuario.trim()) errors.nomeUsuario = "Informe o usuario responsavel.";
+  if (!company.nomeUsuario.trim()) errors.nomeUsuario = "Informe o usuário responsável.";
   const emailUsuarioError = validateEmail(company.emailUsuario);
   if (emailUsuarioError) errors.emailUsuario = emailUsuarioError;
 
@@ -136,7 +136,7 @@ export function validateCompanyProfile(company: CompanyProfile): CompanyFieldErr
   if (cpfError) errors.cpf = cpfError;
 
   if (!company.nomePropriedade.trim()) errors.nomePropriedade = "Informe a propriedade.";
-  if (!company.localizacao.trim()) errors.localizacao = "Informe a localizacao.";
+  if (!company.localizacao.trim()) errors.localizacao = "Informe a localização.";
 
   const latitudeError = validateLatitude(company.latitude);
   if (latitudeError) errors.latitude = latitudeError;
@@ -145,7 +145,7 @@ export function validateCompanyProfile(company: CompanyProfile): CompanyFieldErr
   if (longitudeError) errors.longitude = longitudeError;
 
   if (company.areaTotalHectares < 0) {
-    errors.areaTotalHectares = "A area total nao pode ser negativa.";
+    errors.areaTotalHectares = "A área total não pode ser negativa.";
   }
 
   return errors;

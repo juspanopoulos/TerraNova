@@ -63,10 +63,10 @@ export type DashboardPayload = {
 };
 
 const ERROR_MESSAGES: Record<DashboardLoadErrorKind, string> = {
-  network: "Nao foi possivel conectar. Verifique sua internet e tente novamente.",
+  network: "Não foi possível conectar. Verifique sua internet e tente novamente.",
   server: "O servidor encontrou um problema ao buscar os dados. Tente novamente em instantes.",
-  timeout: "A requisicao demorou demais para responder. Verifique sua conexao e tente outra vez.",
-  unauthorized: "Sua sessao expirou ou voce nao tem permissao. Faca login novamente.",
+  timeout: "A requisição demorou demais para responder. Verifique sua conexão e tente outra vez.",
+  unauthorized: "Sua sessão expirou ou você não tem permissão. Faça login novamente.",
 };
 
 const ALERT_TYPE_LABELS: Record<string, string> = {
@@ -74,8 +74,8 @@ const ALERT_TYPE_LABELS: Record<string, string> = {
   ENCHENTE: "Enchente",
   GEADA: "Geada",
   GRANIZO: "Granizo",
-  EXCESSO_IRRIGACAO: "Excesso de irrigacao",
-  DEFICIT_HIDRICO: "Deficit hidrico",
+  EXCESSO_IRRIGACAO: "Excesso de irrigação",
+  DEFICIT_HIDRICO: "Déficit hídrico",
 };
 
 export const EMPTY_CLIMATE: ClimateState = {
@@ -106,8 +106,8 @@ const EMPTY_SOIL_SERIES: SoilSeries = {
 export const EMPTY_SOIL: SoilState = {
   current: {
     moisture: 0,
-    soilType: "Nao informado",
-    source: "Nao informado",
+    soilType: "Não informado",
+    source: "Não informado",
     collectedAt: "",
   },
   sectors: [],
@@ -129,9 +129,9 @@ export const EMPTY_WATER: WaterState = {
     consumptionMm: 0,
     previousMm: 0,
     areaHa: null,
-    type: "Nao informado",
-    coverage: "Nao informado",
-    origin: "Nao informado",
+    type: "Não informado",
+    coverage: "Não informado",
+    origin: "Não informado",
     date: "",
   },
   history: {
@@ -469,7 +469,7 @@ function weekOfMonth(date: Date) {
   return Math.floor((date.getDate() - 1) / 7) + 1;
 }
 
-function humanizeEnum(value: string | null | undefined, fallback = "Nao informado") {
+function humanizeEnum(value: string | null | undefined, fallback = "Não informado") {
   if (!value) return fallback;
   return value
     .toLowerCase()
@@ -562,7 +562,7 @@ function mapAlerts(
       level: mapAlertLevel(alert.severidade),
       title: type,
       type,
-      sector: namesByArea.get(alert.idArea) ?? `Area ${alert.idArea}`,
+      sector: namesByArea.get(alert.idArea) ?? `Área ${alert.idArea}`,
       time: formatAlertTime(alert.dataAlerta),
       summary: alert.descricao,
     };
@@ -710,7 +710,7 @@ function mapSoilData(
   const currentMoisture = toNumber(latest?.umidadeSolo, toNumber(summary.indicadores.mediaUmidadeSolo));
   const current = {
     moisture: currentMoisture,
-    soilType: latest?.tipoSolo ?? selectedArea?.tipoSolo ?? "Nao informado",
+    soilType: latest?.tipoSolo ?? selectedArea?.tipoSolo ?? "Não informado",
     source: humanizeEnum(latest?.fonte),
     collectedAt: formatDateOnly(latest?.dataColeta),
   };
@@ -723,7 +723,7 @@ function mapSoilData(
       idArea: area.idArea,
       sector: area.nomeArea,
       moisture,
-      soilType: areaSoil?.tipoSolo ?? area.tipoSolo ?? "Nao informado",
+      soilType: areaSoil?.tipoSolo ?? area.tipoSolo ?? "Não informado",
       source: humanizeEnum(areaSoil?.fonte),
       collectedAt: formatDateOnly(areaSoil?.dataColeta),
     };
@@ -942,9 +942,9 @@ function mapCrops(
         idArea: planting.idArea,
         idCultura: planting.idCultura,
         name: cultura?.nomeCultura ?? `Cultura ${planting.idCultura}`,
-        zone: namesByArea.get(planting.idArea) ?? `Area ${planting.idArea}`,
+        zone: namesByArea.get(planting.idArea) ?? `Área ${planting.idArea}`,
         status: humanizeEnum(planting.status),
-        stage: planting.estagioCrescimento ?? "Nao informado",
+        stage: planting.estagioCrescimento ?? "Não informado",
         plantedAt: formatDateOnly(planting.dataPlantio),
         harvestAt: formatDateOnly(planting.dataColheitaPrevista),
         waterNeedMm: cultura?.necessidadeHidricaMm ?? null,
@@ -969,17 +969,17 @@ function mapPredictions(
       id: String(prediction.idPredicao),
       idArea: prediction.idArea,
       idAreaCultura: prediction.idAreaCultura,
-      sector: namesByArea.get(prediction.idArea) ?? `Area ${prediction.idArea}`,
+      sector: namesByArea.get(prediction.idArea) ?? `Área ${prediction.idArea}`,
       cropName: prediction.idAreaCultura ? cropByPlantingId.get(prediction.idAreaCultura) ?? null : null,
       date: formatDateOnly(prediction.dataPredicao),
       type: humanizeEnum(prediction.tipoModelo),
-      model: prediction.nomeModelo ?? "Nao informado",
-      version: prediction.versaoModelo ?? "Nao informado",
+      model: prediction.nomeModelo ?? "Não informado",
+      version: prediction.versaoModelo ?? "Não informado",
       status: humanizeEnum(prediction.status),
       productivity: prediction.produtividadePrevista,
-      classification: prediction.classificacao ?? "Nao informado",
+      classification: prediction.classificacao ?? "Não informado",
       waterVolumeMm: prediction.volumeAguaSugeridoMm,
-      situation: prediction.situacao ?? "Nao informado",
+      situation: prediction.situacao ?? "Não informado",
       error: prediction.erro,
     }));
 }

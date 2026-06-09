@@ -58,8 +58,8 @@ export const ALERT_TYPE_ICONS: Record<string, LucideIcon> = {
   Enchente: CloudRain,
   Geada: Thermometer,
   Granizo: Cloud,
-  "Excesso de irrigacao": Droplets,
-  "Deficit hidrico": Droplets,
+  "Excesso de irrigação": Droplets,
+  "Déficit hídrico": Droplets,
 };
 
 export function alertTypeIcon(type: string): LucideIcon {

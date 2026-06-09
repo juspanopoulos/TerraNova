@@ -78,6 +78,7 @@ type DashboardContextValue = {
   loginError: string | null;
   loginUsers: LoginUserOption[];
   isLoadingLoginUsers: boolean;
+  loginUsersError: string | null;
   reloadLoginUsers: () => Promise<void>;
   submitRegisterStep1: (credentials: RegisterCredentials) => void;
   backFromRegisterCompany: () => void;
@@ -181,6 +182,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loginUsers, setLoginUsers] = useState<LoginUserOption[]>([]);
   const [isLoadingLoginUsers, setIsLoadingLoginUsers] = useState(false);
+  const [loginUsersError, setLoginUsersError] = useState<string | null>(null);
 
   const setAuthMode = useCallback((mode: AuthMode) => {
     if (mode === "login") {
@@ -270,11 +272,17 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   const reloadLoginUsers = useCallback(async () => {
     setIsLoadingLoginUsers(true);
+    setLoginUsersError(null);
     try {
       const usuarios = await listUsuarios();
       setLoginUsers(usuarios.map(toLoginUserOption));
-    } catch {
+    } catch (error) {
       setLoginUsers([]);
+      setLoginUsersError(
+        error instanceof ApiRequestError
+          ? error.message
+          : "Não foi possível carregar os usuários cadastrados.",
+      );
     } finally {
       setIsLoadingLoginUsers(false);
     }
@@ -297,7 +305,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setLoginError(
         error instanceof ApiRequestError
           ? error.message
-          : "Nao foi possivel fazer login. Tente novamente.",
+          : "Não foi possível fazer login. Tente novamente.",
       );
     }
   }, []);
@@ -343,7 +351,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         setLoginError(
           error instanceof ApiRequestError
             ? error.message
-            : "Nao foi possivel concluir o cadastro. Tente novamente.",
+            : "Não foi possível concluir o cadastro. Tente novamente.",
         );
       }
     },
@@ -535,6 +543,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       loginError,
       loginUsers,
       isLoadingLoginUsers,
+      loginUsersError,
       reloadLoginUsers,
       submitRegisterStep1,
       backFromRegisterCompany,
@@ -587,6 +596,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       loginError,
       loginUsers,
       isLoadingLoginUsers,
+      loginUsersError,
       reloadLoginUsers,
       submitRegisterStep1,
       backFromRegisterCompany,

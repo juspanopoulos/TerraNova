@@ -11,7 +11,7 @@ import {
 import { useDashboard } from "@/context/DashboardContext";
 
 function formatOptionalNumber(value: number | null, unit: string) {
-  if (value === null) return "Nao informado";
+  if (value === null) return "Não informado";
   return `${value.toLocaleString("pt-BR")} ${unit}`;
 }
 
@@ -33,10 +33,10 @@ export function GrowthView() {
             <tr>
               <th className={thClass}>Cultura</th>
               <th className={thClass}>Zona</th>
-              <th className={thClass}>Estagio</th>
+              <th className={thClass}>Estágio</th>
               <th className={thClass}>Plantio</th>
               <th className={thClass}>Colheita prevista</th>
-              <th className={thClass}>Necessidade hidrica</th>
+              <th className={thClass}>Necessidade hídrica</th>
               <th className={thClass}>Status</th>
             </tr>
           </thead>
@@ -53,8 +53,8 @@ export function GrowthView() {
                   <td className={`${tdClass} font-medium`}>{crop.name}</td>
                   <td className={`${tdClass} ${textMuted}`}>{crop.zone}</td>
                   <td className={tdClass}>{crop.stage}</td>
-                  <td className={tdClass}>{crop.plantedAt || "Nao informado"}</td>
-                  <td className={tdClass}>{crop.harvestAt || "Nao informada"}</td>
+                  <td className={tdClass}>{crop.plantedAt || "Não informado"}</td>
+                  <td className={tdClass}>{crop.harvestAt || "Não informada"}</td>
                   <td className={`${tdClass} tabular-nums`}>
                     {formatOptionalNumber(crop.waterNeedMm, "mm")}
                   </td>
@@ -69,33 +69,33 @@ export function GrowthView() {
       </DashboardCard>
 
       <DashboardCard>
-        <p className={`${labelMuted} mb-4`}>Predicoes IA</p>
-        <DataTable caption="Predicoes IA">
+        <p className={`${labelMuted} mb-4`}>Predições IA</p>
+        <DataTable caption="Predições IA">
           <thead>
             <tr>
               <th className={thClass}>Data</th>
-              <th className={thClass}>Area</th>
+              <th className={thClass}>Área</th>
               <th className={thClass}>Cultura</th>
               <th className={thClass}>Modelo</th>
               <th className={thClass}>Produtividade</th>
-              <th className={thClass}>Classificacao</th>
-              <th className={thClass}>Agua sugerida</th>
-              <th className={thClass}>Situacao</th>
+              <th className={thClass}>Classificação</th>
+              <th className={thClass}>Água sugerida</th>
+              <th className={thClass}>Situação</th>
             </tr>
           </thead>
           <tbody>
             {predictions.length === 0 ? (
               <tr>
                 <td className={tdClass} colSpan={8}>
-                  Nenhuma predicao de IA encontrada.
+                  Nenhuma predição de IA encontrada.
                 </td>
               </tr>
             ) : (
               predictions.map((prediction) => (
                 <tr key={prediction.id} className={rowHover}>
-                  <td className={tdClass}>{prediction.date || "Nao informada"}</td>
+                  <td className={tdClass}>{prediction.date || "Não informada"}</td>
                   <td className={`${tdClass} ${textMuted}`}>{prediction.sector}</td>
-                  <td className={tdClass}>{prediction.cropName ?? "Nao informada"}</td>
+                  <td className={tdClass}>{prediction.cropName ?? "Não informada"}</td>
                   <td className={tdClass}>{prediction.type}</td>
                   <td className={`${tdClass} tabular-nums`}>
                     {formatOptionalNumber(prediction.productivity, "t/ha")}

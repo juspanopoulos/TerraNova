@@ -51,6 +51,8 @@ export function LoginScreen({
   loginError,
   loginUsers,
   isLoadingLoginUsers,
+  loginUsersError,
+  onReloadLoginUsers,
   onRegisterStep1,
 }: {
   mode: Extract<AuthMode, "login" | "register">;
@@ -59,6 +61,8 @@ export function LoginScreen({
   loginError: string | null;
   loginUsers: LoginUserOption[];
   isLoadingLoginUsers: boolean;
+  loginUsersError: string | null;
+  onReloadLoginUsers: () => Promise<void>;
   onRegisterStep1: (credentials: RegisterCredentials) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -105,136 +109,156 @@ export function LoginScreen({
   return (
     <div className="flex w-full max-w-4xl flex-col items-stretch gap-4 lg:flex-row lg:justify-center">
       <div className="w-full max-w-md shrink-0 rounded-xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
-      <AuthBrandHeader />
-      <h1 className="-mt-4 mb-6 text-center text-2xl font-bold text-preto-suave">
-        {isRegister ? "Crie sua conta" : "Acesse sua propriedade"}
-      </h1>
-      {isRegister && (
-        <p className="-mt-4 mb-6 text-center text-sm text-preto-suave/55">
-          Depois você informará os dados da empresa e da fazenda.
-        </p>
-      )}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <AuthBrandHeader />
+        <h1 className="-mt-4 mb-6 text-center text-2xl font-bold text-preto-suave">
+          {isRegister ? "Crie sua conta" : "Acesse sua propriedade"}
+        </h1>
+
         {isRegister && (
+          <p className="-mt-4 mb-6 text-center text-sm text-preto-suave/55">
+            Depois você informará os dados da empresa e da fazenda.
+          </p>
+        )}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          {isRegister && (
+            <label className="block">
+              <span className={authLabelClass}>Nome</span>
+              <input
+                type="text"
+                autoComplete="name"
+                placeholder="Maria Silva"
+                className={fieldClass(Boolean(errors.fullName))}
+                aria-invalid={Boolean(errors.fullName)}
+                aria-describedby={errors.fullName ? "auth-fullName-error" : undefined}
+                {...register("fullName", {
+                  validate: toFieldValidator(validateFullName),
+                })}
+              />
+              {errors.fullName ? (
+                <p id="auth-fullName-error" className={authErrorClass} role="alert">
+                  {errors.fullName.message}
+                </p>
+              ) : null}
+            </label>
+          )}
+
           <label className="block">
-            <span className={authLabelClass}>Nome</span>
+            <span className={authLabelClass}>E-mail</span>
             <input
-              type="text"
-              autoComplete="name"
-              placeholder="Maria Silva"
-              className={fieldClass(Boolean(errors.fullName))}
-              aria-invalid={Boolean(errors.fullName)}
-              aria-describedby={errors.fullName ? "auth-fullName-error" : undefined}
-              {...register("fullName", {
-                validate: toFieldValidator(validateFullName),
+              type="email"
+              autoComplete="email"
+              placeholder="produtor@terranova.app"
+              className={fieldClass(Boolean(errors.email))}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? "auth-email-error" : undefined}
+              {...register("email", {
+                validate: toFieldValidator(validateEmail),
               })}
             />
-            {errors.fullName ? (
-              <p id="auth-fullName-error" className={authErrorClass} role="alert">
-                {errors.fullName.message}
+            {errors.email ? (
+              <p id="auth-email-error" className={authErrorClass} role="alert">
+                {errors.email.message}
               </p>
             ) : null}
           </label>
-        )}
-        <label className="block">
-          <span className={authLabelClass}>E-mail</span>
-          <input
-            type="email"
-            autoComplete="email"
-            placeholder="produtor@terranova.app"
-            className={fieldClass(Boolean(errors.email))}
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? "auth-email-error" : undefined}
-            {...register("email", {
-              validate: toFieldValidator(validateEmail),
-            })}
-          />
-          {errors.email ? (
-            <p id="auth-email-error" className={authErrorClass} role="alert">
-              {errors.email.message}
+
+          <label className="block">
+            <span className={authLabelClass}>Senha</span>
+            <div className="relative mt-1.5">
+              <input
+                type={showPassword ? "text" : "password"}
+                autoComplete={isRegister ? "new-password" : "current-password"}
+                placeholder="********"
+                className={fieldClass(Boolean(errors.password), "mt-0 pr-11")}
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={errors.password ? "auth-password-error" : undefined}
+                {...register("password", {
+                  validate: toFieldValidator((value) =>
+                    validatePassword(value, { strict: isRegister }),
+                  ),
+                })}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className={`${btnClick} absolute top-1/2 right-3 -translate-y-1/2 rounded-md p-1 text-preto-suave/45 hover:text-verde-floresta`}
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
+            {isRegister && !errors.password && (
+              <p className="mt-1.5 text-xs text-preto-suave/50">{PASSWORD_RULES_HINT}</p>
+            )}
+            {errors.password ? (
+              <p id="auth-password-error" className={authErrorClass} role="alert">
+                {errors.password.message}
+              </p>
+            ) : null}
+          </label>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`${btnClick} w-full rounded-lg bg-verde-floresta px-4 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90 disabled:cursor-not-allowed disabled:opacity-60`}
+          >
+            {isSubmitting
+              ? isRegister
+                ? "Continuando..."
+                : "Entrando..."
+              : isRegister
+                ? "Continuar cadastro"
+                : "Entrar no dashboard"}
+          </button>
+
+          {!isRegister && loginError ? (
+            <p className={authErrorClass} role="alert">
+              {loginError}
             </p>
           ) : null}
-        </label>
-        <label className="block">
-          <span className={authLabelClass}>Senha</span>
-          <div className="relative mt-1.5">
-            <input
-              type={showPassword ? "text" : "password"}
-              autoComplete={isRegister ? "new-password" : "current-password"}
-              placeholder="••••••••"
-              className={fieldClass(Boolean(errors.password), "mt-0 pr-11")}
-              aria-invalid={Boolean(errors.password)}
-              aria-describedby={errors.password ? "auth-password-error" : undefined}
-              {...register("password", {
-                validate: toFieldValidator((value) =>
-                  validatePassword(value, { strict: isRegister }),
-                ),
-              })}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((value) => !value)}
-              className={`${btnClick} absolute top-1/2 right-3 -translate-y-1/2 rounded-md p-1 text-preto-suave/45 hover:text-verde-floresta`}
-              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-            >
-              {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
-          </div>
-          {isRegister && !errors.password && (
-            <p className="mt-1.5 text-xs text-preto-suave/50">{PASSWORD_RULES_HINT}</p>
-          )}
-          {errors.password ? (
-            <p id="auth-password-error" className={authErrorClass} role="alert">
-              {errors.password.message}
-            </p>
-          ) : null}
-        </label>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`${btnClick} w-full rounded-lg bg-verde-floresta px-4 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90 disabled:cursor-not-allowed disabled:opacity-60`}
+        </form>
+
+        <p className="mt-6 text-center text-sm text-preto-suave/55">
+          {isRegister ? "Já possui conta?" : "Ainda não tem conta?"}{" "}
+          <button
+            type="button"
+            onClick={() => onModeChange(isRegister ? "login" : "register")}
+            className={`${btnClick} ${authLinkClass} text-verde-floresta hover:underline`}
+          >
+            {isRegister ? "Fazer login" : "Criar conta"}
+          </button>
+        </p>
+
+        <Link
+          to={ROUTES.home}
+          className={`${btnClick} ${authLinkClass} mt-6 flex items-center justify-center gap-2 text-sm text-preto-suave/50 no-underline`}
         >
-          {isSubmitting
-            ? isRegister
-              ? "Continuando..."
-              : "Entrando..."
-            : isRegister
-              ? "Continuar cadastro"
-              : "Entrar no dashboard"}
-        </button>
-        {!isRegister && loginError ? (
-          <p className={authErrorClass} role="alert">
-            {loginError}
-          </p>
-        ) : null}
-      </form>
-      <p className="mt-6 text-center text-sm text-preto-suave/55">
-        {isRegister ? "Já possui conta?" : "Ainda não tem conta?"}{" "}
-        <button
-          type="button"
-          onClick={() => onModeChange(isRegister ? "login" : "register")}
-          className={`${btnClick} ${authLinkClass} text-verde-floresta hover:underline`}
-        >
-          {isRegister ? "Fazer login" : "Criar conta"}
-        </button>
-      </p>
-      <Link
-        to={ROUTES.home}
-        className={`${btnClick} ${authLinkClass} mt-6 flex items-center justify-center gap-2 text-sm text-preto-suave/50 no-underline`}
-      >
-        <ArrowLeft className="size-4" />
-        Voltar ao site
-      </Link>
+          <ArrowLeft className="size-4" />
+          Voltar ao site
+        </Link>
       </div>
 
       {!isRegister && (
         <aside className="w-full rounded-xl border border-neutral-200/80 bg-white/95 p-4 shadow-sm lg:max-w-xs">
           <p className="text-xs font-bold uppercase tracking-wide text-preto-suave/45">
-            Usuarios cadastrados
+            Usuários cadastrados
           </p>
+
           <div className="mt-3 space-y-2">
             {isLoadingLoginUsers ? (
-              <p className="text-sm text-preto-suave/55">Carregando usuarios...</p>
+              <p className="text-sm text-preto-suave/55">Carregando usuários...</p>
+            ) : loginUsersError ? (
+              <div className="space-y-3">
+                <p className="text-sm text-red-600">{loginUsersError}</p>
+                <button
+                  type="button"
+                  onClick={() => void onReloadLoginUsers()}
+                  className={`${btnClick} w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-semibold text-preto-suave hover:border-verde-floresta/40 hover:bg-verde-floresta/5`}
+                >
+                  Recarregar usuários
+                </button>
+              </div>
             ) : loginUsers.length > 0 ? (
               loginUsers.map((user) => (
                 <button
@@ -251,7 +275,7 @@ export function LoginScreen({
                 </button>
               ))
             ) : (
-              <p className="text-sm text-preto-suave/55">Nenhum usuario encontrado.</p>
+              <p className="text-sm text-preto-suave/55">Nenhum usuário encontrado.</p>
             )}
           </div>
         </aside>

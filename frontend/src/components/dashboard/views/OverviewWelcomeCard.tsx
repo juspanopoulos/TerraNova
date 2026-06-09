@@ -35,7 +35,7 @@ export function OverviewWelcomeCard() {
           <div className="min-w-0">
             <p className={`${labelMuted} mb-2`}>Painel geral</p>
             <h2 className={`text-xl font-bold tracking-tight sm:text-2xl md:text-3xl ${textPrimary}`}>
-              {greeting}, {company.nomeUsuario.split(" ")[0] || "usuario"}!
+              {greeting}, {company.nomeUsuario.split(" ")[0] || "usuário"}!
             </h2>
             <p className={`mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm sm:text-base ${textMuted}`}>
               <span className="inline-flex items-center gap-1.5 font-semibold text-verde-floresta">
@@ -68,7 +68,7 @@ export function OverviewWelcomeCard() {
           <strong className={`font-semibold ${textPrimary}`}>
             {climate.temperature.toFixed(1)}°C
           </strong>
-          , com consumo hidrico atual de{" "}
+          , com consumo hídrico atual de{" "}
           <strong className={`font-semibold ${textPrimary}`}>
             {water.current.consumptionMm.toLocaleString("pt-BR")} mm
           </strong>{" "}
@@ -131,21 +131,21 @@ export function OverviewWelcomeCard() {
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Consumo hidrico atual</p>
+            <p className={labelMuted}>Consumo hídrico atual</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Droplets className="size-4 text-verde-floresta" aria-hidden />
               {water.current.consumptionMm.toLocaleString("pt-BR")} mm
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Irrigacao anterior</p>
+            <p className={labelMuted}>Irrigação anterior</p>
             <p className={`mt-1 flex items-center gap-1.5 text-lg font-bold sm:text-xl ${textPrimary}`}>
               <Droplets className="size-4 text-verde-claro" aria-hidden />
               {water.current.previousMm.toLocaleString("pt-BR")} mm
             </p>
           </div>
           <div className={cardInset}>
-            <p className={labelMuted}>Tipo de irrigacao</p>
+            <p className={labelMuted}>Tipo de irrigação</p>
             <p className={`mt-1 text-lg font-bold sm:text-xl ${textPrimary}`}>
               {water.current.type}
             </p>

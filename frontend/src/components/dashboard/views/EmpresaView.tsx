@@ -59,7 +59,7 @@ export function EmpresaView() {
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2500);
     } catch {
-      setErrorMessage("Nao foi possivel salvar os dados no backend.");
+      setErrorMessage("Não foi possível salvar os dados no backend.");
     } finally {
       setSaving(false);
     }
@@ -77,7 +77,7 @@ export function EmpresaView() {
             <p className={labelMuted}>Cadastro</p>
             <h2 className={`mt-1 ${sectionTitle}`}>Dados da empresa</h2>
             <p className={`mt-1 text-sm ${textMuted}`}>
-              Informacoes cadastradas da propriedade e da empresa responsavel.
+              Informações cadastradas da propriedade e da empresa responsável.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -147,7 +147,7 @@ export function EmpresaView() {
         <DashboardCard>
           <div className="mb-4 flex items-center gap-2">
             <MapPin className="size-4 text-verde-floresta" aria-hidden />
-            <p className={`${labelMuted} mb-0`}>Localizacao e propriedade</p>
+            <p className={`${labelMuted} mb-0`}>Localização e propriedade</p>
           </div>
           {editing ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

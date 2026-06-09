@@ -64,7 +64,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     if (error instanceof Error) {
       throw new ApiRequestError(error.message, 0);
     }
-    throw new ApiRequestError("Nao foi possivel conectar com a API.", 0);
+    throw new ApiRequestError("Não foi possível conectar com a API.", 0);
   }
 
   if (!response.ok) {

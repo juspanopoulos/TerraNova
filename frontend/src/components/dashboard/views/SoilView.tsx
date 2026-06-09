@@ -40,7 +40,7 @@ export function SoilView() {
               { l: "Umidade", v: `${Math.round(soil.current.moisture)}%` },
               { l: "Tipo", v: soil.current.soilType },
               { l: "Fonte", v: soil.current.source },
-              { l: "Coleta", v: soil.current.collectedAt || "Nao informada" },
+              { l: "Coleta", v: soil.current.collectedAt || "Não informada" },
             ].map((item) => (
               <div key={item.l} className={cardInset}>
                 <p className={labelMuted}>{item.l}</p>

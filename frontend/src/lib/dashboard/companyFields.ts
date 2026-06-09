@@ -16,14 +16,14 @@ export const COMPANY_FIELDS: CompanyFieldConfig[] = [
   { key: "cnpj", label: "CNPJ", kind: "cnpj", col: 1, placeholder: "00.000.000/0000-00" },
   { key: "emailEmpresa", label: "E-mail da empresa", kind: "email", col: 1, placeholder: "contato@empresa.com.br" },
   { key: "telefoneEmpresa", label: "Telefone", kind: "phone", col: 1, placeholder: "(00) 0000-0000", required: false },
-  { key: "nomeUsuario", label: "Usuario responsavel", kind: "text", col: 1, placeholder: "Nome do usuario" },
-  { key: "emailUsuario", label: "E-mail do usuario", kind: "email", col: 1, placeholder: "usuario@empresa.com.br" },
+  { key: "nomeUsuario", label: "Usuário responsável", kind: "text", col: 1, placeholder: "Nome do usuário" },
+  { key: "emailUsuario", label: "E-mail do usuário", kind: "email", col: 1, placeholder: "usuario@empresa.com.br" },
   { key: "cpf", label: "CPF", kind: "cpf", col: 1, placeholder: "000.000.000-00", required: false },
   { key: "nomePropriedade", label: "Propriedade", kind: "text", col: 1, placeholder: "Fazenda Exemplo" },
-  { key: "localizacao", label: "Localizacao", kind: "text", col: 2, placeholder: "Cidade, UF" },
+  { key: "localizacao", label: "Localização", kind: "text", col: 2, placeholder: "Cidade, UF" },
   { key: "latitude", label: "Latitude", kind: "number", col: 1, placeholder: "-23.000000", required: false },
   { key: "longitude", label: "Longitude", kind: "number", col: 1, placeholder: "-46.000000", required: false },
-  { key: "areaTotalHectares", label: "Area total (ha)", kind: "number", col: 1, placeholder: "0", required: false },
+  { key: "areaTotalHectares", label: "Área total (ha)", kind: "number", col: 1, placeholder: "0", required: false },
 ];
 
 export const COMPANY_FIELDS_EMPRESA = {

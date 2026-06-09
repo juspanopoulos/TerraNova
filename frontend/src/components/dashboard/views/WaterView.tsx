@@ -31,7 +31,7 @@ export function WaterView() {
           icon={Droplets}
         />
         <MetricTile
-          label="Irrigacao anterior"
+          label="Irrigação anterior"
           value={water.current.previousMm.toLocaleString("pt-BR")}
           unit="mm"
           icon={Waves}
@@ -40,7 +40,7 @@ export function WaterView() {
       </div>
 
       <DashboardCard>
-        <p className={`${labelMuted} mb-4`}>Historico - {filterLabel(pageTimeFilter)}</p>
+        <p className={`${labelMuted} mb-4`}>Histórico - {filterLabel(pageTimeFilter)}</p>
         <WaterBarChart
           values={history.values}
           labels={history.labels}
@@ -51,20 +51,20 @@ export function WaterView() {
         {barIndex !== null && (
           <ChartDetailPanel
             title={`${history.labels[barIndex]} - consumo`}
-            detail={`${history.values[barIndex].toLocaleString("pt-BR")} mm no periodo ${filterLabel(pageTimeFilter).toLowerCase()}.`}
+            detail={`${history.values[barIndex].toLocaleString("pt-BR")} mm no período ${filterLabel(pageTimeFilter).toLowerCase()}.`}
           />
         )}
       </DashboardCard>
 
       <DashboardCard>
-        <p className={`${labelMuted} mb-4`}>Irrigacao por setor</p>
-        <DataTable caption="Irrigacao">
+        <p className={`${labelMuted} mb-4`}>Irrigação por setor</p>
+        <DataTable caption="Irrigação">
           <thead>
             <tr>
               <th className={thClass}>Setor</th>
               <th className={thClass}>Tipo</th>
               <th className={thClass}>Consumo atual</th>
-              <th className={thClass}>Irrigacao anterior</th>
+              <th className={thClass}>Irrigação anterior</th>
               <th className={thClass}>Cobertura</th>
               <th className={thClass}>Origem</th>
             </tr>
@@ -73,7 +73,7 @@ export function WaterView() {
             {water.irrigation.length === 0 ? (
               <tr>
                 <td className={tdClass} colSpan={6}>
-                  Nenhuma irrigacao registrada.
+                  Nenhuma irrigação registrada.
                 </td>
               </tr>
             ) : (

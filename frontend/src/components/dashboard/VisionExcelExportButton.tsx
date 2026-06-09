@@ -91,28 +91,28 @@ export function VisionExcelExportButton({ timeFilter }: { timeFilter: TimeFilter
             ["Empresa", company.nomeEmpresa],
             ["CNPJ", company.cnpj],
             ["Propriedade", company.nomePropriedade],
-            ["Localizacao", company.localizacao],
-            ["Area total (ha)", company.areaTotalHectares],
-            ["Usuario", company.nomeUsuario],
-            ["E-mail do usuario", company.emailUsuario],
+            ["Localização", company.localizacao],
+            ["Área total (ha)", company.areaTotalHectares],
+            ["Usuário", company.nomeUsuario],
+            ["E-mail do usuário", company.emailUsuario],
           ])}
           ${table("Indicadores", ["Indicador", "Valor"], [
             ["Total de propriedades", indicators?.totalPropriedades ?? ""],
-            ["Total de areas", indicators?.totalAreas ?? ""],
+            ["Total de áreas", indicators?.totalAreas ?? ""],
             ["Culturas", indicators?.totalCulturas ?? ""],
             ["Plantios ativos", indicators?.totalPlantiosAtivos ?? ""],
             ["Alertas abertos", indicators?.totalAlertasAbertos ?? ""],
-            ["Predicoes IA", indicators?.totalPredicoesIa ?? ""],
-            ["Media temperatura", indicators?.mediaTemperatura ?? ""],
-            ["Media umidade solo", indicators?.mediaUmidadeSolo ?? ""],
-            ["Agua sugerida pendente (mm)", indicators?.aguaSugeridaPendenteMm ?? ""],
+            ["Predições IA", indicators?.totalPredicoesIa ?? ""],
+            ["Média temperatura", indicators?.mediaTemperatura ?? ""],
+            ["Média umidade solo", indicators?.mediaUmidadeSolo ?? ""],
+            ["Água sugerida pendente (mm)", indicators?.aguaSugeridaPendenteMm ?? ""],
           ])}
           ${table("Clima atual", ["Temperatura", "Umidade", "Vento"], [[
             climate.temperature,
             climate.humidity,
             climate.wind,
           ]])}
-          ${table("Historico climatico", ["Periodo", "Temperatura", "Umidade", "Vento"], climateSeries.labels.map((label, index) => [
+          ${table("Histórico climático", ["Período", "Temperatura", "Umidade", "Vento"], climateSeries.labels.map((label, index) => [
             label,
             climateSeries.temperature[index],
             climateSeries.humidity[index],
@@ -125,11 +125,11 @@ export function VisionExcelExportButton({ timeFilter }: { timeFilter: TimeFilter
             sector.source,
             sector.collectedAt,
           ]))}
-          ${table("Historico hidrico", ["Periodo", "Consumo (mm)"], waterSeries.labels.map((label, index) => [
+          ${table("Histórico hídrico", ["Período", "Consumo (mm)"], waterSeries.labels.map((label, index) => [
             label,
             waterSeries.values[index],
           ]))}
-          ${table("Irrigacao por setor", ["Setor", "Tipo", "Consumo atual (mm)", "Irrigacao anterior (mm)", "Cobertura", "Origem"], water.irrigation.map((row) => [
+          ${table("Irrigação por setor", ["Setor", "Tipo", "Consumo atual (mm)", "Irrigação anterior (mm)", "Cobertura", "Origem"], water.irrigation.map((row) => [
             row.sector,
             row.type,
             row.currentMm,
@@ -137,7 +137,7 @@ export function VisionExcelExportButton({ timeFilter }: { timeFilter: TimeFilter
             row.coverage,
             row.origin,
           ]))}
-          ${table("Culturas e plantios", ["Cultura", "Area", "Estagio", "Plantio", "Colheita prevista", "Necessidade hidrica", "Status"], crops.map((crop) => [
+          ${table("Culturas e plantios", ["Cultura", "Área", "Estágio", "Plantio", "Colheita prevista", "Necessidade hídrica", "Status"], crops.map((crop) => [
             crop.name,
             crop.zone,
             crop.stage,
@@ -146,7 +146,7 @@ export function VisionExcelExportButton({ timeFilter }: { timeFilter: TimeFilter
             crop.waterNeedMm ?? "",
             crop.status,
           ]))}
-          ${table("Predicoes IA", ["Data", "Area", "Cultura", "Modelo", "Produtividade", "Classificacao", "Agua sugerida", "Situacao"], predictions.map((prediction) => [
+          ${table("Predições IA", ["Data", "Área", "Cultura", "Modelo", "Produtividade", "Classificação", "Água sugerida", "Situação"], predictions.map((prediction) => [
             prediction.date,
             prediction.sector,
             prediction.cropName ?? "",
@@ -156,7 +156,7 @@ export function VisionExcelExportButton({ timeFilter }: { timeFilter: TimeFilter
             prediction.waterVolumeMm ?? "",
             prediction.situation,
           ]))}
-          ${table("Alertas", ["Nivel", "Titulo", "Tipo", "Setor", "Data", "Descricao"], alerts.map((alert) => [
+          ${table("Alertas", ["Nível", "Título", "Tipo", "Setor", "Data", "Descrição"], alerts.map((alert) => [
             alert.level,
             alert.title,
             alert.type,

@@ -34,6 +34,8 @@ function DashboardShell() {
     loginError,
     loginUsers,
     isLoadingLoginUsers,
+    loginUsersError,
+    reloadLoginUsers,
     submitRegisterStep1,
     backFromRegisterCompany,
     completeRegistration,
@@ -95,6 +97,8 @@ function DashboardShell() {
           loginError={loginError}
           loginUsers={loginUsers}
           isLoadingLoginUsers={isLoadingLoginUsers}
+          loginUsersError={loginUsersError}
+          onReloadLoginUsers={reloadLoginUsers}
           onRegisterStep1={submitRegisterStep1}
         />
       );

@@ -45,7 +45,7 @@ function ChatEmptyState() {
         Como posso te ajudar hoje?
       </h2>
       <p className={`mt-2 max-w-md text-sm sm:text-base ${textMuted}`}>
-        Pergunte sobre clima, solo, irrigacao, alertas e colheitas.
+        Pergunte sobre clima, solo, irrigação, alertas e colheitas.
       </p>
     </div>
   );
@@ -116,7 +116,7 @@ export function AssistenteView() {
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
-            placeholder="Pergunte sobre clima, solo, irrigacao ou alertas..."
+            placeholder="Pergunte sobre clima, solo, irrigação ou alertas..."
             disabled={isTyping}
             className="max-h-28 min-h-10 flex-1 resize-none rounded-2xl bg-transparent px-3 py-2 text-sm text-[var(--db-text)] outline-none placeholder:text-[var(--db-text-faint)] disabled:opacity-60"
             aria-label="Mensagem"

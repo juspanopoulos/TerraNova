@@ -60,7 +60,7 @@ function SectionHeading({
 }
 
 function formatOptionalNumber(value: number | null, unit: string) {
-  if (value === null) return "Nao informado";
+  if (value === null) return "Não informado";
   return `${value.toLocaleString("pt-BR")} ${unit}`;
 }
 
@@ -120,7 +120,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
       <DashboardCard>
         <p className={labelMuted}>Resumo - {periodLabel}</p>
         <p className={`mt-2 text-sm leading-relaxed ${textMuted}`}>
-          Indicadores consolidados da fazenda no periodo{" "}
+          Indicadores consolidados da fazenda no período{" "}
           <strong className={textPrimary}>{periodLabel.toLowerCase()}</strong>, usando os
           dados reais carregados da plataforma.
         </p>
@@ -142,15 +142,15 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
             value={String(crops.length)}
             icon={Sprout}
           />
-          <MetricTile label="Alertas criticos" value={String(criticalCount)} icon={AlertTriangle} />
+          <MetricTile label="Alertas críticos" value={String(criticalCount)} icon={AlertTriangle} />
         </div>
       </DashboardCard>
 
       <section className="space-y-4">
         <SectionHeading
           icon={Cloud}
-          title="Controle climatico"
-          description={`Historico e leituras do periodo ${periodLabel.toLowerCase()}.`}
+          title="Controle climático"
+          description={`Histórico e leituras do período ${periodLabel.toLowerCase()}.`}
         />
         <div className={gridCols3}>
           {climateCharts.map((m) => (
@@ -178,7 +178,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
         </div>
         <DashboardCard>
           <ClimateAreaChart
-            label={`Historico de ${activeClimate.label} - ${periodLabel}`}
+            label={`Histórico de ${activeClimate.label} - ${periodLabel}`}
             values={activeClimate.data}
             labels={climateSeries.labels}
             unit={activeClimate.unit}
@@ -190,8 +190,8 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
       <section className="space-y-4">
         <SectionHeading
           icon={Droplets}
-          title="Consumo hidrico"
-          description={`Consumo e irrigacao em mm no periodo ${periodLabel.toLowerCase()}.`}
+          title="Consumo hídrico"
+          description={`Consumo e irrigação em mm no período ${periodLabel.toLowerCase()}.`}
         />
         <div className={gridCols3}>
           <MetricTile
@@ -201,7 +201,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
             icon={Droplets}
           />
           <MetricTile
-            label="Irrigacao anterior"
+            label="Irrigação anterior"
             value={water.current.previousMm.toLocaleString("pt-BR")}
             unit="mm"
             icon={Droplets}
@@ -209,7 +209,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
           <MetricTile label="Origem" value={water.current.origin} icon={Gauge} />
         </div>
         <DashboardCard>
-          <p className={`${labelMuted} mb-4`}>Historico - {periodLabel}</p>
+          <p className={`${labelMuted} mb-4`}>Histórico - {periodLabel}</p>
           <WaterBarChart
             values={waterHistory.values}
             labels={waterHistory.labels}
@@ -219,14 +219,14 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
           />
         </DashboardCard>
         <DashboardCard>
-          <p className={`${labelMuted} mb-4`}>Irrigacao por setor - {periodLabel}</p>
-          <DataTable caption="Irrigacao por setor">
+          <p className={`${labelMuted} mb-4`}>Irrigação por setor - {periodLabel}</p>
+          <DataTable caption="Irrigação por setor">
             <thead>
               <tr>
                 <th className={thClass}>Setor</th>
                 <th className={thClass}>Tipo</th>
                 <th className={thClass}>Consumo atual</th>
-                <th className={thClass}>Irrigacao anterior</th>
+                <th className={thClass}>Irrigação anterior</th>
                 <th className={thClass}>Origem</th>
               </tr>
             </thead>
@@ -234,7 +234,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
               {water.irrigation.length === 0 ? (
                 <tr>
                   <td className={tdClass} colSpan={5}>
-                    Nenhuma irrigacao registrada.
+                    Nenhuma irrigação registrada.
                   </td>
                 </tr>
               ) : (
@@ -259,7 +259,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
         <SectionHeading
           icon={Leaf}
           title="Controle do solo"
-          description={`Umidade, tipo de solo e fonte referentes ao periodo ${periodLabel.toLowerCase()}.`}
+          description={`Umidade, tipo de solo e fonte referentes ao período ${periodLabel.toLowerCase()}.`}
         />
         <div className={gridSplit2}>
           <DashboardCard>
@@ -283,7 +283,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
                 { l: "Umidade", v: `${Math.round(soil.current.moisture)}%` },
                 { l: "Tipo", v: soil.current.soilType },
                 { l: "Fonte", v: soil.current.source },
-                { l: "Coleta", v: soil.current.collectedAt || "Nao informada" },
+                { l: "Coleta", v: soil.current.collectedAt || "Não informada" },
               ].map((item) => (
                 <div key={item.l} className={cardInset}>
                   <p className={labelMuted}>{item.l}</p>
@@ -339,7 +339,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
       <section className="space-y-4">
         <SectionHeading
           icon={Sprout}
-          title="Previsao de colheitas"
+          title="Previsão de colheitas"
           description={`Plantios ativos e cronograma no contexto ${periodLabel.toLowerCase()}.`}
         />
         <DashboardCard>
@@ -356,10 +356,10 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
               <tr>
                 <th className={thClass}>Cultura</th>
                 <th className={thClass}>Zona</th>
-                <th className={thClass}>Estagio</th>
+                <th className={thClass}>Estágio</th>
                 <th className={thClass}>Plantio</th>
                 <th className={thClass}>Colheita prevista</th>
-                <th className={thClass}>Necessidade hidrica</th>
+                <th className={thClass}>Necessidade hídrica</th>
                 <th className={thClass}>Status</th>
               </tr>
             </thead>
@@ -376,8 +376,8 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
                     <td className={`${tdClass} font-medium`}>{crop.name}</td>
                     <td className={`${tdClass} ${textMuted}`}>{crop.zone}</td>
                     <td className={tdClass}>{crop.stage}</td>
-                    <td className={tdClass}>{crop.plantedAt || "Nao informado"}</td>
-                    <td className={tdClass}>{crop.harvestAt || "Nao informada"}</td>
+                    <td className={tdClass}>{crop.plantedAt || "Não informado"}</td>
+                    <td className={tdClass}>{crop.harvestAt || "Não informada"}</td>
                     <td className={`${tdClass} tabular-nums`}>
                       {formatOptionalNumber(crop.waterNeedMm, "mm")}
                     </td>
@@ -393,36 +393,36 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
       <section className="space-y-4">
         <SectionHeading
           icon={Gauge}
-          title="Predicoes IA"
-          description={`Produtividade prevista, classificacao, agua sugerida e situacao.`}
+          title="Predições IA"
+          description={`Produtividade prevista, classificação, água sugerida e situação.`}
         />
         <DashboardCard>
-          <DataTable caption="Predicoes IA">
+          <DataTable caption="Predições IA">
             <thead>
               <tr>
                 <th className={thClass}>Data</th>
-                <th className={thClass}>Area</th>
+                <th className={thClass}>Área</th>
                 <th className={thClass}>Cultura</th>
                 <th className={thClass}>Modelo</th>
                 <th className={thClass}>Produtividade</th>
-                <th className={thClass}>Classificacao</th>
-                <th className={thClass}>Agua sugerida</th>
-                <th className={thClass}>Situacao</th>
+                <th className={thClass}>Classificação</th>
+                <th className={thClass}>Água sugerida</th>
+                <th className={thClass}>Situação</th>
               </tr>
             </thead>
             <tbody>
               {predictions.length === 0 ? (
                 <tr>
                   <td className={tdClass} colSpan={8}>
-                    Nenhuma predicao de IA encontrada.
+                    Nenhuma predição de IA encontrada.
                   </td>
                 </tr>
               ) : (
                 predictions.map((prediction) => (
                   <tr key={prediction.id} className={rowHover}>
-                    <td className={tdClass}>{prediction.date || "Nao informada"}</td>
+                    <td className={tdClass}>{prediction.date || "Não informada"}</td>
                     <td className={`${tdClass} ${textMuted}`}>{prediction.sector}</td>
-                    <td className={tdClass}>{prediction.cropName ?? "Nao informada"}</td>
+                    <td className={tdClass}>{prediction.cropName ?? "Não informada"}</td>
                     <td className={tdClass}>{prediction.type}</td>
                     <td className={`${tdClass} tabular-nums`}>
                       {formatOptionalNumber(prediction.productivity, "t/ha")}
@@ -444,7 +444,7 @@ export function VisionDetailView({ timeFilter }: { timeFilter: TimeFilter }) {
         <SectionHeading
           icon={Bell}
           title="Alertas"
-          description={`${alerts.length} alertas relevantes para o periodo ${periodLabel.toLowerCase()}.`}
+          description={`${alerts.length} alertas relevantes para o período ${periodLabel.toLowerCase()}.`}
         />
         <AlertsKanbanBoard alerts={alerts} />
       </section>

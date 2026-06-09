@@ -262,14 +262,14 @@ export function CropHorizontalChart({
             <span className="text-[10px] font-semibold uppercase tracking-wider text-verde-floresta/75">
               Colheita
             </span>
-            <span className="mt-0.5 block font-bold">{hoveredCrop.harvestAt || "Nao informada"}</span>
+            <span className="mt-0.5 block font-bold">{hoveredCrop.harvestAt || "Não informada"}</span>
           </span>
         </CursorTooltip>
       )}
       {selected && (
         <ChartDetailPanel
           title={`${selected.name} - ${selected.zone}`}
-          detail={`Estagio: ${selected.stage}. Plantio: ${selected.plantedAt || "nao informado"}. Colheita prevista: ${selected.harvestAt || "nao informada"}.`}
+          detail={`Estágio: ${selected.stage}. Plantio: ${selected.plantedAt || "não informado"}. Colheita prevista: ${selected.harvestAt || "não informada"}.`}
         />
       )}
     </div>

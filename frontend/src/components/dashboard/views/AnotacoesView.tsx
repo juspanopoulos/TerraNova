@@ -25,7 +25,7 @@ function notePreviewText(note: AnotacaoResponse): string {
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  return plain || "Sem conteudo";
+  return plain || "Sem conteúdo";
 }
 
 function formatNoteDate(value: string): string {
@@ -83,7 +83,7 @@ export function AnotacoesView() {
         .sort((a, b) => new Date(b.dataAtualizacao).getTime() - new Date(a.dataAtualizacao).getTime()),
     );
     void updateAnotacao(next.idAnotacao, {
-      titulo: next.titulo.trim() || "Sem titulo",
+      titulo: next.titulo.trim() || "Sem título",
       conteudoHtml: next.conteudoHtml ?? "",
     });
   }, []);
@@ -91,7 +91,7 @@ export function AnotacoesView() {
   const handleNewNote = () => {
     if (!authUser) return;
     void createAnotacao(authUser.idUsuario, {
-      titulo: "Nova anotacao",
+      titulo: "Nova anotação",
       conteudoHtml: "",
     }).then((note) => {
       setNotes((current) => [note, ...current]);
@@ -101,7 +101,7 @@ export function AnotacoesView() {
 
   const handleDelete = () => {
     if (!activeNote) return;
-    const confirmed = window.confirm("Excluir esta anotacao? Esta acao nao pode ser desfeita.");
+    const confirmed = window.confirm("Excluir esta anotação? Esta ação não pode ser desfeita.");
     if (!confirmed) return;
 
     void deleteAnotacao(activeNote.idAnotacao).then(() => {
@@ -129,12 +129,12 @@ export function AnotacoesView() {
     <div className="dashboard-fade-up flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-6">
       <aside className="flex w-full shrink-0 flex-col gap-3 lg:w-72 xl:w-80">
         <div className="flex items-center justify-between gap-2">
-          <p className={labelMuted}>Suas anotacoes</p>
+          <p className={labelMuted}>Suas anotações</p>
           <button
             type="button"
             onClick={handleNewNote}
             className={`${btnSecondary} ${btnClick} px-2.5 py-1.5 text-xs`}
-            aria-label="Nova anotacao"
+            aria-label="Nova anotação"
           >
             <Plus className="size-4" aria-hidden />
             Nova
@@ -182,14 +182,14 @@ export function AnotacoesView() {
                   value={activeNote.titulo}
                   onChange={(e) => updateTitle(e.target.value)}
                   className={`${inputField} border-0 bg-transparent px-0 py-0 text-lg font-bold shadow-none focus:ring-0 sm:text-xl`}
-                  aria-label="Titulo da anotacao"
+                  aria-label="Título da anotação"
                 />
               </div>
               <button
                 type="button"
                 onClick={handleDelete}
                 className={`${btnClick} flex size-9 shrink-0 items-center justify-center rounded-lg text-[var(--db-text-muted)] hover:bg-red-500/10 hover:text-red-500`}
-                aria-label="Excluir anotacao"
+                aria-label="Excluir anotação"
               >
                 <Trash2 className="size-4" />
               </button>
@@ -199,7 +199,7 @@ export function AnotacoesView() {
               <RichTextEditor
                 value={activeNote.conteudoHtml ?? ""}
                 onChange={updateContent}
-                placeholder="Registre observacoes sobre a propriedade, tarefas, colheitas ou qualquer outro assunto..."
+                placeholder="Registre observações sobre a propriedade, tarefas, colheitas ou qualquer outro assunto..."
                 className="min-h-0 flex-1"
               />
             </div>
@@ -208,7 +208,7 @@ export function AnotacoesView() {
           <div className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
             <NotebookPen className="size-10 text-verde-floresta/60" aria-hidden />
             <p className={`mt-4 text-sm ${textMuted}`}>
-              {loading ? "Carregando anotacoes..." : "Selecione ou crie uma anotacao para comecar."}
+              {loading ? "Carregando anotações..." : "Selecione ou crie uma anotação para começar."}
             </p>
           </div>
         )}
