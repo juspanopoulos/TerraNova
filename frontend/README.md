@@ -17,14 +17,14 @@ Enquanto o clima muda, a tecnologia evolui. O TerraNova conecta dados, inteligê
 👉 [github.com/juspanopoulos/TerraNova](https://github.com/juspanopoulos/TerraNova)
 
 🔗 **Acesse o vídeo:**
-👉 [YouTube](https://)
+👉 [YouTube](https://youtu.be/ltrJ9CrQaRA)
 
 🔗 **Veja o site online:**
 👉 [terra-nova-delta.vercel.app](https://terra-nova-delta.vercel.app/)
 
 <br/>
 
-<img src="./src/assets/images/sobre/painel/" alt="Interface do dashboard" width="100%">
+<img src="./src/assets/images/sobre/painel/inicio.png" alt="Interface do dashboard" width="100%">
 
 <br/>
 
@@ -75,16 +75,15 @@ Criando uma experiência que permite ao produtor entender sua propriedade com ma
 | 🗓️ Visões Temporais | Análise por dia, semana, mês e ano com KPIs, gráficos e tabelas reunindo clima, solo, água, irrigação e alertas do período. |
 | 🔔 Central de Alertas | Alertas ambientais organizados em kanban por severidade — crítico, moderado e normal — com tipo, setor e horário. |
 | 🌤️ Controle Climático | Monitoramento de temperatura, umidade e vento, com histórico gráfico e alternância entre métricas. |
-| 🌱 Controle do Solo | Leitura de NPK, pH e umidade, gráfico de nutrientes e tabela de status por talhão ou setor. |
-| 🌾 Previsão de Colheitas | Gráfico de maturidade por cultura e cronograma com zona, semana estimada, data de colheita e status. |
+| 🌱 Controle do Solo | Umidade do solo por setor, tipo, fonte da leitura e histórico gráfico por período temporal. |
+| 🌾 Previsão de Colheitas | Cronograma de plantios ativos, gráfico por cultura e tabela de predições de IA (produtividade, classificação e volume hídrico sugerido). |
 | 💧 Consumo Hídrico | Indicadores de consumo, histórico, distribuição por setor e tabela de irrigação com comparativos por período. |
-| 🧠 Assistente TerraNova | Chat integrado com prompts sugeridos para consultar clima, solo, irrigação, alertas e colheitas no contexto da propriedade. |
-| 📜 Histórico de Conversas | Armazenamento de conversas do assistente, com opção de abrir histórico e iniciar nova conversa. |
 | 🔍 Filtros Avançados | Painel lateral de filtros por período, mês, nível e tipo de alerta, setor do solo e cultura, conforme a view ativa. |
-| 📈 Relatórios em PDF | Exportação de relatório da visão temporal (dia, semana, mês ou ano) com dados da propriedade e alertas. |
+| 📊 Exportação Excel | Exportação da visão temporal (dia, semana, mês ou ano) em planilha compatível com Excel, com dados da propriedade e alertas. |
 | 🏷️ Gestão de Prioridade | Classificação visual de alertas por urgência, com chips, cores e colunas dedicadas no quadro kanban. |
-| 🏢 Cadastro da Propriedade | Fluxo de login, cadastro de usuário e registro da empresa/propriedade com validação de campos. |
-| ⚙️ Configurações Gerais | Personalização do painel com modo escuro, redução de animações e preferência de alertas por e-mail. |
+| 🛠️ Operações da Propriedade | Na visão geral, cadastro de áreas monitoradas, leituras de solo, irrigação e plantios, coleta climática NASA e predição de irrigação via IA. |
+| 🏢 Cadastro da Propriedade | Fluxo de login, registro de usuário e cadastro da empresa/propriedade integrados à API Java, com validação de campos. |
+| ⚙️ Configurações Gerais | Personalização do painel com modo escuro, redução de animações e preferência de alertas por e-mail, sincronizadas com a API. |
 | 🔗 Integrações Externas | Área preparada para conectar sensores, irrigação, APIs climáticas e ERP — atualmente marcada como “Em breve”. |
 | 🧭 Navegação e Breadcrumb | Sidebar com módulos da plataforma, breadcrumb por rota e hub de acesso às visões temporais. |
 | 📱 Interface Responsiva | Layout adaptável com sidebar, toolbar, cards e gráficos ajustados para desktop e dispositivos móveis. |
@@ -93,7 +92,22 @@ Criando uma experiência que permite ao produtor entender sua propriedade com ma
 
 ## 🚀 Conheça o TerraNova
 
+Explore as principais telas da plataforma TerraNova — da autenticação ao monitoramento da propriedade.
 
+| **Preview** | **Módulo** |
+| :--: | :--- |
+| <img src="./src/assets/images/sobre/painel/login.png" width="480" alt="Tela de login da plataforma"/> | **Login e cadastro**<br><br>Entrada segura na plataforma com fluxo de autenticação, registro de usuário e vinculação de empresa e propriedade. |
+| <img src="./src/assets/images/sobre/painel/inicio.png" width="480" alt="Painel inicial com boas-vindas"/> | **Painel de boas-vindas**<br><br>Primeira impressão após o login: saudação contextual, indicadores rápidos e acesso direto às visões da propriedade. |
+| <img src="./src/assets/images/sobre/painel/visao-geral.png" width="480" alt="Hub de visões temporais"/> | **Visão Geral**<br><br>Hub unificado com indicadores da propriedade, clima, solo, água e alertas — além do painel operacional para cadastrar áreas, leituras e plantios. |
+| <img src="./src/assets/images/sobre/painel/alertas.png" width="480" alt="Central de alertas em kanban"/> | **Alertas**<br><br>Antecipe riscos como seca, geada e déficit hídrico com sinais claros, organizados em kanban por criticidade. |
+| <img src="./src/assets/images/sobre/painel/controle-climatico.png" width="480" alt="Controle climático"/> | **Controle Climático**<br><br>Temperatura, umidade e vento reunidos em gráficos e histórico, com alternância entre métricas e recortes temporais. |
+| <img src="./src/assets/images/sobre/painel/controle-solo.png" width="480" alt="Controle do solo"/> | **Controle do Solo**<br><br>Monitore umidade e saúde do solo por setor, com leituras que orientam irrigação e manejo da propriedade. |
+| <img src="./src/assets/images/sobre/painel/previsao-colheitas.png" width="480" alt="Previsão de colheitas"/> | **Previsão de Colheitas**<br><br>Acompanhe plantios ativos, cronograma de colheita e predições de IA com produtividade e volume hídrico sugerido. |
+| <img src="./src/assets/images/sobre/painel/consumo-hidrico.png" width="480" alt="Consumo hídrico"/> | **Consumo Hídrico**<br><br>Eficiência de irrigação, comparativos por setor e histórico de consumo com metas visíveis para economia de água. |
+| <img src="./src/assets/images/sobre/painel/configuracoes-geral.png" width="480" alt="Configurações gerais"/> | **Configurações gerais**<br><br>Personalize o painel com modo escuro, redução de animações e preferências de alertas por e-mail. |
+| <img src="./src/assets/images/sobre/painel/configuracoes-empresa.png" width="480" alt="Dados da empresa"/> | **Dados da empresa**<br><br>Edite informações da empresa, propriedade e usuário responsável, sincronizadas com a API do backend. |
+| <img src="./src/assets/images/sobre/painel/configuracoes-integracoes.png" width="480" alt="Integrações externas"/> | **Integrações**<br><br>Área preparada para conectar sensores, irrigação, APIs climáticas e ERP — atualmente marcada como “Em breve”. |
+| <img src="./src/assets/images/sobre/painel/404.png" width="480" alt="Página não encontrada"/> | **Página não encontrada**<br><br>Experiência amigável quando a rota não existe, com mensagem contextual e opções de voltar ou ir ao início. |
 
 <br/>
 
@@ -123,7 +137,6 @@ O front-end do **TerraNova** foi desenvolvido com tecnologias de ponta para gara
 | <img src="https://img.shields.io/badge/Lenis_v1.3-000000?style=for-the-badge&logo=smooth-scroll&logoColor=white" /> | **Scroll Suave** | Biblioteca de scroll suave (smooth scroll) integrada para aprimorar a experiência de navegação. |
 | <img src="https://img.shields.io/badge/Lucide_React_v1.17-2C3E50?style=for-the-badge&logo=lucide&logoColor=white" /> | **Ícones** | Conjunto de ícones vetoriais consistentes, leves e otimizados para componentes React. |
 | <img src="https://img.shields.io/badge/React_Hook_Form_v7.77-EC5990?style=for-the-badge&logo=react-hook-form&logoColor=white" /> | **Formulários** | Gerenciamento de estado de formulários focado em performance, validação e redução de re-renders. |
-| <img src="https://img.shields.io/badge/@react--pdf/renderer_v4.5-FF6B6B?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=white" /> | **Relatórios PDF** | Geração e exportação de relatórios dinâmicos diretamente pelo lado do cliente (client-side). |
 | <img src="https://img.shields.io/badge/Inter_Font_v5.2-111111?style=for-the-badge&logo=google-fonts&logoColor=white" /> | **Tipografia** | Família tipográfica Inter carregada via Fontsource para garantir consistência e legibilidade. |
 
 <br/>
@@ -140,113 +153,142 @@ Abaixo estão as funcionalidades centrais implementadas no Frontend:
 | **Interpretação de rotas** | **Segmentos estáticos + funções tipadas** | :heavy_check_mark: | O projeto não usa `useParams`. O `pathname` é interpretado por funções como `pathToViewId()`, `TIME_FILTER_FROM_PATH()`, `pathToSettingsTab()` e `breadcrumbsFromPath()` em `constants/dashboard.ts`. |
 | **Feedback ao usuário** | **Estados de carregamento e erro** | :heavy_check_mark: | `DashboardLoadingState` e `DashboardErrorState` no dashboard; estados `isLoading` / `error` na equipe (`useTeamMembers` + `TeamSection.tsx`); mensagens de validação nos formulários de auth e contato. |
 | **Criação de tipos de dados** | **TypeScript 6** | :heavy_check_mark: | Tipagem estática em todo o projeto (`npm run typecheck`). Domínios organizados em `src/types/dashboard.ts` e `src/types/equipe.ts`. |
-| **Tipos básicos** | **string, number, boolean, arrays e object** | :heavy_check_mark: | Utilizados em mocks, formulários e componentes. Ex.: `mockDashboard.ts`, `faq.ts`, `CompanyProfile`, métricas de clima/solo/água no `DashboardContext`. |
+| **Tipos básicos** | **string, number, boolean, arrays e object** | :heavy_check_mark: | Utilizados em formulários, conteúdo estático e componentes. Ex.: `faq.ts`, `CompanyProfile`, métricas de clima/solo/água no `DashboardContext`. |
 | **Type aliases** | **type** | :heavy_check_mark: | Modelagem principal via `type` para entidades e contratos. Ex.: `CompanyProfile`, `AlertItem`, `TeamMemberData`, `BreadcrumbItem`, `PageFilters` em `FilterSlideover.tsx`. |
 | **Union types** | **Tipos literais restritivos** | :heavy_check_mark: | Garantem valores válidos em rotas, auth e dashboard. Ex.: `AuthMode = "login" \| "register" \| "registerCompany"`, `ViewId`, `TimeFilter`, `AlertLevel`, `DashboardLoadStatus`. |
 | **Intersection types** | **Composição de tipos** | :heavy_check_mark: | Combinação de estruturas para enriquecer dados carregados. Ex.: `TeamMember = TeamMemberData & { photo: string }` em `types/equipe.ts`. |
-| **Tipos avançados** | **Record, Partial, keyof, generics, as const** | :heavy_check_mark: | `Record<ViewId, string>` em `PAGE_TITLES`; `Partial<CompanyProfile>` em `updateCompany()`; `updatePreference<K extends keyof GeneralPreferences>`; `ROUTES` e `DASHBOARD_ROUTES` com `as const`. |
+| **Tipos avançados** | **Record, Partial, keyof, generics, as const** | :heavy_check_mark: | `Record<ViewId, string>` em `PAGE_TITLES`; `Partial<Record<keyof CompanyProfile, string>>` em validação de cadastro; `updatePreference<K extends keyof GeneralPreferences>`; `ROUTES` e `DASHBOARD_ROUTES` com `as const`. |
 | **Responsividade total** | **Tailwind CSS 4 (mobile / tablet / desktop)** | :heavy_check_mark: | Layout adaptável com breakpoints `sm:`, `md:`, `lg:` em site institucional e dashboard. Ex.: `DashboardLayout.tsx`, `FilterSlideover.tsx`, `HomeNavbar.tsx`, views da plataforma. |
-| **Gerenciamento de estado** | **React Context API** | :heavy_check_mark: | `DashboardContext` concentra auth, dados do painel, filtros e preferências; `AssistantChatContext` gerencia conversas do assistente. |
+| **Gerenciamento de estado** | **React Context API** | :heavy_check_mark: | `DashboardContext` concentra auth, dados do painel, filtros e preferências sincronizadas com a API. |
 | **Formulários** | **React Hook Form** | :heavy_check_mark: | Validação e controle de campos em login, cadastro da propriedade e contato. Ex.: `LoginScreen.tsx`, `RegisterCompanyScreen.tsx`, `ContactForm.tsx`, `CompanyFieldInput.tsx` com `Controller`. |
 | **Carregamento assíncrono de dados** | **Serviços + import dinâmico** | :heavy_check_mark: | `equipeService.ts` carrega `team.json` e `members/*.json` com `await import()` e `import.meta.glob`; `useTeamMembers` consome no `useEffect`. |
-| **Consumo de API (dashboard)** | **fetchDashboardData (mock)** | :hourglass: | `loadDashboardData.ts` simula latência e erros (`network`, `server`, `timeout`, `unauthorized`) antes de retornar mocks. Contrato preparado para substituição pela API Java descrita em `BACKEND_INTEGRATION.md`. |
-| **Fetch API** | **fetch** | :hourglass: | Uso pontual em `downloadVisionReport.tsx` para carregar o logo público do PDF. Demais módulos ainda consomem dados locais/mock. |
+| **Consumo de API (dashboard)** | **fetchDashboardData + lib/api** | :heavy_check_mark: | `loadDashboardData.ts` agrega dados da API Java (alertas, clima, solo, irrigação, culturas e predições) e normaliza o payload do dashboard. Cliente HTTP central em `lib/api/client.ts`. |
+| **Fetch API** | **fetch via apiRequest** | :heavy_check_mark: | `apiRequest()` em `lib/api/client.ts` consome os endpoints REST do backend. Serviços por domínio em `lib/api/*Api.ts` (usuários, empresas, propriedades, alertas, clima, solo, irrigação, culturas, IA e preferências). |
 | **Tratamento de erros** | **Classes de erro + normalização** | :heavy_check_mark: | `DashboardLoadFailure` e `toDashboardLoadError()` em `DashboardLoadState.tsx`; `try/catch` no carregamento do dashboard e da equipe; mensagens amigáveis por tipo de falha. |
-| **Persistência local** | **localStorage / sessionStorage** | :heavy_check_mark: | Sessão de auth (`authSession.ts`), preferências (`preferences.ts`) e conversas do assistente (`assistantChat.ts`). `sessionStorage` usado para simular erro forçado no mock do dashboard. |
-| **Relatórios PDF** | **@react-pdf/renderer** | :heavy_check_mark: | Geração e download de relatório das visões temporais via `VisionReportDocument.tsx`, `downloadVisionReport.tsx` e botão `VisionPdfDownloadButton.tsx`. |
+| **Persistência local** | **localStorage** | :heavy_check_mark: | Sessão de auth (`authSession.ts`) e preferência local de modo escuro (`preferences.ts`). Preferências gerais e filtros também são persistidos na API via `preferencesApi.ts`. |
+| **Exportação de relatórios** | **Planilha Excel (client-side)** | :heavy_check_mark: | Exportação das visões temporais via `VisionExcelExportButton.tsx`, gerando arquivo `.xls` com dados consolidados da propriedade. |
 | **Animações e UX** | **GSAP + Lenis** | :heavy_check_mark: | GSAP em hooks de seção (`useHomeSectionAnimation`, `useAboutSectionAnimation`, etc.); Lenis para scroll suave nas páginas institucionais (`smoothScroll.ts`, `SiteSmoothScroll` em `AppRoutes.tsx`). |
 | **Ícones e identidade visual** | **Lucide React + tokens Tailwind** | :heavy_check_mark: | Ícones em navegação, dashboard e FAQ; tokens reutilizáveis em `src/constants/tokens/` (home, sobre, faq, contato, auth). |
 | **Organização do projeto** | **Arquitetura modular** | :heavy_check_mark: | Separação em `components/`, `pages/`, `layouts/`, `routes/`, `context/`, `services/`, `hooks/`, `lib/`, `data/`, `types/`, `utils/` e `styles/`, conforme `README.md`. |
 
 <br/>
 
-## Rotas, navegação e tipagem
+## 🧭 Rotas, navegação e tipagem
 
-### Definição de rotas
+> O roteamento usa **React Router DOM v7** com URLs centralizadas em `src/constants/routes.ts` e `src/constants/dashboard.ts` (`as const`). A configuração principal fica em `src/routes/AppRoutes.tsx`.
 
-O roteamento utiliza **React Router DOM v7** com URLs centralizadas em `src/constants/routes.ts` e `src/constants/dashboard.ts`, declaradas com `as const` para inferência literal de tipos.
+---
 
-**Site institucional:**
+### 🗺️ Mapa de rotas
 
-| Rota | Página |
-|------|--------|
-| `/` | Início |
-| `/sobre` | Sobre |
-| `/equipe` | Equipe |
-| `/faq` | FAQ |
-| `/contato` | Contato |
-| `/mapa-do-site` | Mapa do site |
+#### Site institucional
 
-**Plataforma (dashboard):**
+| Rota | Página | Descrição |
+| :-- | :-- | :-- |
+| `/` | Início | Landing page com hero, módulos e CTA |
+| `/sobre` | Sobre | Proposta, missão e visão da plataforma |
+| `/equipe` | Equipe | Integrantes do projeto |
+| `/faq` | FAQ | Perguntas frequentes com busca |
+| `/contato` | Contato | Formulário de contato |
+| `/mapa-do-site` | Mapa do site | Índice navegável de todas as páginas |
 
-| Rota | Página |
-|------|--------|
-| `/plataforma` | Redireciona para visão geral |
-| `/plataforma/visao-geral` | Hub de visões |
-| `/plataforma/visao/dia` | Visão do dia |
-| `/plataforma/visao/semana` | Visão semanal |
-| `/plataforma/visao/mes` | Visão do mês |
-| `/plataforma/visao/anual` | Visão anual |
-| `/plataforma/alertas` | Alertas |
-| `/plataforma/clima` | Controle climático |
-| `/plataforma/solo` | Controle do solo |
-| `/plataforma/colheitas` | Previsão de colheitas |
-| `/plataforma/agua` | Consumo hídrico |
-| `/plataforma/assistente` | Assistente TerraNova |
-| `/plataforma/configuracoes/geral` | Configurações gerais |
-| `/plataforma/configuracoes/empresa` | Dados da empresa |
-| `/plataforma/configuracoes/integracoes` | Integrações |
+#### Plataforma (dashboard)
 
-A configuração central está em `src/routes/AppRoutes.tsx`. Rotas da plataforma são aninhadas com `DashboardLayout` como layout pai e `<Outlet />` para renderizar as páginas filhas.
+| Rota | Página | Descrição |
+| :-- | :-- | :-- |
+| `/plataforma` | — | Redireciona para `/plataforma/visao-geral` |
+| `/plataforma/visao-geral` | Visão Geral | Hub de visões e operações da propriedade |
+| `/plataforma/visao/dia` | Visão do dia | KPIs e gráficos das últimas 24h |
+| `/plataforma/visao/semana` | Visão semanal | Tendências e comparativos da semana |
+| `/plataforma/visao/mes` | Visão do mês | Panorama consolidado do mês |
+| `/plataforma/visao/anual` | Visão anual | Evolução e metas ao longo do ano |
+| `/plataforma/alertas` | Alertas | Kanban por severidade |
+| `/plataforma/clima` | Controle Climático | Métricas e histórico climático |
+| `/plataforma/solo` | Controle do Solo | Umidade e leituras por setor |
+| `/plataforma/colheitas` | Previsão de Colheitas | Plantios e predições de IA |
+| `/plataforma/agua` | Consumo Hídrico | Irrigação e histórico hídrico |
+| `/plataforma/configuracoes/geral` | Configurações gerais | Preferências do painel |
+| `/plataforma/configuracoes/empresa` | Dados da empresa | Cadastro da propriedade |
+| `/plataforma/configuracoes/integracoes` | Integrações | Conexões externas (em breve) |
 
-### Navegação
+> Rotas da plataforma são **aninhadas** com `DashboardLayout` como layout pai e `<Outlet />` para renderizar as páginas filhas.
+
+---
+
+### 🧩 Navegação
 
 | Componente | Escopo | Mecanismo |
-|------------|--------|-----------|
+| :-- | :-- | :-- |
 | `Navbar` / `HomeNavbar` | Site institucional | `NavLink` com estado ativo |
 | `Sidebar` | Plataforma | `NavLink` + `VIEW_ROUTE_BY_ID` |
 | `SettingsNavGroup` | Plataforma | Submenu expansível de Configurações |
-| `PageBreadcrumb` | Site | Trilha de navegação |
+| `PageBreadcrumb` | Site | Trilha de navegação estática |
 | `DashboardBreadcrumb` | Plataforma | Gerado por `breadcrumbsFromPath()` |
 
-Comportamentos de UX: `ScrollToTop` (rolagem ao topo a cada mudança de rota), `SiteSmoothScroll` (scroll suave com Lenis nas páginas institucionais), `BaseLayout` (oculta Navbar/Footer na home, plataforma e 404).
+**Comportamentos de UX**
 
-### Parâmetros de rota dinâmica
+| Recurso | Função |
+| :-- | :-- |
+| `ScrollToTop` | Rola ao topo a cada mudança de rota |
+| `SiteSmoothScroll` | Scroll suave com Lenis nas páginas institucionais |
+| `BaseLayout` | Oculta Navbar/Footer na home, plataforma e 404 |
 
-O projeto não utiliza parâmetros no formato `:id` com `useParams`. Em vez disso, adota **segmentos de URL estáticos e aninhados**, interpretados por funções tipadas em `src/constants/dashboard.ts`:
+---
 
-| Função | Retorno | Uso |
-|--------|---------|-----|
+### 🔗 Interpretação de URL (sem `useParams`)
+
+O projeto **não usa** parâmetros dinâmicos (`:id`). Segmentos estáticos são interpretados por funções tipadas em `src/constants/dashboard.ts`:
+
+| Função | Retorno | Responsabilidade |
+| :-- | :-- | :-- |
+| `pathToViewId(pathname)` | `ViewId` | View ativa do dashboard |
 | `TIME_FILTER_FROM_PATH(pathname)` | `TimeFilter \| null` | Filtro temporal da visão |
 | `pathToSettingsTab(pathname)` | `SettingsTabId \| null` | Aba ativa de configurações |
-| `pathToViewId(pathname)` | `ViewId` | View ativa do dashboard |
 | `pageTitleFromPath(pathname)` | `string` | Título da página atual |
 | `breadcrumbsFromPath(pathname)` | `BreadcrumbItem[]` | Trilha de navegação |
 
-Mapeamentos bidirecionais: `VISION_ROUTE_BY_FILTER`, `SETTINGS_ROUTE_BY_TAB`, `VIEW_ROUTE_BY_ID`.
+**Mapeamentos bidirecionais:** `VISION_ROUTE_BY_FILTER` · `SETTINGS_ROUTE_BY_TAB` · `VIEW_ROUTE_BY_ID`
 
-### Redirecionamento
+---
 
-| Origem | Destino | Comportamento |
-|--------|---------|---------------|
+### ↪️ Redirecionamentos
+
+| Origem | Destino | Motivo |
+| :-- | :-- | :-- |
 | `/plataforma` | `/plataforma/visao-geral` | Rota index da plataforma |
-| `/plataforma/configuracoes` | `/plataforma/configuracoes/geral` | Aba padrão |
+| `/plataforma/configuracoes` | `/plataforma/configuracoes/geral` | Aba padrão de configurações |
 | `/platform` | `/plataforma` | Alias em inglês |
-| `*` (rota desconhecida) | `NotFound` | Página 404 personalizada |
+| `*` (desconhecida) | `NotFound` | Página 404 personalizada |
 
-A página 404 (`NotFound.tsx`) exibe mensagem contextual ("Você saiu do trilho!") com opções de voltar ou ir ao início. A plataforma oferece feedbacks de carregamento e erro via `DashboardLoadingState` e `DashboardErrorState`.
+> A plataforma exibe feedbacks de carregamento e erro via `DashboardLoadingState` e `DashboardErrorState`.
 
-### Tipos de dados
+---
 
-Tipos básicos (`string`, `number`, `boolean`, objetos) aplicados em domínios de negócio em `src/types/`:
+### 🏷️ Tipagem TypeScript
+
+Contratos de domínio organizados em `src/types/dashboard.ts` e `src/types/equipe.ts`.
+
+#### Tipos principais
 
 ```typescript
 export type CompanyProfile = {
-  legalName: string;
-  tradeName: string;
-  totalAreaHa: number;
-  activeSectors: number;
-  // ...
+  idEmpresa: number | null;
+  idPropriedade: number | null;
+  idUsuario: number | null;
+  nomeEmpresa: string;
+  cnpj: string;
+  emailEmpresa: string;
+  telefoneEmpresa: string;
+  nomePropriedade: string;
+  localizacao: string;
+  latitude: number | null;
+  longitude: number | null;
+  areaTotalHectares: number;
+  nomeUsuario: string;
+  emailUsuario: string;
+  cpf: string;
+  perfil: string;
+  status: string;
 };
 
 export type GeneralPreferences = {
@@ -256,19 +298,17 @@ export type GeneralPreferences = {
 };
 ```
 
-### Tipos avançados
-
-**Union Types:**
+#### Union types
 
 ```typescript
 export type AuthMode = "login" | "register" | "registerCompany";
-export type ViewId = "overview" | "alerts" | "climate" | "soil" | "growth" | "water" | "assistant" | "settings";
+export type ViewId = "overview" | "alerts" | "climate" | "soil" | "growth" | "water" | "settings";
 export type TimeFilter = "daily" | "weekly" | "monthly" | "yearly";
 export type AlertLevel = "critical" | "warning" | "normal";
 export type DashboardLoadStatus = "idle" | "loading" | "success" | "error";
 ```
 
-**Intersection Types:**
+#### Intersection types
 
 ```typescript
 export type TeamMember = TeamMemberData & {
@@ -276,19 +316,16 @@ export type TeamMember = TeamMemberData & {
 };
 ```
 
-**Tipos utilitários:** `Record<K, V>`, `Partial<T>`, `keyof T`, `Pick<T, K>` e generics (ex.: `updatePreference<K extends keyof GeneralPreferences>`).
+#### Utilitários
 
-### Tipagem personalizada de objetos
+| Recurso | Exemplo no projeto |
+| :-- | :-- |
+| `Record<K, V>` | `Record<ViewId, string>` em `PAGE_TITLES` |
+| `Partial<T>` | `Partial<Record<keyof CompanyProfile, string>>` na validação de cadastro |
+| `keyof` + generics | `updatePreference<K extends keyof GeneralPreferences>` |
+| `as const` | `ROUTES` e `DASHBOARD_ROUTES` |
 
-O projeto utiliza `type` aliases para contratos estruturais, organizados em:
-
-```
-src/types/
-├── dashboard.ts   # Tipos do dashboard e plataforma
-└── equipe.ts      # Tipos da página de equipe
-```
-
-Principais tipos: `CompanyProfile`, `GeneralPreferences`, `TeamMemberData`, `BreadcrumbItem`, `NavItem`, `ChartSegment`, `DashboardLoadError`, `RegisterCredentials`, `SitemapSection`.
+**Principais tipos:** `CompanyProfile` · `GeneralPreferences` · `TeamMemberData` · `BreadcrumbItem` · `NavItem` · `ChartSegment` · `DashboardLoadError` · `RegisterCredentials` · `SitemapSection`
 
 </br>
 
@@ -296,9 +333,8 @@ Principais tipos: `CompanyProfile`, `GeneralPreferences`, `TeamMemberData`, `Bre
 
 ```text
 frontend/
-├── docs/                    → Documentação técnica (ex.: integração backend)
 ├── public/                  → Arquivos estáticos servidos na raiz
-│   └── logos/               → Logo público (PDF e URLs absolutas)
+│   └── logos/               → Logo público (URLs absolutas)
 ├── src/
 │   ├── assets/              → Imagens, logos, ícones, fontes e vídeos
 │   │   ├── hero/            → Fundos parallax (home e sobre)
@@ -317,18 +353,20 @@ frontend/
 │   │   ├── sobre/           → Seções da página Sobre
 │   │   ├── HeroParallax/    → Hero animado da home
 │   │   └── ...              → Navbar, HomeNavbar, Footer, PageHero, breadcrumbs
-│   ├── constants/           v Rotas, layout do dashboard e tokens de UI
+│   ├── constants/           → Rotas, layout do dashboard e tokens de UI
 │   │   └── tokens/          → Classes Tailwind reutilizáveis por página
-│   ├── context/             → Context API (Dashboard, Assistente)
+│   ├── context/             → Context API (Dashboard)
 │   ├── data/                → Conteúdo estático (.ts) e JSON da equipe
 │   │   ├── equipe/
 │   │   │   ├── team.json    → Manifesto com IDs dos membros
 │   │   │   └── members/     → Um JSON por integrante
-│   │   ├── home/            → Textos e módulos da home
-│   │   └── sobre/           → Textos e módulos da página Sobre
+│   │   ├── home/            → Textos e módulos da home (`content.ts`)
+│   │   └── sobre/           → Textos e módulos da página Sobre (`platform.ts`)
 │   ├── hooks/               → Hooks customizados (animações, equipe)
 │   ├── layouts/             → BaseLayout e DashboardLayout
-│   ├── lib/                 → Auth, PDF, scroll, helpers do dashboard
+│   ├── lib/                 → Cliente HTTP, auth, scroll e helpers do dashboard
+│   │   ├── api/             → Cliente REST e serviços por domínio
+│   │   └── dashboard/       → Sessão, preferências, validação e carregamento de dados
 │   ├── pages/               → Wrappers finos por rota
 │   │   └── plataforma/      → Páginas do dashboard (delegam para views)
 │   ├── routes/              → Configuração central de rotas (AppRoutes)
@@ -364,60 +402,46 @@ cd TerraNova
 
 ## ▶️ Executando o Backend / API
 
-A API foi desenvolvida em **Java 17** com **Quarkus** e utiliza banco de dados **Oracle**.
+A API foi desenvolvida em **Java 25** com **Quarkus** e utiliza banco de dados **Oracle**.
 Acesse a pasta do backend:
 
 ```bash
-cd backend/api
+cd backend
 ```
 
-Configure as variáveis de ambiente necessárias para conexão com o banco Oracle:
+Configure as variáveis de ambiente necessárias para conexão com o banco Oracle (ou crie um `.env` a partir de `.env.example`):
 
 ### Windows (PowerShell)
 
 ```bash
-$env:ORACLE_USERNAME="rm"
+$env:ORACLE_USER="rm"
 $env:ORACLE_PASSWORD="senha"
-$env:ORACLE_JDBC_URL="jdbc:oracle:thin:@host:porta/service"
+$env:ORACLE_JDBC_URL="jdbc:oracle:thin:@//host:porta/service"
 $env:PORT="8080"
 ```
 
 ### Linux / macOS
 
-Garanta permissão de execução no Maven wrapper:
-
-```bash
-chmod +x ./mvnw
-```
-
 Configure as variáveis de ambiente:
 
 ```bash
-export ORACLE_USERNAME="rm"
+export ORACLE_USER="rm"
 export ORACLE_PASSWORD="senha"
-export ORACLE_JDBC_URL="jdbc:oracle:thin:@host:porta/service"
+export ORACLE_JDBC_URL="jdbc:oracle:thin:@//host:porta/service"
 export PORT="8080"
 ```
 
 Depois execute a aplicação em modo desenvolvimento:
 
-### Windows (PowerShell)
-
 ```bash
-mvnw.cmd quarkus:dev
-```
-
-### Linux / macOS
-
-```bash
-./mvnw quarkus:dev
+mvn quarkus:dev
 ```
 
 A API estará disponível em:
-👉 http://localhost:8080
+👉 http://localhost:8080/api
 
 A documentação Swagger estará disponível em:
-👉 http://localhost:8080/swagger-ui
+👉 http://localhost:8080/q/swagger-ui
 
 </br>
 
@@ -449,21 +473,21 @@ O frontend já possui configuração automática para ambiente local.
 Durante o desenvolvimento (`npm run dev`), caso nenhuma variável seja definida, a aplicação utilizará automaticamente:
 
 ```bash
-http://localhost:8080
+http://localhost:8080/api
 ```
 
-Opcionalmente, é possível sobrescrever a URL da API através de uma variável de ambiente.
+Opcionalmente, é possível sobrescrever a URL base da API através de uma variável de ambiente.
 
 ### Windows (PowerShell)
 
 ```powershell
-$env:VITE_API_URL="http://localhost:8080"
+$env:VITE_API_BASE_URL="http://localhost:8080/api"
 ```
 
 ### Linux / macOS
 
 ```bash
-export VITE_API_URL="http://localhost:8080"
+export VITE_API_BASE_URL="http://localhost:8080/api"
 ```
 
 > Caso nenhuma variável seja informada, o sistema utilizará automaticamente a configuração padrão para desenvolvimento local.
@@ -493,10 +517,10 @@ Para funcionamento completo da aplicação, o backend e frontend precisam estar 
 
 | Serviço       | Tecnologia     | URL local             |
 | :------------ | :------------- | :-------------------- |
-| Backend / API | Java + Quarkus | http://localhost:8080 |
+| Backend / API | Java 25 + Quarkus | http://localhost:8080/api |
 | Frontend      | React + Vite   | http://localhost:5173 |
 
-> Caso o backend não esteja em execução, o frontend continuará abrindo normalmente, porém funcionalidades que dependem da API (login, dashboard, tickets, contatos, relatórios, financeiro e demais recursos dinâmicos) poderão apresentar erros ou não carregar informações.
+> Caso o backend não esteja em execução, o frontend continuará abrindo normalmente, porém funcionalidades que dependem da API (login, plataforma, alertas, clima, solo, irrigação, colheitas, preferências e cadastro da propriedade) poderão apresentar erros ou não carregar informações.
 
 ---
 
