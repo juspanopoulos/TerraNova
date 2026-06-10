@@ -96,7 +96,7 @@ Explore as principais telas da plataforma TerraNova — da autenticação ao mon
 
 | **Preview** | **Módulo** |
 | :--: | :--- |
-| <img src="./src/assets/images/sobre/painel/inicio.png" width="480" alt="Painel inicial com boas-vindas"/> | **Painel de boas-vindas**<br><br>Primeira impressão após o login: saudação contextual, indicadores rápidos e acesso direto às visões da propriedade. |
+| <img src="./src/assets/images/sobre/painel/inicio.png" width="480" alt="Painel inicial com boas-vindas"/> | **Painel de boas-vindas**<br><br>Site institucional: saudação contextual, indicadores rápidos e acesso direto às visões da propriedade. |
 | <img src="./src/assets/images/sobre/painel/login.png" width="480" alt="Tela de login da plataforma"/> | **Login e cadastro**<br><br>Entrada segura na plataforma com fluxo de autenticação, registro de usuário e vinculação de empresa e propriedade. |
 | <img src="./src/assets/images/sobre/painel/visao-geral.png" width="480" alt="Hub de visões temporais"/> | **Visão Geral**<br><br>Hub unificado com indicadores da propriedade, clima, solo, água e alertas — além do painel operacional para cadastrar áreas, leituras e plantios. |
 | <img src="./src/assets/images/sobre/painel/alertas.png" width="480" alt="Central de alertas em kanban"/> | **Alertas**<br><br>Antecipe riscos como seca, geada e déficit hídrico com sinais claros, organizados em kanban por criticidade. |
