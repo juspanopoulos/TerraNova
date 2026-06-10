@@ -87,7 +87,7 @@ export const faqCategories: FaqCategory[] = [
         id: "origem-dados",
         question: "De onde vêm os dados climáticos e de solo?",
         answer:
-          "lorem ipsum",
+          "Os dados climáticos são coletados pela API NASA POWER com base na latitude e longitude da sua propriedade. O servidor consulta temperatura, umidade, chuva, vento e índice UV e grava tudo no banco, vinculado a cada área monitorada. As leituras de solo podem ser registradas manualmente no dashboard ou recebidas de sensores, quando houver integração. Em ambos os casos, a plataforma indica a fonte de cada informação, NASA, manual ou sensor.",
       },
       {
         id: "setores",
@@ -99,7 +99,7 @@ export const faqCategories: FaqCategory[] = [
         id: "colheitas",
         question: "Como funciona a Previsão de Colheitas?",
         answer:
-          "lorem ipsum",
+          "O módulo reúne os plantios ativos da propriedade, cultura, talhão, estágio e datas previstas de colheita, e cruza essas informações com dados de clima, solo e irrigação já cadastrados. A partir daí, modelos de inteligência artificial estimam produtividade, classificação da safra e necessidade hídrica, exibidos no cronograma e na tabela de predições. Cada resultado fica salvo no histórico para você acompanhar a evolução. Quanto mais completos os cadastros de área, cultura e condições do campo, mais consistente fica a previsão.",
       },
     ],
   },
@@ -126,7 +126,7 @@ export const faqCategories: FaqCategory[] = [
         id: "seguranca",
         question: "Meus dados ficam seguros?",
         answer:
-          "lorem ipsum",
+          "Sim. Suas informações ficam armazenadas no banco de dados da plataforma e só podem ser acessadas após login com e-mail e senha. A senha nunca é guardada em texto aberto, ela é protegida por hash antes de ser salva. Integrações com serviços externos, como clima e IA, acontecem no servidor, sem expor chaves ou dados sensíveis no navegador. Os cadastros da propriedade permanecem vinculados à sua conta de usuário.",
       },
     ],
   },

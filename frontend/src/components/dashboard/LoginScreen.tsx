@@ -201,7 +201,7 @@ export function LoginScreen({
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`${btnClick} w-full rounded-lg bg-verde-floresta px-4 py-3 text-sm font-semibold text-bege-natural hover:bg-verde-floresta/90 disabled:cursor-not-allowed disabled:opacity-60`}
+            className={`${btnClick} w-full rounded-lg bg-verde-floresta px-4 py-3 text-sm font-semibold text-white hover:bg-verde-floresta/90 disabled:cursor-not-allowed disabled:opacity-60`}
           >
             {isSubmitting
               ? isRegister

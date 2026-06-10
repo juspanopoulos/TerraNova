@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Bot, CloudSun, Droplets, Leaf, MapPinned, Sprout } from "lucide-react";
+import { CustomSelect } from "@/components/dashboard/DashboardPickers";
 import { DashboardCard } from "@/components/dashboard/ui";
 import {
   btnClick,
@@ -110,13 +111,15 @@ function AreaSelect({
   onChange: (value: number) => void;
 }) {
   return (
-    <select value={value} onChange={(event) => onChange(Number(event.target.value))} className={inputField}>
-      {areas.map((area) => (
-        <option key={area.idArea} value={area.idArea}>
-          {area.nomeArea}
-        </option>
-      ))}
-    </select>
+    <CustomSelect
+      value={value === "" ? "" : String(value)}
+      onChange={(next) => onChange(Number(next))}
+      placeholder="Selecionar área"
+      options={areas.map((area) => ({
+        value: String(area.idArea),
+        label: area.nomeArea,
+      }))}
+    />
   );
 }
 
@@ -405,13 +408,11 @@ export function OperationalDataPanel() {
                 <input className={inputField} type="number" min="0" step="0.01" value={areaForm.areaHectares} onChange={(event) => setAreaForm({ ...areaForm, areaHectares: event.target.value })} />
               </Field>
               <Field label="Tipo de solo">
-                <select className={inputField} value={areaForm.tipoSolo} onChange={(event) => setAreaForm({ ...areaForm, tipoSolo: event.target.value })}>
-                  {SOIL_TYPE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={areaForm.tipoSolo}
+                  onChange={(tipoSolo) => setAreaForm({ ...areaForm, tipoSolo })}
+                  options={[...SOIL_TYPE_OPTIONS]}
+                />
               </Field>
             </div>
           )}
@@ -422,22 +423,18 @@ export function OperationalDataPanel() {
                 <input className={inputField} type="number" min="0" max="100" step="0.01" value={soilForm.umidadeSolo} onChange={(event) => setSoilForm({ ...soilForm, umidadeSolo: event.target.value })} />
               </Field>
               <Field label="Tipo de solo">
-                <select className={inputField} value={soilForm.tipoSolo} onChange={(event) => setSoilForm({ ...soilForm, tipoSolo: event.target.value })}>
-                  {SOIL_TYPE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={soilForm.tipoSolo}
+                  onChange={(tipoSolo) => setSoilForm({ ...soilForm, tipoSolo })}
+                  options={[...SOIL_TYPE_OPTIONS]}
+                />
               </Field>
               <Field label="Fonte">
-                <select className={inputField} value={soilForm.fonte} onChange={(event) => setSoilForm({ ...soilForm, fonte: event.target.value })}>
-                  {SOURCE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={soilForm.fonte}
+                  onChange={(fonte) => setSoilForm({ ...soilForm, fonte })}
+                  options={[...SOURCE_OPTIONS]}
+                />
               </Field>
             </div>
           )}
@@ -445,13 +442,11 @@ export function OperationalDataPanel() {
           {mode === "irrigation" && (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <Field label="Tipo">
-                <select className={inputField} value={irrigationForm.tipoIrrigacao} onChange={(event) => setIrrigationForm({ ...irrigationForm, tipoIrrigacao: event.target.value })}>
-                  {IRRIGATION_TYPE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={irrigationForm.tipoIrrigacao}
+                  onChange={(tipoIrrigacao) => setIrrigationForm({ ...irrigationForm, tipoIrrigacao })}
+                  options={[...IRRIGATION_TYPE_OPTIONS]}
+                />
               </Field>
               <Field label="Irrigação anterior (mm)">
                 <input className={inputField} type="number" min="0" step="0.01" value={irrigationForm.irrigacaoAnteriorMm} onChange={(event) => setIrrigationForm({ ...irrigationForm, irrigacaoAnteriorMm: event.target.value })} />
@@ -463,22 +458,18 @@ export function OperationalDataPanel() {
                 <input className={inputField} type="number" min="0" step="0.01" value={irrigationForm.areaCampoHectare} onChange={(event) => setIrrigationForm({ ...irrigationForm, areaCampoHectare: event.target.value })} />
               </Field>
               <Field label="Cobertura de solo">
-                <select className={inputField} value={irrigationForm.usouCoberturaSolo} onChange={(event) => setIrrigationForm({ ...irrigationForm, usouCoberturaSolo: event.target.value })}>
-                  {YES_NO_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={irrigationForm.usouCoberturaSolo}
+                  onChange={(usouCoberturaSolo) => setIrrigationForm({ ...irrigationForm, usouCoberturaSolo })}
+                  options={[...YES_NO_OPTIONS]}
+                />
               </Field>
               <Field label="Origem">
-                <select className={inputField} value={irrigationForm.origem} onChange={(event) => setIrrigationForm({ ...irrigationForm, origem: event.target.value })}>
-                  {SOURCE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  value={irrigationForm.origem}
+                  onChange={(origem) => setIrrigationForm({ ...irrigationForm, origem })}
+                  options={[...SOURCE_OPTIONS]}
+                />
               </Field>
             </div>
           )}

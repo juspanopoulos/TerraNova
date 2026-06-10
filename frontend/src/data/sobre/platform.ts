@@ -11,13 +11,18 @@ import {
 import decidirComCalmaImg from "@/assets/images/sobre/decidir-com-calma.png";
 import noSeuTempoImg from "@/assets/images/sobre/no-seu-tempo.png";
 import verOQueImportaImg from "@/assets/images/sobre/ver-o-que-importa.png";
+import alertasPreviewImg from "@/assets/images/sobre/painel/alertas.png";
+import consumoHidricoPreviewImg from "@/assets/images/sobre/painel/consumo-hidrico.png";
+import controleClimaticoPreviewImg from "@/assets/images/sobre/painel/controle-climatico.png";
+import controleSoloPreviewImg from "@/assets/images/sobre/painel/controle-solo.png";
+import previsaoColheitasPreviewImg from "@/assets/images/sobre/painel/previsao-colheitas.png";
+import visaoGeralPreviewImg from "@/assets/images/sobre/painel/visao-geral.png";
 
 export type PlatformModule = {
   id: string;
   title: string;
   description: string;
   icon: LucideIcon;
-  /** Substituir pela captura do dashboard quando disponível */
   previewImage?: string | null;
 };
 
@@ -28,6 +33,7 @@ export const platformModules: PlatformModule[] = [
     description:
       "Painel unificado com indicadores da propriedade, clima, solo, água e alertas em um só lugar.",
     icon: LayoutDashboard,
+    previewImage: visaoGeralPreviewImg,
   },
   {
     id: "alerts",
@@ -35,6 +41,7 @@ export const platformModules: PlatformModule[] = [
     description:
       "Antecipe riscos como seca, calor extremo e enchente com sinais claros e priorização por criticidade.",
     icon: Bell,
+    previewImage: alertasPreviewImg,
   },
   {
     id: "climate",
@@ -42,6 +49,7 @@ export const platformModules: PlatformModule[] = [
     description:
       "Temperatura, umidade, vento e previsões reunidos para reduzir incertezas antes da safra sofrer.",
     icon: Cloud,
+    previewImage: controleClimaticoPreviewImg,
   },
   {
     id: "soil",
@@ -49,6 +57,7 @@ export const platformModules: PlatformModule[] = [
     description:
       "Monitore umidade e saúde do solo por setor, com leituras que orientam irrigação e manejo.",
     icon: Leaf,
+    previewImage: controleSoloPreviewImg,
   },
   {
     id: "growth",
@@ -56,6 +65,7 @@ export const platformModules: PlatformModule[] = [
     description:
       "Acompanhe maturação das culturas e janelas de colheita com base em dados históricos e atuais.",
     icon: Sprout,
+    previewImage: previsaoColheitasPreviewImg,
   },
   {
     id: "water",
@@ -63,6 +73,7 @@ export const platformModules: PlatformModule[] = [
     description:
       "Eficiência de irrigação, comparativos por setor e economia de água com metas visíveis.",
     icon: Droplets,
+    previewImage: consumoHidricoPreviewImg,
   },
 ];
 

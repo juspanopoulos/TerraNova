@@ -1,10 +1,15 @@
 import { useState } from "react";
-import { ImageIcon } from "lucide-react";
 import type { PlatformModule } from "@/data/sobre/platform";
 import { platformModules } from "@/data/sobre/platform";
 import { AboutSectionHeading } from "@/components/sobre/AboutSectionHeading";
 import { aboutCard, aboutContentGap } from "@/constants/tokens/about";
 import { copyOnLight } from "@/constants/layout";
+
+/** Proporção comum das capturas do painel (~1918×909) para uniformizar exibição. */
+const modulePreviewFrameClass =
+  "aspect-[1918/909] w-full overflow-hidden rounded-xl border border-verde-floresta/10 shadow-sm shadow-verde-floresta/5";
+
+const modulePreviewImageClass = "h-full w-full object-cover object-left-top";
 
 function ModuleDetailPanel({ module }: { module: PlatformModule }) {
   const Icon = module.icon;
@@ -29,28 +34,17 @@ function ModuleDetailPanel({ module }: { module: PlatformModule }) {
         {module.description}
       </p>
 
-      <div className="mt-6 sm:mt-8">
-        {module.previewImage ? (
+      {module.previewImage ? (
+        <div className={`${modulePreviewFrameClass} mt-6 sm:mt-8`}>
           <img
             src={module.previewImage}
             alt={`Prévia do módulo ${module.title} no dashboard`}
-            className="w-full rounded-xl border border-verde-floresta/10 object-cover object-top shadow-sm shadow-verde-floresta/5"
+            className={modulePreviewImageClass}
             loading="lazy"
             decoding="async"
           />
-        ) : (
-          <div
-            className="flex aspect-video w-full flex-col items-center justify-center rounded-xl border border-dashed border-verde-floresta/25 bg-verde-floresta/[0.03] px-4 text-center"
-            aria-label={`Placeholder da prévia do módulo ${module.title}`}
-          >
-            <ImageIcon className="size-8 text-verde-floresta/35 sm:size-9" strokeWidth={1.5} aria-hidden />
-            <p className="mt-3 text-sm font-semibold text-preto-suave/55">
-              Prévia do dashboard
-            </p>
-            <p className="mt-1 text-xs text-preto-suave/40">{module.title}</p>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 }
