@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,6 +81,33 @@ public class DadoClimaticoDAO implements CrudDAO<DadoClimatico> {
             return dados;
         } catch (SQLException exception) {
             throw new BancoDadosException("Erro ao buscar historico climatico por area.", exception);
+        }
+    }
+
+    public Optional<DadoClimatico> buscarPorAreaDataReferenciaFonte(
+            Long idArea,
+            LocalDate dataReferencia,
+            FonteApi fonteApi
+    ) {
+        String sql = """
+                SELECT id_dado, id_area, dt_coleta, dt_referencia, nr_temperatura, nr_umidade,
+                       nr_precipitacao, nr_indice_uv, nr_velocidade_vento_kmh, nr_radiacao_solar, ds_fonte_api
+                FROM TN_DADO_CLIMATICO
+                WHERE id_area = ?
+                  AND dt_referencia = ?
+                  AND ds_fonte_api = ?
+                ORDER BY dt_coleta DESC
+                """;
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, idArea);
+            DaoUtils.setLocalDate(statement, 2, dataReferencia);
+            DaoUtils.setEnum(statement, 3, fonteApi);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? Optional.of(mapear(resultSet)) : Optional.empty();
+            }
+        } catch (SQLException exception) {
+            throw new BancoDadosException("Erro ao buscar dado climatico por area, data e fonte.", exception);
         }
     }
 

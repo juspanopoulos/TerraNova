@@ -159,6 +159,7 @@ export const contentPad = "px-4 sm:px-5 md:px-6 lg:px-8";
 export const DASHBOARD_ROUTES = {
   root: "/plataforma",
   visaoGeral: "/plataforma/visao-geral",
+  cadastrarArea: "/plataforma/areas/cadastrar",
   visaoDia: "/plataforma/visao/dia",
   visaoSemana: "/plataforma/visao/semana",
   visaoMes: "/plataforma/visao/mes",
@@ -275,6 +276,7 @@ export const VISION_PAGE_TITLES: Record<TimeFilter, string> = {
 };
 
 export function pageTitleFromPath(pathname: string): string {
+  if (pathname.startsWith(DASHBOARD_ROUTES.cadastrarArea)) return "Cadastrar uma área";
   const settingsTab = pathToSettingsTab(pathname);
   if (settingsTab) return SETTINGS_TAB_TITLES[settingsTab];
   const timeFilter = TIME_FILTER_FROM_PATH(pathname);
@@ -286,6 +288,12 @@ export function breadcrumbsFromPath(pathname: string): BreadcrumbItem[] {
   if (isVisaoGeralHub(pathname)) return [];
 
   const items: BreadcrumbItem[] = [{ label: "Plataforma", to: DASHBOARD_ROUTES.visaoGeral }];
+
+  if (pathname.startsWith(DASHBOARD_ROUTES.cadastrarArea)) {
+    items.push({ label: "Visão Geral", to: DASHBOARD_ROUTES.visaoGeral });
+    items.push({ label: "Cadastrar uma área" });
+    return items;
+  }
 
   const settingsTab = pathToSettingsTab(pathname);
   if (settingsTab) {

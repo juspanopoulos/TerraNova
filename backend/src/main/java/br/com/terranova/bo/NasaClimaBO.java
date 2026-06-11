@@ -52,6 +52,19 @@ public class NasaClimaBO {
         validarCoordenadas(propriedade);
 
         LocalDate dataConsulta = dataReferencia == null ? LocalDate.now().minusDays(5) : dataReferencia;
+        DadoClimaticoResponse dadoExistente = dadoClimaticoBO
+                .buscarPorAreaDataReferenciaFonte(idArea, dataConsulta, FonteApi.NASA)
+                .orElse(null);
+        if (dadoExistente != null) {
+            return new ColetaNasaResponse(
+                    idArea,
+                    dataConsulta,
+                    propriedade.getLatitude(),
+                    propriedade.getLongitude(),
+                    dadoExistente
+            );
+        }
+
         String dataNasa = dataConsulta.format(DateTimeFormatter.BASIC_ISO_DATE);
 
         NasaPowerResponse resposta;

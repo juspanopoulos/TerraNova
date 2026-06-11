@@ -10,8 +10,10 @@ import br.com.terranova.exceptions.EntidadeNaoEncontradaException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class DadoClimaticoBO {
@@ -29,6 +31,16 @@ public class DadoClimaticoBO {
     public List<DadoClimaticoResponse> listarHistoricoPorArea(Long idArea) {
         validarArea(idArea);
         return dadoClimaticoDAO.buscarHistoricoPorArea(idArea).stream().map(this::toResponse).toList();
+    }
+
+    public Optional<DadoClimaticoResponse> buscarPorAreaDataReferenciaFonte(
+            Long idArea,
+            LocalDate dataReferencia,
+            FonteApi fonteApi
+    ) {
+        validarArea(idArea);
+        return dadoClimaticoDAO.buscarPorAreaDataReferenciaFonte(idArea, dataReferencia, fonteApi)
+                .map(this::toResponse);
     }
 
     public DadoClimaticoResponse buscarPorId(Long id) {

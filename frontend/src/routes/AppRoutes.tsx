@@ -14,6 +14,7 @@ import NotFound from "@/pages/NotFound";
 import Sobre from "@/pages/Sobre";
 import AguaPage from "@/pages/plataforma/AguaPage";
 import AlertasPage from "@/pages/plataforma/AlertasPage";
+import CadastrarAreaPage from "@/pages/plataforma/CadastrarAreaPage";
 import ClimaPage from "@/pages/plataforma/ClimaPage";
 import ColheitasPage from "@/pages/plataforma/ColheitasPage";
 import EmpresaPage from "@/pages/plataforma/EmpresaPage";
@@ -53,6 +54,7 @@ export const AppRoutes = () => {
           <Route path={ROUTES.plataforma} element={<DashboardLayout />}>
             <Route index element={<Navigate to="visao-geral" replace />} />
             <Route path="visao-geral" element={<VisaoGeralPage />} />
+            <Route path="areas/cadastrar" element={<CadastrarAreaPage />} />
             <Route path="visao/dia" element={<VisaoDiaPage />} />
             <Route path="visao/semana" element={<VisaoSemanaPage />} />
             <Route path="visao/mes" element={<VisaoMesPage />} />

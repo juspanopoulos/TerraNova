@@ -1,15 +1,201 @@
-import { useMemo, useState } from "react";
-import { Droplets, Thermometer, Wind } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AlertCircle, CheckCircle2, CloudSun, Droplets, Loader2, Thermometer, Wind } from "lucide-react";
 import { ClimateAreaChart } from "@/components/dashboard/charts";
 import { DashboardCard } from "@/components/dashboard/ui";
-import { btnClick, cardBase, gridCols3, labelMuted, textPrimary } from "@/constants/dashboard";
+import { btnClick, cardBase, gridCols3, labelMuted, textMuted, textPrimary } from "@/constants/dashboard";
 import { useDashboard } from "@/context/DashboardContext";
+import { ApiRequestError } from "@/lib/api/client";
+import { coletarClimaNasa } from "@/lib/api/climateApi";
 import { climateMetricColor } from "@/lib/dashboard/chartTheme";
+import type { DadoClimaticoResponse } from "@/lib/api/types";
+
+function formatDate(value: string | null | undefined) {
+  if (!value) return "Não informada";
+  const normalized = value.includes("T") ? value : `${value}T00:00:00`;
+  const date = new Date(normalized);
+  if (Number.isNaN(date.getTime())) return "Não informada";
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
+
+function formatOptionalNumber(value: number | null | undefined, unit: string) {
+  if (value === null || value === undefined) return "Não informado";
+  return `${Number(value).toLocaleString("pt-BR")} ${unit}`;
+}
+
+function sourceLabel(source: string | null | undefined) {
+  if (source === "NASA") return "NASA POWER";
+  if (!source) return "Não informada";
+  return source
+    .toLowerCase()
+    .split("_")
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
+function nasaReferenceDate() {
+  const date = new Date();
+  date.setDate(date.getDate() - 5);
+  return date.toISOString().slice(0, 10);
+}
+
+function isSameDate(value: string | null | undefined, isoDate: string) {
+  return Boolean(value && value.slice(0, 10) === isoDate);
+}
+
+function errorMessageFromApi(error: unknown) {
+  if (error instanceof ApiRequestError) return error.message;
+  return "Não foi possível consultar a NASA POWER agora.";
+}
+
+function ClimateDataCard({
+  latestClimate,
+  collecting,
+  collectionError,
+  missingCoordinates,
+  hasArea,
+}: {
+  latestClimate: DadoClimaticoResponse | null;
+  collecting: boolean;
+  collectionError: string | null;
+  missingCoordinates: boolean;
+  hasArea: boolean;
+}) {
+  const status = collecting
+    ? "Atualizando"
+    : collectionError || missingCoordinates || !hasArea
+      ? "Atenção"
+      : latestClimate
+        ? "Atualizado"
+        : "Sem dados";
+  const StatusIcon = collecting ? Loader2 : status === "Atualizado" ? CheckCircle2 : AlertCircle;
+
+  return (
+    <DashboardCard className="h-full">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className={labelMuted}>Dados climáticos</p>
+          <h2 className={`mt-1 text-lg font-bold ${textPrimary}`}>{status}</h2>
+        </div>
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-verde-floresta/10 text-verde-floresta">
+          <CloudSun className="size-5" aria-hidden />
+        </span>
+      </div>
+
+      <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-[var(--db-text)]">
+        <StatusIcon className={`size-4 ${collecting ? "animate-spin" : ""}`} aria-hidden />
+        <span>{collecting ? "Buscando dados na NASA POWER..." : `Fonte: ${sourceLabel(latestClimate?.fonteApi)}`}</span>
+      </div>
+
+      {missingCoordinates ? (
+        <p className={`mt-4 text-sm leading-relaxed ${textMuted}`}>
+          Informe latitude e longitude da propriedade para consultar a NASA POWER.
+        </p>
+      ) : null}
+      {!hasArea ? (
+        <p className={`mt-4 text-sm leading-relaxed ${textMuted}`}>
+          Cadastre uma área monitorada para habilitar a coleta climática.
+        </p>
+      ) : null}
+      {collectionError ? (
+        <p className="mt-4 text-sm font-semibold text-red-600" role="alert">
+          {collectionError}
+        </p>
+      ) : null}
+
+      <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+        <div>
+          <p className={labelMuted}>Última coleta</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatDate(latestClimate?.dataColeta)}</p>
+        </div>
+        <div>
+          <p className={labelMuted}>Data referência</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatDate(latestClimate?.dataReferencia)}</p>
+        </div>
+        <div>
+          <p className={labelMuted}>Temperatura</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatOptionalNumber(latestClimate?.temperatura, "°C")}</p>
+        </div>
+        <div>
+          <p className={labelMuted}>Umidade</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatOptionalNumber(latestClimate?.umidade, "%")}</p>
+        </div>
+        <div>
+          <p className={labelMuted}>Precipitação</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatOptionalNumber(latestClimate?.precipitacao, "mm")}</p>
+        </div>
+        <div>
+          <p className={labelMuted}>Vento</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>
+            {formatOptionalNumber(latestClimate?.velocidadeVentoKmh, "km/h")}
+          </p>
+        </div>
+      </div>
+    </DashboardCard>
+  );
+}
 
 export function ClimateView() {
-  const { climate, climateHistory, preferences, pageTimeFilter } = useDashboard();
+  const {
+    climate,
+    climateHistory,
+    preferences,
+    pageTimeFilter,
+    selectedArea,
+    dashboardAreas,
+    company,
+    reloadDashboard,
+  } = useDashboard();
   const history = climateHistory[pageTimeFilter];
   const [metric, setMetric] = useState<"temperature" | "humidity" | "wind">("temperature");
+  const [collecting, setCollecting] = useState(false);
+  const [collectionError, setCollectionError] = useState<string | null>(null);
+  const attemptedCollectionsRef = useRef(new Set<string>());
+
+  const areaId = selectedArea?.idArea ?? dashboardAreas[0]?.idArea ?? null;
+  const latestClimate = selectedArea?.ultimoDadoClimatico ?? null;
+  const referenceDate = useMemo(() => nasaReferenceDate(), []);
+  const missingCoordinates = company.latitude === null || company.longitude === null;
+  const hasTargetNasaData =
+    latestClimate?.fonteApi === "NASA" && isSameDate(latestClimate.dataReferencia, referenceDate);
+  const visibleCollectionError = areaId && !missingCoordinates ? collectionError : null;
+
+  useEffect(() => {
+    if (!areaId || missingCoordinates || hasTargetNasaData) return;
+
+    const attemptKey = `${areaId}-${referenceDate}`;
+    if (attemptedCollectionsRef.current.has(attemptKey)) return;
+    attemptedCollectionsRef.current.add(attemptKey);
+
+    let cancelled = false;
+
+    void Promise.resolve()
+      .then(() => {
+        if (cancelled) return null;
+        setCollecting(true);
+        setCollectionError(null);
+        return coletarClimaNasa(areaId, referenceDate);
+      })
+      .then(async () => {
+        if (cancelled) return;
+        await reloadDashboard();
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setCollectionError(errorMessageFromApi(error));
+      })
+      .finally(() => {
+        if (cancelled) return;
+        setCollecting(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [areaId, hasTargetNasaData, missingCoordinates, referenceDate, reloadDashboard]);
 
   const metrics = useMemo(
     () => [
@@ -72,15 +258,25 @@ export function ClimateView() {
           );
         })}
       </div>
-      <DashboardCard>
-        <ClimateAreaChart
-          label={`Histórico de ${active.label}`}
-          values={active.data}
-          labels={history.labels}
-          unit={active.unit}
-          color={active.color}
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(20rem,1fr)]">
+        <DashboardCard>
+          <ClimateAreaChart
+            label={`Histórico de ${active.label}`}
+            values={active.data}
+            labels={history.labels}
+            unit={active.unit}
+            color={active.color}
+          />
+        </DashboardCard>
+        <ClimateDataCard
+          latestClimate={latestClimate}
+          collecting={collecting}
+          collectionError={visibleCollectionError}
+          missingCoordinates={missingCoordinates}
+          hasArea={Boolean(areaId)}
         />
-      </DashboardCard>
+      </div>
     </div>
   );
 }
