@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
@@ -209,6 +210,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [loadStatus, setLoadStatus] = useState<DashboardLoadStatus>("idle");
   const [loadError, setLoadError] = useState<DashboardLoadError | null>(null);
   const loadRequestRef = useRef(0);
+  const loadStatusRef = useRef<DashboardLoadStatus>("idle");
 
   const [company, setCompany] = useState<CompanyProfile>({ ...EMPTY_COMPANY_PROFILE });
 
@@ -246,7 +248,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     }
 
     const requestId = ++loadRequestRef.current;
-    setLoadStatus("loading");
+    const keepCurrentScreenVisible = loadStatusRef.current === "success";
+    if (!keepCurrentScreenVisible) {
+      setLoadStatus("loading");
+    }
     setLoadError(null);
 
     try {
@@ -268,7 +273,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       if (requestId !== loadRequestRef.current) return;
       setLoadError(toDashboardLoadError(err));
-      setLoadStatus("error");
+      if (!keepCurrentScreenVisible) {
+        setLoadStatus("error");
+      }
     }
   }, [authUser]);
 
@@ -289,6 +296,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setIsLoadingLoginUsers(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadStatusRef.current = loadStatus;
+  }, [loadStatus]);
 
   const login = useCallback(async (credentials: LoginCredentials) => {
     setLoginError(null);
@@ -488,7 +499,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isAuthenticated) return;
-    void reloadLoginUsers();
+    const timeoutId = window.setTimeout(() => void reloadLoginUsers(), 0);
+    return () => window.clearTimeout(timeoutId);
   }, [isAuthenticated, reloadLoginUsers]);
 
   useEffect(() => {
@@ -515,7 +527,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    void reloadDashboard();
+    const timeoutId = window.setTimeout(() => void reloadDashboard(), 0);
+    return () => window.clearTimeout(timeoutId);
   }, [isAuthenticated, reloadDashboard]);
 
   const prevPathRef = useRef(location.pathname);
@@ -523,7 +536,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     if (!isAuthenticated) return;
     if (prevPathRef.current === location.pathname) return;
     prevPathRef.current = location.pathname;
-    void reloadDashboard();
+    const timeoutId = window.setTimeout(() => void reloadDashboard(), 0);
+    return () => window.clearTimeout(timeoutId);
   }, [location.pathname, isAuthenticated, reloadDashboard]);
 
   useEffect(() => {

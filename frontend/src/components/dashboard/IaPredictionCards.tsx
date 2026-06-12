@@ -11,6 +11,11 @@ import {
 } from "@/constants/dashboard";
 import { ApiRequestError } from "@/lib/api/client";
 import { predizerIrrigacao, predizerProdutividade } from "@/lib/api/iaApi";
+import {
+  inferIrrigationCrop,
+  irrigationCropLabel,
+  irrigationSituationLabel,
+} from "@/lib/dashboard/irrigationModel";
 import type {
   DashboardAreaResumoResponse,
   IaIrrigacaoResponse,
@@ -20,6 +25,7 @@ import type {
   CompanyProfile,
   CropPlantingItem,
   IrrigationRow,
+  PredictionItem,
   SoilSectorState,
   SoilState,
 } from "@/types/dashboard";
@@ -54,15 +60,6 @@ const PRODUCTIVITY_CROP_OPTIONS = [
   { value: "Soybean", label: "Soja" },
   { value: "Wheat", label: "Trigo" },
   { value: "Maize", label: "Milho" },
-];
-
-const IRRIGATION_CROP_OPTIONS = [
-  { value: "Wheat", label: "Trigo" },
-  { value: "Maize", label: "Milho" },
-  { value: "Cotton", label: "Algodão" },
-  { value: "Rice", label: "Arroz" },
-  { value: "Sugarcane", label: "Cana-de-açúcar" },
-  { value: "Potato", label: "Batata" },
 ];
 
 const WEATHER_OPTIONS = [
@@ -206,17 +203,6 @@ function inferProductivityCrop(value: string) {
   if (text.includes("soja") || text.includes("soy")) return "Soybean";
   if (text.includes("trigo") || text.includes("wheat")) return "Wheat";
   if (text.includes("milho") || text.includes("maize") || text.includes("corn")) return "Maize";
-  return "";
-}
-
-function inferIrrigationCrop(value: string) {
-  const text = normalize(value);
-  if (text.includes("trigo") || text.includes("wheat")) return "Wheat";
-  if (text.includes("milho") || text.includes("maize") || text.includes("corn")) return "Maize";
-  if (text.includes("algod")) return "Cotton";
-  if (text.includes("arroz") || text.includes("rice")) return "Rice";
-  if (text.includes("cana") || text.includes("sugar")) return "Sugarcane";
-  if (text.includes("batata") || text.includes("potato")) return "Potato";
   return "";
 }
 
@@ -575,17 +561,21 @@ export function ProductivityPredictionCard({
 
 export function IrrigationPredictionCard({
   crop,
+  selectedCropName,
   company,
   soil,
   soilSector,
   irrigation,
+  latestPrediction,
   onPredicted,
 }: {
   crop: CropPlantingItem | null;
+  selectedCropName?: string | null;
   company: CompanyProfile;
   soil: SoilState;
   soilSector: SoilSectorState | null;
   irrigation: IrrigationRow | null;
+  latestPrediction: PredictionItem | null;
   onPredicted: () => Promise<void>;
 }) {
   const initialDraft = useMemo(
@@ -598,10 +588,13 @@ export function IrrigationPredictionCard({
   const [result, setResult] = useState<IaIrrigacaoResponse | null>(null);
 
   const missingCoordinates = company.latitude === null || company.longitude === null;
+  const unsupportedSelectedCrop = Boolean(selectedCropName && !crop);
+  const selectedModelCrop = crop ? inferIrrigationCrop(crop.name) : "";
   const canPredict = Boolean(
     crop &&
     irrigation &&
     !missingCoordinates &&
+    selectedModelCrop &&
     draft.soil_type &&
     draft.crop_type &&
     draft.crop_growth_stage &&
@@ -650,6 +643,11 @@ export function IrrigationPredictionCard({
       setMessage(errorMessage(error, "Não foi possível gerar a predição de irrigação."));
     }
   };
+  const visibleRecommendation = result?.recomendado ?? latestPrediction?.waterVolumeMm ?? null;
+  const visibleSituation = result
+    ? irrigationSituationLabel(result.situacao)
+    : latestPrediction?.situation ?? null;
+  const hasVisiblePrediction = visibleRecommendation !== null || Boolean(visibleSituation);
 
   return (
     <DashboardCard className="h-full">
@@ -657,7 +655,9 @@ export function IrrigationPredictionCard({
         <div>
           <p className={labelMuted}>Predição de irrigação</p>
           <h2 className={`mt-1 text-lg font-bold ${textPrimary}`}>
-            {result ? formatNumber(result.recomendado, "mm") : crop?.name ?? "Sem plantio selecionado"}
+            {visibleRecommendation !== null
+              ? formatNumber(visibleRecommendation, "mm")
+              : crop?.name ?? (unsupportedSelectedCrop ? "Cultura incompatível" : "Sem plantio selecionado")}
           </h2>
         </div>
         <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-verde-floresta/10 text-verde-floresta">
@@ -669,22 +669,46 @@ export function IrrigationPredictionCard({
         Recomenda água usando solo, plantio, irrigação, área e coordenadas da propriedade.
       </p>
 
-      {result ? (
+      {hasVisiblePrediction ? (
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className={cardInset}>
-            <p className={labelMuted}>Consumo atual</p>
-            <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{formatNumber(result.consumo_atual, "mm")}</p>
+            <p className={labelMuted}>Água recomendada</p>
+            <p className={`mt-1 text-lg font-bold ${textPrimary}`}>
+              {formatNumber(visibleRecommendation, "mm")}
+            </p>
           </div>
           <div className={cardInset}>
+            <p className={labelMuted}>{result ? "Consumo atual" : "Última predição"}</p>
+            <p className={`mt-1 text-lg font-bold ${textPrimary}`}>
+              {result ? formatNumber(result.consumo_atual, "mm") : latestPrediction?.date || "Salva"}
+            </p>
+          </div>
+          <div className={`${cardInset} col-span-2`}>
             <p className={labelMuted}>Situação</p>
-            <p className={`mt-1 text-sm font-bold ${textPrimary}`}>{result.situacao}</p>
+            <p className={`mt-1 text-sm font-bold ${textPrimary}`}>{visibleSituation ?? "Não informada"}</p>
           </div>
         </div>
+      ) : null}
+      {hasVisiblePrediction ? (
+        <p className={`mt-3 text-xs leading-relaxed ${textMuted}`}>
+          {result
+            ? "Resultado salvo no histórico de predições de irrigação abaixo."
+            : "Exibindo a última predição de irrigação salva para esta área."}
+        </p>
       ) : null}
 
       {missingCoordinates ? (
         <p className={`mt-4 text-sm ${textMuted}`}>
           Informe latitude e longitude da propriedade para habilitar a predição.
+        </p>
+      ) : null}
+      {unsupportedSelectedCrop ? (
+        <p
+          className="mt-4 rounded-lg border border-red-500/25 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-600"
+          role="alert"
+        >
+          A cultura {selectedCropName} não é aceita pelo modelo de irrigação. Selecione um plantio de
+          trigo, milho, algodão, arroz, cana-de-açúcar ou batata para gerar a predição.
         </p>
       ) : null}
 
@@ -711,17 +735,13 @@ export function IrrigationPredictionCard({
             onChange={(event) => setDraft({ ...draft, soil_moisture: event.target.value })}
           />
         </SmallField>
-        <SmallField label="Cultura">
-          <select
-            className={inputField}
-            value={draft.crop_type}
-            onChange={(event) => setDraft({ ...draft, crop_type: event.target.value })}
-          >
-            <option value="">Selecione</option>
-            {IRRIGATION_CROP_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
+        <SmallField label="Cultura usada pelo modelo">
+          <input
+            className={`${inputField} cursor-not-allowed opacity-80`}
+            type="text"
+            readOnly
+            value={draft.crop_type ? irrigationCropLabel(draft.crop_type) : "Não compatível"}
+          />
         </SmallField>
         <SmallField label="Estágio">
           <select
@@ -800,12 +820,6 @@ export function IrrigationPredictionCard({
         {status === "loading" ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <BrainCircuit className="size-4" aria-hidden />}
         {status === "loading" ? "Gerando predição..." : "Gerar predição"}
       </button>
-
-      {!draft.crop_type ? (
-        <p className={`mt-3 text-xs ${textMuted}`}>
-          A cultura deste plantio não existe no modelo de irrigação; selecione a mais próxima para continuar.
-        </p>
-      ) : null}
     </DashboardCard>
   );
 }

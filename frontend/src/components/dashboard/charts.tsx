@@ -54,7 +54,19 @@ export function DonutChart({
   const circumference = 2 * Math.PI * r;
   const total = segments.reduce((s, seg) => s + seg.value, 0);
   const safeTotal = Math.max(total, 1);
-  let accumulated = 0;
+  const segmentsWithGeometry = segments.reduce<{
+    offset: number;
+    items: Array<{ dash: number; offset: number; segment: ChartSegment }>;
+  }>(
+    (acc, segment) => {
+      const dash = (segment.value / safeTotal) * circumference;
+      return {
+        offset: acc.offset + dash,
+        items: [...acc.items, { dash, offset: acc.offset, segment }],
+      };
+    },
+    { offset: 0, items: [] },
+  ).items;
   const selected = segments.find((s) => s.id === selectedId);
   const hoveredSeg = hovered ? segments.find((s) => s.id === hovered.id) : null;
 
@@ -125,10 +137,7 @@ export function DonutChart({
               stroke="var(--db-chart-track)"
               strokeWidth={strokeWidth}
             />
-            {segments.map((seg) => {
-              const dash = (seg.value / safeTotal) * circumference;
-              const offset = accumulated;
-              accumulated += dash;
+            {segmentsWithGeometry.map(({ dash, offset, segment: seg }) => {
               const active = selectedId === seg.id || hovered?.id === seg.id;
               const dimmed = selectedId !== null && selectedId !== seg.id;
               return (
@@ -457,7 +466,7 @@ export function WaterBarChart({
   };
 
   return (
-    <div className="relative flex items-end justify-between gap-2" data-chart-root>
+    <div className="relative flex min-h-44 items-end justify-between gap-2" data-chart-root>
       {values.map((v, i) => (
         <button
           key={labels[i]}
@@ -470,8 +479,8 @@ export function WaterBarChart({
           <div
             className={`w-full max-w-12 rounded-t-md bg-linear-to-t from-verde-floresta/75 to-verde-floresta ${chartMotion}`}
             style={{
-              height: `${(v / max) * 120}px`,
-              minHeight: 8,
+              height: `${(v / max) * 148}px`,
+              minHeight: 10,
               opacity:
                 selectedIndex !== null && selectedIndex !== i
                   ? 0.4
