@@ -34,13 +34,13 @@ export function SoilView() {
           </div>
         </DashboardCard>
         <DashboardCard>
-          <p className={`${labelMuted} mb-4`}>Indicadores</p>
+          <p className={`${labelMuted} mb-4`}>Detalhes da leitura atual</p>
           <div className={gridCols2}>
             {[
-              { l: "Umidade", v: `${Math.round(soil.current.moisture)}%` },
-              { l: "Tipo", v: soil.current.soilType },
-              { l: "Fonte", v: soil.current.source },
-              { l: "Coleta", v: soil.current.collectedAt || "Não informada" },
+              { l: "Umidade atual", v: `${Math.round(soil.current.moisture)}%` },
+              { l: "Tipo de solo", v: soil.current.soilType },
+              { l: "Fonte da leitura", v: soil.current.source },
+              { l: "Data da coleta", v: soil.current.collectedAt || "Não informada" },
             ].map((item) => (
               <div key={item.l} className={cardInset}>
                 <p className={labelMuted}>{item.l}</p>

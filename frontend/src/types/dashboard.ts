@@ -184,7 +184,9 @@ export type CropPlantingItem = {
   status: string;
   stage: string;
   plantedAt: string;
+  plantedAtIso: string;
   harvestAt: string;
+  harvestAtIso: string | null;
   waterNeedMm: number | null;
   plantingPeriod: string | null;
   description: string | null;

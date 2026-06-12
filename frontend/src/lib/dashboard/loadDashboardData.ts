@@ -78,6 +78,14 @@ const ALERT_TYPE_LABELS: Record<string, string> = {
   DEFICIT_HIDRICO: "Déficit hídrico",
 };
 
+const SOIL_TYPE_LABELS: Record<string, string> = {
+  clay: "Argiloso",
+  silt: "Siltoso",
+  sandy: "Arenoso",
+  loamy: "Franco",
+  loam: "Franco",
+};
+
 export const EMPTY_CLIMATE: ClimateState = {
   temperature: 0,
   humidity: 0,
@@ -479,6 +487,11 @@ function humanizeEnum(value: string | null | undefined, fallback = "Não informa
     .join(" ");
 }
 
+function soilTypeLabel(value: string | null | undefined) {
+  if (!value) return "Não informado";
+  return SOIL_TYPE_LABELS[value.trim().toLowerCase()] ?? value;
+}
+
 function areaLookup(areas: AreaMonitoradaResponse[], summary: DashboardResumoResponse) {
   const entries = [
     ...summary.areas.map((area) => [area.idArea, area.nomeArea] as const),
@@ -494,7 +507,7 @@ function knownAreas(areas: AreaMonitoradaResponse[], summary: DashboardResumoRes
     map.set(area.idArea, {
       idArea: area.idArea,
       nomeArea: area.nomeArea,
-      tipoSolo: area.tipoSolo,
+      tipoSolo: soilTypeLabel(area.tipoSolo),
       areaHectares: area.areaHectares,
     });
   });
@@ -503,7 +516,7 @@ function knownAreas(areas: AreaMonitoradaResponse[], summary: DashboardResumoRes
     map.set(area.idArea, {
       idArea: area.idArea,
       nomeArea: area.nomeArea,
-      tipoSolo: area.tipoSolo,
+      tipoSolo: soilTypeLabel(area.tipoSolo),
       areaHectares: area.areaHectares,
     });
   });
@@ -710,7 +723,7 @@ function mapSoilData(
   const currentMoisture = toNumber(latest?.umidadeSolo, toNumber(summary.indicadores.mediaUmidadeSolo));
   const current = {
     moisture: currentMoisture,
-    soilType: latest?.tipoSolo ?? selectedArea?.tipoSolo ?? "Não informado",
+    soilType: soilTypeLabel(latest?.tipoSolo ?? selectedArea?.tipoSolo),
     source: humanizeEnum(latest?.fonte),
     collectedAt: formatDateOnly(latest?.dataColeta),
   };
@@ -723,7 +736,7 @@ function mapSoilData(
       idArea: area.idArea,
       sector: area.nomeArea,
       moisture,
-      soilType: areaSoil?.tipoSolo ?? area.tipoSolo ?? "Não informado",
+      soilType: soilTypeLabel(areaSoil?.tipoSolo ?? area.tipoSolo),
       source: humanizeEnum(areaSoil?.fonte),
       collectedAt: formatDateOnly(areaSoil?.dataColeta),
     };
@@ -946,7 +959,9 @@ function mapCrops(
         status: humanizeEnum(planting.status),
         stage: planting.estagioCrescimento ?? "Não informado",
         plantedAt: formatDateOnly(planting.dataPlantio),
+        plantedAtIso: planting.dataPlantio,
         harvestAt: formatDateOnly(planting.dataColheitaPrevista),
+        harvestAtIso: planting.dataColheitaPrevista ?? null,
         waterNeedMm: cultura?.necessidadeHidricaMm ?? null,
         plantingPeriod: cultura?.periodoPlantio ?? null,
         description: cultura?.descricao ?? null,

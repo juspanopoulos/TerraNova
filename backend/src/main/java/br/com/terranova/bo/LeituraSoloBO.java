@@ -71,13 +71,14 @@ public class LeituraSoloBO {
 
     private LeituraSolo toEntity(LeituraSoloRequest request, AreaMonitorada area) {
         BoUtils.percentualObrigatorio(request.umidadeSolo(), "umidadeSolo");
-        String tipoSolo = BoUtils.normalizar(request.tipoSolo());
+        String tipoSolo = BoUtils.tipoSoloPortugues(request.tipoSolo());
+        String tipoSoloArea = BoUtils.tipoSoloPortugues(area.getTipoSolo());
 
         LeituraSolo leitura = new LeituraSolo();
         leitura.setIdArea(request.idArea());
         leitura.setDataColeta(BoUtils.dataHoraOuAgora(request.dataColeta()));
         leitura.setUmidadeSolo(request.umidadeSolo());
-        leitura.setTipoSolo(tipoSolo == null ? area.getTipoSolo() : tipoSolo);
+        leitura.setTipoSolo(tipoSolo == null ? tipoSoloArea : tipoSolo);
         leitura.setFonte(request.fonte() == null ? FonteSolo.MANUAL : request.fonte());
         return leitura;
     }
@@ -88,7 +89,7 @@ public class LeituraSoloBO {
                 leitura.getIdArea(),
                 leitura.getDataColeta(),
                 leitura.getUmidadeSolo(),
-                leitura.getTipoSolo(),
+                BoUtils.tipoSoloPortugues(leitura.getTipoSolo()),
                 leitura.getFonte()
         );
     }

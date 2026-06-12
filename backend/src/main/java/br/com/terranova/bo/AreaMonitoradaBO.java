@@ -63,7 +63,7 @@ public class AreaMonitoradaBO {
         area.setIdPropriedade(request.idPropriedade());
         area.setNomeArea(BoUtils.textoObrigatorio(request.nomeArea(), "nomeArea"));
         area.setAreaHectares(request.areaHectares());
-        area.setTipoSolo(BoUtils.normalizar(request.tipoSolo()));
+        area.setTipoSolo(BoUtils.tipoSoloPortugues(request.tipoSolo()));
         return area;
     }
 
@@ -73,7 +73,7 @@ public class AreaMonitoradaBO {
                 area.getIdPropriedade(),
                 area.getNomeArea(),
                 area.getAreaHectares(),
-                area.getTipoSolo()
+                BoUtils.tipoSoloPortugues(area.getTipoSolo())
         );
     }
 }

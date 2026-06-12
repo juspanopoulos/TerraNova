@@ -18,22 +18,21 @@ import {
   labelMuted,
   sectionTitle,
   textMuted,
-  textPrimary,
   DASHBOARD_ROUTES,
 } from "@/constants/dashboard";
 import { useDashboard } from "@/context/DashboardContext";
 import { ApiRequestError } from "@/lib/api/client";
 import { createAreaMonitorada } from "@/lib/api/areasApi";
-import { createAreaCultura, createCultura } from "@/lib/api/cropsApi";
+import { createAreaCultura, createCultura, listCulturas } from "@/lib/api/cropsApi";
 import { createIrrigacao } from "@/lib/api/irrigationApi";
 import { createLeituraSolo } from "@/lib/api/soilApi";
-import type { IrrigacaoRequest } from "@/lib/api/types";
+import type { CulturaResponse, IrrigacaoRequest } from "@/lib/api/types";
 
 const SOIL_TYPE_OPTIONS = [
-  { value: "Clay", label: "Argiloso" },
-  { value: "Silt", label: "Siltoso" },
-  { value: "Sandy", label: "Arenoso" },
-  { value: "Loamy", label: "Franco" },
+  { value: "Argiloso", label: "Argiloso" },
+  { value: "Siltoso", label: "Siltoso" },
+  { value: "Arenoso", label: "Arenoso" },
+  { value: "Franco", label: "Franco" },
 ] as const;
 
 const IRRIGATION_TYPE_OPTIONS = [
@@ -93,6 +92,29 @@ function validPercent(value: string) {
 function errorMessageFromApi(error: unknown, fallback: string) {
   if (error instanceof ApiRequestError) return error.message;
   return fallback;
+}
+
+function normalizeCultureName(value: string) {
+  return value
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+async function resolveCultura(body: {
+  nomeCultura: string;
+  descricao: string;
+  necessidadeHidricaMm: number;
+  periodoPlantio: string;
+}): Promise<CulturaResponse> {
+  const targetName = normalizeCultureName(body.nomeCultura);
+  const existingCulture = (await listCulturas()).find(
+    (cultura) => normalizeCultureName(cultura.nomeCultura) === targetName,
+  );
+
+  return existingCulture ?? createCultura(body);
 }
 
 function Field({
@@ -307,7 +329,7 @@ export function AreaRegistrationView() {
       };
       await createIrrigacao(irrigationPayload);
 
-      const cultura = await createCultura({
+      const cultura = await resolveCultura({
         nomeCultura: cropForm.nomeCultura.trim(),
         descricao: cropForm.descricao.trim(),
         necessidadeHidricaMm: numberFromInput(cropForm.necessidadeHidricaMm),
@@ -346,21 +368,6 @@ export function AreaRegistrationView() {
           <span className="font-semibold text-red-500">*</span> Campos obrigatórios
         </p>
       </div>
-
-      {feedback ? (
-        <div
-          className={[
-            "flex items-start gap-3 rounded-lg border px-4 py-3 text-sm font-semibold",
-            feedback.type === "success"
-              ? "border-verde-floresta/30 bg-verde-floresta/10 text-verde-floresta"
-              : "border-red-500/30 bg-red-500/10 text-red-600",
-          ].join(" ")}
-          role={feedback.type === "error" ? "alert" : "status"}
-        >
-          {feedback.type === "success" ? <CheckCircle2 className="size-5 shrink-0" aria-hidden /> : null}
-          <span>{feedback.message}</span>
-        </div>
-      ) : null}
 
       <FormSection
         icon={MapPinned}
@@ -608,6 +615,21 @@ export function AreaRegistrationView() {
         </div>
       </FormSection>
 
+      {feedback ? (
+        <div
+          className={[
+            "flex items-start gap-3 rounded-lg border px-4 py-3 text-sm font-semibold",
+            feedback.type === "success"
+              ? "border-verde-floresta/30 bg-verde-floresta/10 text-verde-floresta"
+              : "border-red-500/30 bg-red-500/10 text-red-600",
+          ].join(" ")}
+          role={feedback.type === "error" ? "alert" : "status"}
+        >
+          {feedback.type === "success" ? <CheckCircle2 className="size-5 shrink-0" aria-hidden /> : null}
+          <span>{feedback.message}</span>
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--db-border)] bg-[var(--db-surface)] p-4 shadow-sm sm:p-5">
         <p className={`max-w-xl text-sm ${textMuted}`}>
           O cadastro será salvo em ordem: área, solo, irrigação, cultura e plantio.
@@ -630,11 +652,6 @@ export function AreaRegistrationView() {
       {areaValid && !formValid ? (
         <p className={`text-sm ${textMuted}`}>
           Agora complete os blocos de solo, irrigação e plantio para habilitar o cadastro.
-        </p>
-      ) : null}
-      {feedback?.type === "success" ? (
-        <p className={`text-sm font-semibold ${textPrimary}`}>
-          Você já pode voltar para a Visão Geral para conferir a área cadastrada.
         </p>
       ) : null}
     </form>

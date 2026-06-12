@@ -1,9 +1,6 @@
 import {
   Bell,
   Building2,
-  Calendar,
-  CalendarDays,
-  CalendarRange,
   Cloud,
   Droplets,
   LayoutDashboard,
@@ -11,7 +8,6 @@ import {
   Plug,
   Settings2,
   Sprout,
-  TrendingUp,
 } from "lucide-react";
 import type { AlertLevel, BreadcrumbItem, NavItem, SettingsTabId, TimeFilter, ViewId } from "@/types/dashboard";
 
@@ -76,18 +72,6 @@ export const TIME_FILTERS: { id: TimeFilter; label: string }[] = [
   { id: "weekly", label: "Semanal" },
   { id: "monthly", label: "Mensal" },
   { id: "yearly", label: "Anual" },
-];
-
-export const VISION_CARDS: {
-  id: TimeFilter;
-  label: string;
-  description: string;
-  icon: typeof CalendarDays;
-}[] = [
-  { id: "daily", label: "Visão do Dia", description: "Indicadores e consumo nas últimas 24h", icon: CalendarDays },
-  { id: "weekly", label: "Visão Semanal", description: "Tendências e comparativos da semana", icon: CalendarRange },
-  { id: "monthly", label: "Visão do Mês", description: "Panorama consolidado do mês corrente", icon: Calendar },
-  { id: "yearly", label: "Visão Anual", description: "Evolução e metas ao longo do ano", icon: TrendingUp },
 ];
 
 export const PAGE_TITLES: Record<ViewId, string> = {

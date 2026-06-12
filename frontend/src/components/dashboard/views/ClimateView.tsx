@@ -21,6 +21,16 @@ function formatDate(value: string | null | undefined) {
   }).format(date);
 }
 
+function formatTime(value: string | null | undefined) {
+  if (!value || !value.includes("T")) return "Não informado";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Não informado";
+  return new Intl.DateTimeFormat("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
 function formatOptionalNumber(value: number | null | undefined, unit: string) {
   if (value === null || value === undefined) return "Não informado";
   return `${Number(value).toLocaleString("pt-BR")} ${unit}`;
@@ -112,8 +122,8 @@ function ClimateDataCard({
           <p className={`mt-1 font-semibold ${textPrimary}`}>{formatDate(latestClimate?.dataColeta)}</p>
         </div>
         <div>
-          <p className={labelMuted}>Data referência</p>
-          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatDate(latestClimate?.dataReferencia)}</p>
+          <p className={labelMuted}>Horário da coleta</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatTime(latestClimate?.dataColeta)}</p>
         </div>
         <div>
           <p className={labelMuted}>Temperatura</p>
@@ -202,6 +212,7 @@ export function ClimateView() {
       {
         key: "temperature" as const,
         label: "Temperatura",
+        cardLabel: "Temperatura Hoje",
         value: `${climate.temperature.toFixed(1)}°C`,
         icon: Thermometer,
         data: history.temperature,
@@ -211,6 +222,7 @@ export function ClimateView() {
       {
         key: "humidity" as const,
         label: "Umidade",
+        cardLabel: "Umidade Hoje",
         value: `${Math.round(climate.humidity)}%`,
         icon: Droplets,
         data: history.humidity,
@@ -220,6 +232,7 @@ export function ClimateView() {
       {
         key: "wind" as const,
         label: "Vento",
+        cardLabel: "Vento Hoje",
         value: `${climate.wind.toFixed(1)} km/h`,
         icon: Wind,
         data: history.wind,
@@ -250,7 +263,7 @@ export function ClimateView() {
               ].join(" ")}
             >
               <div className="flex items-start justify-between">
-                <p className={labelMuted}>{m.label}</p>
+                <p className={labelMuted}>{m.cardLabel}</p>
                 <Icon className="size-4 text-verde-floresta/50" />
               </div>
               <p className={`mt-2 text-2xl font-bold tabular-nums ${textPrimary}`}>{m.value}</p>

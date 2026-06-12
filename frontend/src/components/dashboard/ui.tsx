@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { Thermometer } from "lucide-react";
 import { VisionExcelExportButton } from "@/components/dashboard/VisionExcelExportButton";
 import {
@@ -10,17 +10,15 @@ import {
   btnClick,
   cardBase,
   cardInset,
-  gridCols4,
   labelMuted,
   pageTitle,
   pageTitleFromPath,
+  isVisaoGeralHub,
   showsPagePeriodFilter,
   TIME_FILTER_FROM_PATH,
   TIME_FILTERS,
-  VISION_CARDS,
   VISION_ROUTE_BY_FILTER,
 } from "@/constants/dashboard";
-import { eyebrow } from "@/constants/layout";
 import type { TimeFilter, ViewId } from "@/types/dashboard";
 
 export function DashboardCard({ children, className = "" }: { children: ReactNode; className?: string }) {
@@ -42,21 +40,34 @@ export function PageToolbar({
   onPeriodChange: (filter: TimeFilter) => void;
   pathname: string;
 }) {
+  const navigate = useNavigate();
   const showPeriodFilter = showsPagePeriodFilter(view);
   const showFilters = hasFiltersForView(view, timeFilter);
   const visionTimeFilter = TIME_FILTER_FROM_PATH(pathname);
+  const showVisionPeriodTabs = isVisaoGeralHub(pathname) || visionTimeFilter !== null;
   const showVisionExport = visionTimeFilter !== null;
-  const showActions = showPeriodFilter || showFilters || showVisionExport;
+  const showActions = showPeriodFilter || showVisionPeriodTabs || showFilters || showVisionExport;
+
+  const handlePeriodChange = (filter: TimeFilter) => {
+    if (showVisionPeriodTabs) {
+      navigate(VISION_ROUTE_BY_FILTER[filter]);
+      return;
+    }
+    onPeriodChange(filter);
+  };
 
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-4 sm:mb-8">
       <h1 className={`min-w-0 flex-1 ${pageTitle}`}>{pageTitleFromPath(pathname)}</h1>
       {showActions && (
         <div className="flex flex-wrap items-center justify-end gap-2">
+          {showVisionPeriodTabs && (
+            <PeriodFilterTabs value={visionTimeFilter} onChange={handlePeriodChange} inline />
+          )}
           {showVisionExport && visionTimeFilter && (
             <VisionExcelExportButton timeFilter={visionTimeFilter} />
           )}
-          {showPeriodFilter && (
+          {showPeriodFilter && !showVisionPeriodTabs && (
             <PeriodFilterTabs value={timeFilter} onChange={onPeriodChange} inline />
           )}
           {showFilters && (
@@ -68,80 +79,12 @@ export function PageToolbar({
   );
 }
 
-export function VisionNavCards() {
-  const { pathname } = useLocation();
-
-  return (
-    <div className={gridCols4}>
-      {VISION_CARDS.map(({ id, label, description, icon: Icon }) => {
-        const to = VISION_ROUTE_BY_FILTER[id];
-        const active = pathname === to || pathname.startsWith(`${to}/`);
-        return (
-          <Link
-            key={id}
-            to={to}
-            className={[
-              btnClick,
-              cardBase,
-              "group relative flex min-w-0 w-full cursor-pointer flex-col gap-3 overflow-hidden text-left no-underline",
-              active
-                ? "border-verde-floresta/25 ring-2 ring-verde-floresta/15"
-                : "hover:border-[var(--db-border)]",
-            ].join(" ")}
-          >
-            <span
-              className={[
-                "absolute inset-x-0 top-0 h-0.5 bg-verde-floresta dashboard-soft",
-                active ? "opacity-100" : "opacity-0",
-              ].join(" ")}
-              aria-hidden
-            />
-            <div className="flex items-center justify-between gap-2">
-              <span
-                className={[
-                  "flex size-9 items-center justify-center rounded-md dashboard-soft",
-                  active
-                    ? "bg-verde-floresta text-bege-natural"
-                    : "bg-[var(--db-surface-muted)] text-[var(--db-text-muted)] group-hover:bg-[var(--db-hover)]",
-                ].join(" ")}
-              >
-                <Icon className="size-4" aria-hidden />
-              </span>
-              <span
-                className={[
-                  `${eyebrow} mb-0 text-[10px] dashboard-soft`,
-                  active ? "opacity-100" : "pointer-events-none opacity-0",
-                ].join(" ")}
-              >
-                Ativa
-              </span>
-            </div>
-            <div>
-              <p
-                className={[
-                  "text-sm font-bold dashboard-soft sm:text-base",
-                  active ? "text-verde-floresta" : "text-[var(--db-text)]",
-                ].join(" ")}
-              >
-                {label}
-              </p>
-              <p className="mt-1 text-xs leading-relaxed text-[var(--db-text-muted)] sm:text-sm">
-                {description}
-              </p>
-            </div>
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
-
 export function PeriodFilterTabs({
   value,
   onChange,
   inline = false,
 }: {
-  value: TimeFilter;
+  value: TimeFilter | null;
   onChange: (filter: TimeFilter) => void;
   inline?: boolean;
 }) {

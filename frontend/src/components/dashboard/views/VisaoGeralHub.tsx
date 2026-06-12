@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapPinned } from "lucide-react";
 import { OverviewWelcomeCard } from "@/components/dashboard/views/OverviewWelcomeCard";
-import { VisionNavCards } from "@/components/dashboard/ui";
 import { btnClick, DASHBOARD_ROUTES } from "@/constants/dashboard";
 
 export function VisaoGeralHub() {
@@ -17,7 +16,6 @@ export function VisaoGeralHub() {
         </Link>
       </div>
       <OverviewWelcomeCard />
-      <VisionNavCards />
     </div>
   );
 }

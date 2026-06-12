@@ -42,6 +42,20 @@ final class BoUtils {
         return normalizado;
     }
 
+    static String tipoSoloPortugues(String valor) {
+        String normalizado = normalizar(valor);
+        if (normalizado == null) {
+            return null;
+        }
+        return switch (normalizado.toLowerCase()) {
+            case "clay" -> "Argiloso";
+            case "silt" -> "Siltoso";
+            case "sandy" -> "Arenoso";
+            case "loamy", "loam" -> "Franco";
+            default -> normalizado;
+        };
+    }
+
     static <T> T valorObrigatorio(T valor, String campo) {
         if (valor == null) {
             throw new ValidacaoException(campo + " deve ser informado.");

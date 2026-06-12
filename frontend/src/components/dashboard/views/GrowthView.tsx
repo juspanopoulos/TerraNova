@@ -1,4 +1,5 @@
 import { CropHorizontalChart } from "@/components/dashboard/charts";
+import { ProductivityPredictionCard } from "@/components/dashboard/IaPredictionCards";
 import { DashboardCard, DataTable } from "@/components/dashboard/ui";
 import {
   badgeStatus,
@@ -16,16 +17,45 @@ function formatOptionalNumber(value: number | null, unit: string) {
 }
 
 export function GrowthView() {
-  const { crops: dashboardCrops, predictions, selectedCrop, setSelectedCrop, appliedFilters } = useDashboard();
+  const {
+    crops: dashboardCrops,
+    predictions,
+    selectedCrop,
+    setSelectedCrop,
+    appliedFilters,
+    dashboardSummary,
+    selectedArea,
+    climate,
+    water,
+    company,
+    reloadDashboard,
+  } = useDashboard();
   const crops = dashboardCrops.filter(
     (crop) => appliedFilters.growthCrop === "all" || crop.id === appliedFilters.growthCrop,
   );
+  const activeCrop = crops.find((crop) => crop.id === selectedCrop) ?? crops[0] ?? null;
+  const activeAreaSummary =
+    dashboardSummary?.areas.find((area) => area.idArea === activeCrop?.idArea) ??
+    (selectedArea?.idArea === activeCrop?.idArea ? selectedArea : null);
+  const activeIrrigation = water.irrigation.find((row) => row.idArea === activeCrop?.idArea) ?? null;
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <DashboardCard>
-        <CropHorizontalChart crops={crops} selectedId={selectedCrop} onSelect={setSelectedCrop} />
-      </DashboardCard>
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(22rem,1fr)]">
+        <DashboardCard>
+          <CropHorizontalChart crops={crops} selectedId={selectedCrop} onSelect={setSelectedCrop} />
+        </DashboardCard>
+        <ProductivityPredictionCard
+          key={`prod-${activeCrop?.id ?? "none"}`}
+          crop={activeCrop}
+          climate={climate}
+          areaSummary={activeAreaSummary}
+          selectedArea={selectedArea}
+          company={company}
+          irrigation={activeIrrigation}
+          onPredicted={reloadDashboard}
+        />
+      </div>
       <DashboardCard>
         <p className={`${labelMuted} mb-4`}>Cronograma</p>
         <DataTable caption="Colheitas">
