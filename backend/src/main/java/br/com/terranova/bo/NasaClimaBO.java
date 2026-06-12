@@ -20,6 +20,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -30,6 +32,8 @@ public class NasaClimaBO {
     private static final String PARAMETROS = "T2M,RH2M,PRECTOTCORR,ALLSKY_SFC_UVA,WS2M,ALLSKY_SFC_SW_DWN";
     private static final BigDecimal NASA_MISSING_VALUE = BigDecimal.valueOf(-999);
     private static final BigDecimal MPS_TO_KMH = BigDecimal.valueOf(3.6);
+    private static final ZoneId DATA_REFERENCIA_ZONE = ZoneId.of("America/Sao_Paulo");
+    private static final ZoneOffset DATA_COLETA_ZONE = ZoneOffset.UTC;
 
     @Inject
     @RestClient
@@ -51,7 +55,7 @@ public class NasaClimaBO {
                 propriedadeDAO.buscarPorId(area.getIdPropriedade()), "Propriedade", area.getIdPropriedade());
         validarCoordenadas(propriedade);
 
-        LocalDate dataConsulta = dataReferencia == null ? LocalDate.now().minusDays(5) : dataReferencia;
+        LocalDate dataConsulta = dataReferencia == null ? LocalDate.now(DATA_REFERENCIA_ZONE).minusDays(5) : dataReferencia;
         DadoClimaticoResponse dadoExistente = dadoClimaticoBO
                 .buscarPorAreaDataReferenciaFonte(idArea, dataConsulta, FonteApi.NASA)
                 .orElse(null);
@@ -88,7 +92,7 @@ public class NasaClimaBO {
 
         DadoClimaticoResponse dadoPersistido = dadoClimaticoBO.criar(new DadoClimaticoRequest(
                 idArea,
-                LocalDateTime.now(),
+                LocalDateTime.now(DATA_COLETA_ZONE),
                 dataConsulta,
                 valor(parametros, "T2M", dataNasa, true),
                 valor(parametros, "RH2M", dataNasa, true),

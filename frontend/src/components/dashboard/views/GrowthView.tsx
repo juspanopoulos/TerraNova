@@ -38,6 +38,9 @@ export function GrowthView() {
     dashboardSummary?.areas.find((area) => area.idArea === activeCrop?.idArea) ??
     (selectedArea?.idArea === activeCrop?.idArea ? selectedArea : null);
   const activeIrrigation = water.irrigation.find((row) => row.idArea === activeCrop?.idArea) ?? null;
+  const productivityPredictions = predictions.filter(
+    (prediction) => prediction.modelType === "PRODUTIVIDADE",
+  );
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -99,44 +102,41 @@ export function GrowthView() {
       </DashboardCard>
 
       <DashboardCard>
-        <p className={`${labelMuted} mb-4`}>Predições IA</p>
-        <DataTable caption="Predições IA">
+        <div className="mb-4">
+          <p className={labelMuted}>Previsão de Produtividade (IA)</p>
+          <p className={`mt-1 text-sm ${textMuted}`}>
+            Histórico de previsões do rendimento esperado da cultura em toneladas por hectare.
+          </p>
+        </div>
+        <DataTable caption="Previsão de Produtividade (IA)">
           <thead>
             <tr>
               <th className={thClass}>Data</th>
               <th className={thClass}>Área</th>
               <th className={thClass}>Cultura</th>
-              <th className={thClass}>Modelo</th>
-              <th className={thClass}>Produtividade</th>
+              <th className={thClass}>Produtividade prevista</th>
               <th className={thClass}>Classificação</th>
-              <th className={thClass}>Água sugerida</th>
-              <th className={thClass}>Situação</th>
+              <th className={thClass}>Orientação</th>
             </tr>
           </thead>
           <tbody>
-            {predictions.length === 0 ? (
+            {productivityPredictions.length === 0 ? (
               <tr>
-                <td className={tdClass} colSpan={8}>
-                  Nenhuma predição de IA encontrada.
+                <td className={tdClass} colSpan={6}>
+                  Nenhuma previsão de produtividade encontrada.
                 </td>
               </tr>
             ) : (
-              predictions.map((prediction) => (
+              productivityPredictions.map((prediction) => (
                 <tr key={prediction.id} className={rowHover}>
                   <td className={tdClass}>{prediction.date || "Não informada"}</td>
                   <td className={`${tdClass} ${textMuted}`}>{prediction.sector}</td>
                   <td className={tdClass}>{prediction.cropName ?? "Não informada"}</td>
-                  <td className={tdClass}>{prediction.type}</td>
                   <td className={`${tdClass} tabular-nums`}>
                     {formatOptionalNumber(prediction.productivity, "t/ha")}
                   </td>
                   <td className={tdClass}>{prediction.classification}</td>
-                  <td className={`${tdClass} tabular-nums`}>
-                    {formatOptionalNumber(prediction.waterVolumeMm, "mm")}
-                  </td>
-                  <td className={tdClass}>
-                    <span className={badgeStatus}>{prediction.situation}</span>
-                  </td>
+                  <td className={`${tdClass} max-w-xl ${textMuted}`}>{prediction.recommendation}</td>
                 </tr>
               ))
             )}

@@ -9,25 +9,68 @@ import { coletarClimaNasa } from "@/lib/api/climateApi";
 import { climateMetricColor } from "@/lib/dashboard/chartTheme";
 import type { DadoClimaticoResponse } from "@/lib/api/types";
 
-function formatDate(value: string | null | undefined) {
-  if (!value) return "Não informada";
-  const normalized = value.includes("T") ? value : `${value}T00:00:00`;
+const NASA_COLLECTION_TIME_ZONE = "America/Sao_Paulo";
+const DATE_TIME_WITH_OFFSET_PATTERN = /(?:Z|[+-]\d{2}:?\d{2})$/i;
+
+function toUtcIsoDate(date: Date) {
+  return [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, "0"),
+    String(date.getUTCDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function datePartsInTimeZone(date: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone,
+    year: "numeric",
+  }).formatToParts(date);
+  const valueByType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return {
+    day: Number(valueByType.day),
+    month: Number(valueByType.month),
+    year: Number(valueByType.year),
+  };
+}
+
+function parseCalendarDate(value: string) {
+  const [year, month, day] = value.slice(0, 10).split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const date = new Date(year, month - 1, day);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function parseCollectionDate(value: string | null | undefined, source?: string | null) {
+  if (!value) return null;
+  if (!value.includes("T")) return parseCalendarDate(value);
+
+  const normalized =
+    source === "NASA" && !DATE_TIME_WITH_OFFSET_PATTERN.test(value) ? `${value}Z` : value;
   const date = new Date(normalized);
-  if (Number.isNaN(date.getTime())) return "Não informada";
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatDate(value: string | null | undefined, source?: string | null) {
+  const date = parseCollectionDate(value, source);
+  if (!date) return "Não informada";
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    ...(source === "NASA" && value?.includes("T") ? { timeZone: NASA_COLLECTION_TIME_ZONE } : {}),
   }).format(date);
 }
 
-function formatTime(value: string | null | undefined) {
+function formatTime(value: string | null | undefined, source?: string | null) {
   if (!value || !value.includes("T")) return "Não informado";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Não informado";
+  const date = parseCollectionDate(value, source);
+  if (!date) return "Não informado";
   return new Intl.DateTimeFormat("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",
+    ...(source === "NASA" ? { timeZone: NASA_COLLECTION_TIME_ZONE } : {}),
   }).format(date);
 }
 
@@ -47,9 +90,10 @@ function sourceLabel(source: string | null | undefined) {
 }
 
 function nasaReferenceDate() {
-  const date = new Date();
-  date.setDate(date.getDate() - 5);
-  return date.toISOString().slice(0, 10);
+  const { day, month, year } = datePartsInTimeZone(new Date(), NASA_COLLECTION_TIME_ZONE);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() - 5);
+  return toUtcIsoDate(date);
 }
 
 function isSameDate(value: string | null | undefined, isoDate: string) {
@@ -118,12 +162,20 @@ function ClimateDataCard({
 
       <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
         <div>
+          <p className={labelMuted}>Dados referentes a</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatDate(latestClimate?.dataReferencia)}</p>
+        </div>
+        <div>
           <p className={labelMuted}>Última coleta</p>
-          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatDate(latestClimate?.dataColeta)}</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>
+            {formatDate(latestClimate?.dataColeta, latestClimate?.fonteApi)}
+          </p>
         </div>
         <div>
           <p className={labelMuted}>Horário da coleta</p>
-          <p className={`mt-1 font-semibold ${textPrimary}`}>{formatTime(latestClimate?.dataColeta)}</p>
+          <p className={`mt-1 font-semibold ${textPrimary}`}>
+            {formatTime(latestClimate?.dataColeta, latestClimate?.fonteApi)}
+          </p>
         </div>
         <div>
           <p className={labelMuted}>Temperatura</p>

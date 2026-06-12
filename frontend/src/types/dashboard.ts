@@ -199,6 +199,7 @@ export type PredictionItem = {
   sector: string;
   cropName: string | null;
   date: string;
+  modelType: string;
   type: string;
   model: string;
   version: string;
@@ -207,6 +208,7 @@ export type PredictionItem = {
   classification: string;
   waterVolumeMm: number | null;
   situation: string;
+  recommendation: string;
   error: string | null;
 };
 

@@ -487,6 +487,63 @@ function humanizeEnum(value: string | null | undefined, fallback = "Não informa
     .join(" ");
 }
 
+function normalizeForLookup(value: string | null | undefined) {
+  return (value ?? "")
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function normalizePredictionType(value: string | null | undefined) {
+  if (value === "IRRIGACAO") return "Irrigação";
+  if (value === "PRODUTIVIDADE") return "Produtividade";
+  return humanizeEnum(value);
+}
+
+function productivityClassification(value: string | null | undefined) {
+  const normalized = normalizeForLookup(value).replace(/[_-]+/g, " ");
+  if (!normalized) return "Sem classificação";
+  if (["alta", "alto"].includes(normalized)) return "Alta";
+  if (["media", "medio", "moderada", "moderado"].includes(normalized)) return "Média";
+  if (["baixa", "baixo"].includes(normalized)) return "Baixa";
+  if (["boa", "bom"].includes(normalized)) return "Boa";
+  return humanizeEnum(value, "Sem classificação");
+}
+
+function irrigationSituation(value: string | null | undefined) {
+  const normalized = normalizeForLookup(value).replace(/[_-]+/g, " ");
+  if (!normalized) return "Sem situação registrada";
+  const labels: Record<string, string> = {
+    "ainda pode regar": "Pode irrigar mais",
+    "esta perfeito": "Irrigação adequada",
+    "estah perfeito": "Irrigação adequada",
+    "esta gastando mais agua do que o necessario": "Está gastando mais água do que o necessário",
+    "deficit moderado": "Déficit moderado",
+    "deficit hidrico": "Déficit hídrico",
+    "excesso irrigacao": "Excesso de irrigação",
+    "excesso de irrigacao": "Excesso de irrigação",
+  };
+  return labels[normalized] ?? humanizeEnum(value, "Sem situação registrada");
+}
+
+function productivityRecommendation(classification: string, productivity: number | null) {
+  const normalized = normalizeForLookup(classification);
+  if (normalized === "alta" || normalized === "boa") {
+    return "Manter o manejo atual e acompanhar clima, solo e irrigação até a colheita.";
+  }
+  if (normalized === "media") {
+    return "Revisar irrigação e adubação para tentar elevar a produtividade prevista.";
+  }
+  if (normalized === "baixa") {
+    return "Priorizar diagnóstico de solo, água e clima antes da colheita.";
+  }
+  if (productivity !== null) {
+    return "Acompanhar a lavoura e gerar nova previsão quando houver dados climáticos mais recentes.";
+  }
+  return "Gere uma nova previsão com dados completos para obter uma orientação.";
+}
+
 function soilTypeLabel(value: string | null | undefined) {
   if (!value) return "Não informado";
   return SOIL_TYPE_LABELS[value.trim().toLowerCase()] ?? value;
@@ -980,23 +1037,38 @@ function mapPredictions(
 
   return [...predictions]
     .sort((a, b) => dateTimeMs(b.dataPredicao) - dateTimeMs(a.dataPredicao))
-    .map((prediction) => ({
-      id: String(prediction.idPredicao),
-      idArea: prediction.idArea,
-      idAreaCultura: prediction.idAreaCultura,
-      sector: namesByArea.get(prediction.idArea) ?? `Área ${prediction.idArea}`,
-      cropName: prediction.idAreaCultura ? cropByPlantingId.get(prediction.idAreaCultura) ?? null : null,
-      date: formatDateOnly(prediction.dataPredicao),
-      type: humanizeEnum(prediction.tipoModelo),
-      model: prediction.nomeModelo ?? "Não informado",
-      version: prediction.versaoModelo ?? "Não informado",
-      status: humanizeEnum(prediction.status),
-      productivity: prediction.produtividadePrevista,
-      classification: prediction.classificacao ?? "Não informado",
-      waterVolumeMm: prediction.volumeAguaSugeridoMm,
-      situation: prediction.situacao ?? "Não informado",
-      error: prediction.erro,
-    }));
+    .map((prediction) => {
+      const modelType = prediction.tipoModelo ?? "";
+      const classification =
+        modelType === "PRODUTIVIDADE"
+          ? productivityClassification(prediction.classificacao)
+          : "Não se aplica";
+      const situation =
+        modelType === "IRRIGACAO" ? irrigationSituation(prediction.situacao) : "Não se aplica";
+
+      return {
+        id: String(prediction.idPredicao),
+        idArea: prediction.idArea,
+        idAreaCultura: prediction.idAreaCultura,
+        sector: namesByArea.get(prediction.idArea) ?? `Área ${prediction.idArea}`,
+        cropName: prediction.idAreaCultura ? cropByPlantingId.get(prediction.idAreaCultura) ?? null : null,
+        date: formatDateOnly(prediction.dataPredicao),
+        modelType,
+        type: normalizePredictionType(modelType),
+        model: prediction.nomeModelo ?? "Não informado",
+        version: prediction.versaoModelo ?? "Não informado",
+        status: humanizeEnum(prediction.status),
+        productivity: prediction.produtividadePrevista,
+        classification,
+        waterVolumeMm: prediction.volumeAguaSugeridoMm,
+        situation,
+        recommendation:
+          modelType === "PRODUTIVIDADE"
+            ? productivityRecommendation(classification, prediction.produtividadePrevista)
+            : situation,
+        error: prediction.erro,
+      };
+    });
 }
 
 export { getGreeting, formatTodayPt } from "@/utils/format/date";

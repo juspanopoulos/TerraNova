@@ -113,9 +113,41 @@ type IrrigationDraft = {
 
 function normalize(value: string | null | undefined) {
   return (value ?? "")
+    .trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
+}
+
+function productivityClassificationLabel(value: string | null | undefined) {
+  const normalized = normalize(value).replace(/[_-]+/g, " ");
+  if (!normalized) return "Sem classificação";
+  if (["alta", "alto"].includes(normalized)) return "Alta";
+  if (["media", "medio", "moderada", "moderado"].includes(normalized)) return "Média";
+  if (["baixa", "baixo"].includes(normalized)) return "Baixa";
+  if (["boa", "bom"].includes(normalized)) return "Boa";
+  return normalized
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
+function productivityGuidance(classification: string | null | undefined, productivity: number | null | undefined) {
+  const normalized = normalize(classification);
+  if (normalized === "alta" || normalized === "boa") {
+    return "Manter o manejo atual e acompanhar clima, solo e irrigação até a colheita.";
+  }
+  if (normalized === "media") {
+    return "Revisar irrigação e adubação para tentar elevar a produtividade prevista.";
+  }
+  if (normalized === "baixa") {
+    return "Priorizar diagnóstico de solo, água e clima antes da colheita.";
+  }
+  if (productivity !== null && productivity !== undefined) {
+    return "Acompanhar a lavoura e gerar nova previsão quando houver dados climáticos mais recentes.";
+  }
+  return "Gere uma nova previsão com dados completos para obter uma orientação.";
 }
 
 function formatNumber(value: number | null | undefined, unit = "") {
@@ -384,12 +416,16 @@ export function ProductivityPredictionCard({
       setMessage(errorMessage(error, "Não foi possível gerar a previsão de produtividade."));
     }
   };
+  const resultClassification = result ? productivityClassificationLabel(result.classificacao) : null;
+  const resultGuidance = result
+    ? productivityGuidance(resultClassification, result.produtividade)
+    : null;
 
   return (
     <DashboardCard className="h-full">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className={labelMuted}>Previsão de produtividade</p>
+          <p className={labelMuted}>Previsão de Produtividade (IA)</p>
           <h2 className={`mt-1 text-lg font-bold ${textPrimary}`}>
             {result ? `${formatNumber(result.produtividade, "t/ha")}` : crop?.name ?? "Sem plantio selecionado"}
           </h2>
@@ -407,11 +443,15 @@ export function ProductivityPredictionCard({
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className={cardInset}>
             <p className={labelMuted}>Classificação</p>
-            <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{result.classificacao}</p>
+            <p className={`mt-1 text-lg font-bold ${textPrimary}`}>{resultClassification}</p>
           </div>
           <div className={cardInset}>
             <p className={labelMuted}>Modelo</p>
             <p className={`mt-1 text-lg font-bold ${textPrimary}`}>GS-M1</p>
+          </div>
+          <div className={`${cardInset} col-span-2`}>
+            <p className={labelMuted}>Orientação</p>
+            <p className={`mt-1 text-sm leading-relaxed ${textPrimary}`}>{resultGuidance}</p>
           </div>
         </div>
       ) : null}
