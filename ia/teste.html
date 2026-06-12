@@ -1,290 +1,1266 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>TerraNova IA - Teste</title>
+
+    <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>TerraNova IA - Demonstração dos Modelos</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
+
+        :root{
+            --primary:#2E7D32;
+            --primary-dark:#1B5E20;
+            --secondary:#43A047;
+            --light:#F4F7FA;
+            --white:#FFFFFF;
+            --text:#263238;
+            --border:#E0E0E0;
+            --success:#E8F5E9;
+            --info:#E3F2FD;
+            --warning:#FFF8E1;
+            --danger:#FFEBEE;
+            --shadow:0 8px 25px rgba(0,0,0,.08);
         }
 
-        section {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
 
-        h2 {
-            margin-top: 0;
+        body{
+            font-family:'Segoe UI',sans-serif;
+            background:var(--light);
+            color:var(--text);
+        }
+
+        header{
+            background:
+            linear-gradient(
+                135deg,
+                var(--primary-dark),
+                var(--secondary)
+            );
+
+            color:white;
+            text-align:center;
+            padding:50px 20px;
+        }
+
+        header h1{
+            font-size:42px;
+            margin-bottom:15px;
+        }
+
+        header p{
+            max-width:900px;
+            margin:auto;
+            line-height:1.8;
+        }
+
+        .container{
+            width:95%;
+            max-width:1400px;
+            margin:auto;
+            padding:30px 0;
+        }
+
+        .card{
+            background:white;
+            border-radius:18px;
+            padding:30px;
+            margin-bottom:30px;
+            box-shadow:var(--shadow);
+        }
+
+        .badge{
+            display:inline-block;
+            background:var(--primary);
+            color:white;
+            padding:8px 15px;
+            border-radius:50px;
+            font-size:13px;
+            margin-bottom:15px;
+            font-weight:600;
+        }
+
+        .card h2{
+            color:var(--primary);
+            margin-bottom:15px;
+        }
+
+        .info-box{
+            background:var(--info);
+            border-left:6px solid #1976D2;
+            padding:20px;
+            border-radius:10px;
+            margin-bottom:20px;
+        }
+
+        .info-box h3{
+            margin-bottom:10px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:
+                repeat(auto-fit,minmax(280px,1fr));
+
+            gap:20px;
+        }
+
+        .field{
+            display:flex;
+            flex-direction:column;
+        }
+
+        .field label{
+            font-weight:600;
+            margin-bottom:5px;
+        }
+
+        .field small{
+            color:#666;
+            margin-bottom:8px;
+            min-height:36px;
         }
 
         input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 10px;
+        select{
+            padding:12px;
+            border:1px solid #CCC;
+            border-radius:10px;
+            font-size:14px;
         }
 
-        button {
-            padding: 10px 15px;
-            cursor: pointer;
+        button{
+            background:var(--primary);
+            color:white;
+            border:none;
+            padding:14px 22px;
+            border-radius:10px;
+            cursor:pointer;
+            font-size:15px;
+            transition:.2s;
         }
 
-        pre {
-            background: #f4f4f4;
-            padding: 10px;
-            overflow: auto;
+        button:hover{
+            background:var(--primary-dark);
         }
+
+        .button-area{
+            display:flex;
+            gap:10px;
+            margin-top:20px;
+            flex-wrap:wrap;
+        }
+
+        .health{
+            background:#1565C0;
+        }
+
+        .health:hover{
+            background:#0D47A1;
+        }
+
+        pre{
+            background:#1E1E1E;
+            color:#8CFF8C;
+            padding:15px;
+            border-radius:10px;
+            overflow:auto;
+        }
+
+        .payload{
+            margin-top:20px;
+        }
+
+        .resultado{
+            margin-top:20px;
+        }
+
+        .cards-result{
+            display:grid;
+            grid-template-columns:
+                repeat(auto-fit,minmax(220px,1fr));
+
+            gap:20px;
+            margin-top:20px;
+        }
+
+        .result-card{
+            background:white;
+            border-radius:12px;
+            padding:20px;
+            text-align:center;
+            box-shadow:var(--shadow);
+        }
+
+        .result-card h4{
+            margin-bottom:10px;
+            color:#666;
+        }
+
+        .result-card span{
+            font-size:28px;
+            font-weight:bold;
+            color:var(--primary);
+        }
+
+        .fluxo{
+            background:#FAFAFA;
+            padding:20px;
+            border-radius:10px;
+            text-align:center;
+            line-height:2;
+            margin-top:20px;
+        }
+
+        .classificacao{
+            margin-top:20px;
+            background:var(--warning);
+            border-left:6px solid #F9A825;
+            padding:15px;
+            border-radius:10px;
+        }
+
+        .classificacao ul{
+            margin-left:20px;
+            margin-top:10px;
+        }
+
+        .api-status{
+            margin-top:20px;
+            padding:15px;
+            border-radius:10px;
+            background:#F5F5F5;
+        }
+
+        footer{
+            text-align:center;
+            padding:40px;
+            color:#777;
+        }
+
     </style>
+
 </head>
+
 <body>
 
-<h1>TerraNova IA - Testes</h1>
+    <header>
 
-<!-- ML1 -->
+    <h1>🌱 TerraNova IA</h1>
 
-<section>
+    <p>
 
-    <h2>ML1 - Produtividade</h2>
+    Sistema de Agricultura Inteligente baseado em
+    Machine Learning para previsão de produtividade
+    e recomendação de irrigação.
 
-    <select id="region">
-        <option>North</option>
-        <option>South</option>
-        <option>East</option>
-        <option>West</option>
-    </select>
+    </p>
 
-    <select id="soil_type">
-        <option>Clay</option>
-        <option>Loam</option>
-        <option>Peaty</option>
-        <option>Sandy</option>
-        <option>Silt</option>
-    </select>
+    </header>
 
-    <select id="crop">
-        <option>Rice</option>
-        <option>Wheat</option>
-        <option>Maize</option>
-        <option>Cotton</option>
-        <option>Soybean</option>
-    </select>
+    <div class="container">
 
-    <select id="weather_condition">
-        <option>Sunny</option>
-        <option>Rainy</option>
-    </select>
+        <div class="card">
 
-    <input type="number" id="rainfall_mm" placeholder="Rainfall mm" value="1200">
+            <h2>🔌 Status da API</h2>
 
-    <input type="number" id="temperature_celsius" placeholder="Temperatura" value="28">
+            <p>
+            Verifica se o backend Flask está funcionando.
+            </p>
 
-    <input type="number" id="fertilizer_used" value="1">
+            <div class="button-area">
 
-    <input type="number" id="irrigation_used" value="1">
+            <button
+            class="health"
+            onclick="verificarAPI()">
 
-    <input type="number" id="days_to_harvest" value="120">
+            Verificar API
 
-    <button onclick="testarML1()">
-        Testar ML1
-    </button>
+            </button>
 
-    <pre id="resultado_ml1"></pre>
+        </div>
 
-</section>
+        <div
+        id="api_status"
+        class="api-status">
 
-<!-- ML2 -->
+            Aguardando verificação...
 
-<section>
+        </div>
 
-    <h2>ML2 - Irrigação</h2>
+    </div>
+    <div class="container">
+        <!-- ========================= -->
+        <!-- MODELO 1 -->
+        <!-- ========================= -->
 
-    <input type="number" step="any"
-           id="latitude"
-           value="-23.5505">
+        <div class="card">
 
-    <input type="number" step="any"
-           id="longitude"
-           value="-46.6333">
+            <span class="badge">
+            MODELO 1
+            </span>
 
-    <select id="soil_type2">
-        <option>Clay</option>
-        <option>Loam</option>
-        <option>Sandy</option>
-        <option>Silt</option>
-        <option>Peaty</option>
-        <option>Chalky</option>
-    </select>
+            <h2>📈 Previsão de Produtividade Agrícola</h2>
 
-    <input type="number"
-           id="soil_moisture"
-           value="45">
+            <div class="info-box">
 
-    <select id="crop_type">
-        <option>Rice</option>
-        <option>Wheat</option>
-        <option>Maize</option>
-        <option>Cotton</option>
-    </select>
+            <h3>Objetivo do Modelo</h3>
 
-    <select id="crop_growth_stage">
-        <option>Germination</option>
-        <option>Vegetative</option>
-        <option>Flowering</option>
-        <option>Maturity</option>
-    </select>
+            <p>
+            Este modelo utiliza Machine Learning para prever a produtividade
+            agrícola com base em informações da região, tipo de solo,
+            cultura cultivada, clima e práticas agrícolas.
+            </p>
 
-    <select id="irrigation_type">
-        <option>Drip</option>
-        <option>Sprinkler</option>
-        <option>Surface</option>
-    </select>
+        </div>
 
-    <input type="number"
-           id="field_area_hectare"
-           value="10">
+        <div class="grid">
 
-    <select id="mulching_used">
-        <option value="1">Yes</option>
-        <option value="0">No</option>
-    </select>
+            <div class="field">
 
-    <input type="number"
-           id="previous_irrigation_mm"
-           value="30">
+                <label>Região</label>
 
-    <input type="number"
-           id="current_water_usage"
-           value="8">
+                <small>
+                Região geográfica onde a produção está localizada.
+                </small>
 
-    <button onclick="testarML2()">
-        Testar ML2
-    </button>
+                <select id="region">
+                <option>West</option>
+                <option>South</option>
+                <option>North</option>
+                <option>East</option>
+                </select>
 
-    <pre id="resultado_ml2"></pre>
+            </div>
 
-</section>
+            <div class="field">
 
-<script>
+                <label>Tipo de Solo</label>
 
-const API = "http://localhost:5000";
+                <small>
+                Característica predominante do solo utilizado.
+                </small>
 
-async function testarML1() {
+                <select id="soil_type">
+                    <option>Sandy</option>
+                    <option>Clay</option>
+                    <option>Loam</option>
+                    <option>Silt</option>
+                    <option>Peaty</option>
+                    <option>Chalky</option>
+                </select>
 
-    const payload = {
+            </div>
 
-        region:
-            document.getElementById("region").value,
+            <div class="field">
 
-        soil_type:
-            document.getElementById("soil_type").value,
+                <label>Cultura</label>
 
-        crop:
-            document.getElementById("crop").value,
+                <small>
+                Tipo de plantação analisada pelo modelo.
+                </small>
 
-        weather_condition:
-            document.getElementById("weather_condition").value,
+                <select id="crop">
+                    <option>Cotton</option>
+                    <option>Rice</option>
+                    <option>Barley</option>
+                    <option>Soybean</option>
+                    <option>Wheat</option>
+                    <option>Maize</option>
+                </select>
 
-        rainfall_mm:
-            Number(document.getElementById("rainfall_mm").value),
+            </div>
 
-        temperature_celsius:
-            Number(document.getElementById("temperature_celsius").value),
+            <div class="field">
 
-        fertilizer_used:
-            Number(document.getElementById("fertilizer_used").value),
+                <label>Condição Climática</label>
 
-        irrigation_used:
-            Number(document.getElementById("irrigation_used").value),
+                <small>
+                Condição predominante observada durante o cultivo.
+                </small>
 
-        days_to_harvest:
-            Number(document.getElementById("days_to_harvest").value)
-    };
+                <select id="weather_condition">
+                    <option>Cloudy</option>
+                    <option>Rainy</option>
+                    <option>Sunny</option>
+                </select>
 
-    const response = await fetch(
-        `${API}/modelo1/predict`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type":"application/json"
-            },
-            body: JSON.stringify(payload)
+            </div>
+
+            <div class="field">
+
+                <label>Chuva (mm)</label>
+
+                <small>
+                Quantidade acumulada de precipitação.
+                </small>
+
+                <input
+                type="number"
+                id="rainfall_mm"
+                value="1200">
+
+            </div>
+
+            <div class="field">
+
+                <label>Temperatura (°C)</label>
+
+                <small>
+                Temperatura média da região.
+                </small>
+
+                <input
+                type="number"
+                id="temperature_celsius"
+                value="28">
+
+            </div>
+
+            <div class="field">
+
+                <label>Fertilizante Utilizado</label>
+
+                <small>
+                    1 = Sim | 0 = Não
+                </small>
+
+                <input
+                    type="number"
+                    id="fertilizer_used"
+                    value="1">
+
+            </div>
+
+            <div class="field">
+
+                <label>Irrigação Utilizada</label>
+
+                <small>
+                1 = Sim | 0 = Não
+                </small>
+
+                <input
+                type="number"
+                id="irrigation_used"
+                value="1">
+
+            </div>
+
+            <div class="field">
+
+                <label>Dias até a Colheita</label>
+
+                <small>
+                Quantidade de dias previstos até a colheita.
+                </small>
+
+                <input
+                type="number"
+                id="days_to_harvest"
+                value="120">
+
+            </div>
+
+        </div>
+
+        <div class="fluxo">
+
+            Usuário preenche os dados
+
+            <br>↓<br>
+
+            Frontend gera JSON
+
+            <br>↓<br>
+
+            API Flask
+
+            <br>↓<br>
+
+            Modelo de Machine Learning
+
+            <br>↓<br>
+
+            Produtividade Prevista
+
+            </div>
+
+            <div class="classificacao">
+
+                <h3>Interpretação da Classificação</h3>
+
+                <ul>
+
+                <li>
+                <b>Alta:</b>
+                Produtividade ≥ 8
+                </li>
+
+                <li>
+                <b>Média:</b>
+                Produtividade entre 5 e 7.99
+                </li>
+
+                <li>
+                <b>Baixa:</b>
+                Produtividade abaixo de 5
+                </li>
+
+                </ul>
+
+            </div>
+
+            <div class="button-area">
+
+                <button onclick="testarML1()">
+
+                Executar Modelo 1
+
+                </button>
+
+            </div>
+
+            <div class="payload">
+
+                <h3>Payload enviado para API</h3>
+
+                <pre id="payload_ml1">
+
+                Aguardando execução...
+
+                </pre>
+
+            </div>
+
+            <div class="resultado">
+
+                <h3>Resposta da API</h3>
+
+                <pre id="resultado_ml1">
+
+                Aguardando execução...
+
+                </pre>
+
+            </div>
+
+            <div class="cards-result">
+
+                <div class="result-card">
+
+                    <h4>Produtividade</h4>
+
+                    <span id="produtividade_card">
+
+                    -
+
+                    </span>
+
+                </div>
+
+                <div class="result-card">
+
+                    <h4>Classificação</h4>
+
+                    <span id="classificacao_card">
+
+                    -
+
+                    </span>
+                </div>
+
+            </div>
+        </div>
+        <!-- ========================= -->
+        <!-- MODELO 2 -->
+        <!-- ========================= -->
+
+        <div class="card">
+
+            <span class="badge">
+            MODELO 2
+            </span>
+
+            <h2>💧 Recomendação Inteligente de Irrigação</h2>
+
+            <div class="info-box">
+
+                <h3>Objetivo do Modelo</h3>
+
+                <p>
+                Este modelo utiliza Machine Learning para determinar a necessidade
+                de irrigação da cultura com base em características do solo,
+                cultivo e dados climáticos.
+                </p>
+
+            </div>
+
+            <div class="info-box">
+
+                <h3>Integração Climática Automática</h3>
+
+                <p>
+
+                Ao informar Latitude e Longitude, o sistema consulta
+                automaticamente uma API climática para obter:
+
+                </p>
+
+                <ul style="margin-left:20px; margin-top:10px;">
+
+                <li>Temperatura</li>
+                <li>Umidade</li>
+                <li>Chuva</li>
+                <li>Horas de Sol</li>
+                <li>Velocidade do Vento</li>
+
+                </ul>
+
+            </div>
+
+            <div class="grid">
+
+                <div class="field">
+
+                <label>Latitude</label>
+
+                <small>
+                Localização geográfica da fazenda.
+                </small>
+
+                <input
+                type="number"
+                step="any"
+                id="latitude"
+                value="-23.5505">
+
+            </div>
+
+            <div class="field">
+
+                <label>Longitude</label>
+
+                <small>
+                Localização geográfica da fazenda.
+                </small>
+
+                <input
+                type="number"
+                step="any"
+                id="longitude"
+                value="-46.6333">
+
+            </div>
+
+            <div class="field">
+
+                <label>Tipo de Solo</label>
+
+                <small>
+                Tipo predominante do solo.
+                </small>
+
+                <select id="soil_type2">
+
+                    <option>Clay</option>
+                    <option>Silt</option>
+                    <option>Sandy</option>
+                    <option>Loamy</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label>Umidade do Solo</label>
+
+                <small>
+                Quantidade atual de água no solo.
+                </small>
+
+                <input
+                type="number"
+                id="soil_moisture"
+                value="45">
+
+            </div>
+
+            <div class="field">
+
+                <label>Tipo de Cultura</label>
+
+                <small>
+                Cultura analisada pelo modelo.
+                </small>
+
+                <select id="crop_type">
+
+                    <option>Wheat</option>
+                    <option>Maize</option>
+                    <option>Cotton</option>
+                    <option>Rice</option>
+                    <option>Sugarcane</option>
+                    <option>Potato</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label>Estágio da Cultura</label>
+
+                <small>
+                Fase atual de desenvolvimento.
+                </small>
+
+                <select id="crop_growth_stage">
+
+                <option>Vegetative</option>
+                <option>Flowering</option>
+                <option>Harvest</option>
+                <option>Sowing</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label>Tipo de Irrigação</label>
+
+                <small>
+                Método utilizado na propriedade.
+                </small>
+
+                <select id="irrigation_type">
+
+                    <option>Rainfed</option>
+                    <option>Canal</option>
+                    <option>Drip</option>
+                    <option>Sprinkler</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label>Área Plantada (hectares)</label>
+
+                <small>
+                Tamanho da área cultivada.
+                </small>
+
+                <input
+                type="number"
+                id="field_area_hectare"
+                value="10">
+
+            </div>
+
+            <div class="field">
+
+                <label>Cobertura do Solo</label>
+
+                <small>
+                Mulching utilizado na plantação.
+                </small>
+
+                <select id="mulching_used">
+
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label>Irrigação Anterior (mm)</label>
+
+                <small>
+                Última irrigação aplicada.
+                </small>
+
+                <input
+                type="number"
+                id="previous_irrigation_mm"
+                value="30">
+
+            </div>
+
+            <div class="field">
+
+                <label>Consumo Atual de Água</label>
+
+                <small>
+                Consumo atualmente utilizado.
+                </small>
+
+                <input
+                type="number"
+                id="current_water_usage"
+                value="8">
+
+            </div>
+
+        </div>
+
+        <div class="fluxo">
+
+            Latitude + Longitude
+
+            <br>↓<br>
+
+            API Climática
+
+            <br>↓<br>
+
+            Temperatura, Umidade,
+            Chuva, Sol e Vento
+
+            <br>↓<br>
+
+            Modelo de Machine Learning
+
+            <br>↓<br>
+
+            Recomendação de Irrigação
+
+        </div>
+
+        <div class="classificacao">
+
+            <h3>Necessidade Hídrica Base Utilizada</h3>
+
+            <ul>
+
+            <li><b>Rice:</b> 10.0</li>
+
+            <li><b>Sugarcane:</b> 9.0</li>
+
+            <li><b>Cotton:</b> 7.0</li>
+
+            <li><b>Maize:</b> 6.5</li>
+
+            <li><b>Potato:</b> 5.5</li>
+
+            <li><b>Wheat:</b> 4.5</li>
+
+            </ul>
+
+        </div>
+
+        <div class="button-area">
+
+            <button onclick="testarML2()">
+
+            Executar Modelo 2
+
+            </button>
+
+        </div>
+
+        <div class="payload">
+
+            <h3>Payload enviado para API</h3>
+
+            <pre id="payload_ml2">
+
+            Aguardando execução...
+
+            </pre>
+
+        </div>
+
+        <div class="resultado">
+
+            <h3>Resposta da API</h3>
+
+            <pre id="resultado_ml2">
+
+            Aguardando execução...
+
+            </pre>
+
+        </div>
+
+        <div class="cards-result">
+
+            <div class="result-card">
+
+                <h4>Recomendado</h4>
+
+                <span id="recomendado_card">
+
+                -
+
+                </span>
+
+            </div>
+
+            <div class="result-card">
+
+                <h4>Consumo Atual</h4>
+
+                <span id="consumo_card">
+
+                -
+
+                </span>
+
+            </div>
+
+            <div class="result-card">
+
+                <h4>Situação</h4>
+
+                <span id="situacao_card">
+
+                -
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <script>
+
+        const API = "http://localhost:5000";
+
+        /* ========================= */
+        /* HEALTH CHECK */
+        /* ========================= */
+
+        async function verificarAPI(){
+
+            try{
+
+                const response = await fetch(
+                    `${API}/health`
+                );
+
+                const data = await response.json();
+
+                document.getElementById(
+                    "api_status"
+                ).innerHTML = `
+                    <strong>Status:</strong> ${data.status}
+                    <br>
+                    <strong>Serviço:</strong> ${data.service}
+                `;
+
+            }catch(error){
+
+                document.getElementById(
+                    "api_status"
+                ).innerHTML = `
+                    <strong>Erro:</strong>
+                    ${error.message}
+                `;
+
+            }
+
         }
-    );
 
-    const data = await response.json();
+        /* ========================= */
+        /* MODELO 1 */
+        /* ========================= */
 
-    document.getElementById(
-        "resultado_ml1"
-    ).textContent =
-        JSON.stringify(data, null, 2);
-}
+        async function testarML1(){
 
-async function testarML2() {
+            const payload = {
 
-    const payload = {
+                region:
+                    document.getElementById(
+                        "region"
+                    ).value,
 
-        latitude:
-            Number(document.getElementById("latitude").value),
+                soil_type:
+                    document.getElementById(
+                        "soil_type"
+                    ).value,
 
-        longitude:
-            Number(document.getElementById("longitude").value),
+                crop:
+                    document.getElementById(
+                        "crop"
+                    ).value,
 
-        soil_type:
-            document.getElementById("soil_type2").value,
+                weather_condition:
+                    document.getElementById(
+                        "weather_condition"
+                    ).value,
 
-        soil_moisture:
-            Number(document.getElementById("soil_moisture").value),
+                rainfall_mm:
+                    Number(
+                        document.getElementById(
+                            "rainfall_mm"
+                        ).value
+                    ),
 
-        crop_type:
-            document.getElementById("crop_type").value,
+                temperature_celsius:
+                    Number(
+                        document.getElementById(
+                            "temperature_celsius"
+                        ).value
+                    ),
 
-        crop_growth_stage:
-            document.getElementById("crop_growth_stage").value,
+                fertilizer_used:
+                    Number(
+                        document.getElementById(
+                            "fertilizer_used"
+                        ).value
+                    ),
 
-        irrigation_type:
-            document.getElementById("irrigation_type").value,
+                irrigation_used:
+                    Number(
+                        document.getElementById(
+                            "irrigation_used"
+                        ).value
+                    ),
 
-        field_area_hectare:
-            Number(document.getElementById("field_area_hectare").value),
+                days_to_harvest:
+                    Number(
+                        document.getElementById(
+                            "days_to_harvest"
+                        ).value
+                    )
+            };
 
-        mulching_used:
-            document.getElementById("mulching_used").value,
+            document.getElementById(
+                "payload_ml1"
+            ).textContent =
+                JSON.stringify(
+                    payload,
+                    null,
+                    2
+                );
 
-        previous_irrigation_mm:
-            Number(document.getElementById("previous_irrigation_mm").value),
+            try{
 
-        current_water_usage:
-            Number(document.getElementById("current_water_usage").value)
-    };
+                const response = await fetch(
+                    `${API}/modelo1/predict`,
+                    {
+                        method:"POST",
+                        headers:{
+                            "Content-Type":
+                            "application/json"
+                        },
+                        body:JSON.stringify(
+                            payload
+                        )
+                    }
+                );
 
-    const response = await fetch(
-        `${API}/modelo2/predict`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type":"application/json"
-            },
-            body: JSON.stringify(payload)
+                const data =
+                    await response.json();
+
+                document.getElementById(
+                    "resultado_ml1"
+                ).textContent =
+                    JSON.stringify(
+                        data,
+                        null,
+                        2
+                    );
+
+                document.getElementById(
+                    "produtividade_card"
+                ).textContent =
+                    data.produtividade ??
+                    "-";
+
+                document.getElementById(
+                    "classificacao_card"
+                ).textContent =
+                    data.classificacao ??
+                    "-";
+
+            }catch(error){
+
+                document.getElementById(
+                    "resultado_ml1"
+                ).textContent =
+                    "Erro ao conectar com a API:\n\n"
+                    + error.message;
+
+            }
+
         }
-    );
 
-    const data = await response.json();
+        /* ========================= */
+        /* MODELO 2 */
+        /* ========================= */
 
-    document.getElementById(
-        "resultado_ml2"
-    ).textContent =
-        JSON.stringify(data, null, 2);
-}
+        async function testarML2(){
 
-</script>
+            const payload = {
+
+                latitude:
+                    Number(
+                        document.getElementById(
+                            "latitude"
+                        ).value
+                    ),
+
+                longitude:
+                    Number(
+                        document.getElementById(
+                            "longitude"
+                        ).value
+                    ),
+
+                soil_type:
+                    document.getElementById(
+                        "soil_type2"
+                    ).value,
+
+                soil_moisture:
+                    Number(
+                        document.getElementById(
+                            "soil_moisture"
+                        ).value
+                    ),
+
+                crop_type:
+                    document.getElementById(
+                        "crop_type"
+                    ).value,
+
+                crop_growth_stage:
+                    document.getElementById(
+                        "crop_growth_stage"
+                    ).value,
+
+                irrigation_type:
+                    document.getElementById(
+                        "irrigation_type"
+                    ).value,
+
+                field_area_hectare:
+                    Number(
+                        document.getElementById(
+                            "field_area_hectare"
+                        ).value
+                    ),
+
+                mulching_used:
+                    document.getElementById(
+                        "mulching_used"
+                    ).value,
+
+                previous_irrigation_mm:
+                    Number(
+                        document.getElementById(
+                            "previous_irrigation_mm"
+                        ).value
+                    ),
+
+                current_water_usage:
+                    Number(
+                        document.getElementById(
+                            "current_water_usage"
+                        ).value
+                    )
+            };
+
+            document.getElementById(
+                "payload_ml2"
+            ).textContent =
+                JSON.stringify(
+                    payload,
+                    null,
+                    2
+                );
+
+            try{
+
+                const response = await fetch(
+                    `${API}/modelo2/predict`,
+                    {
+                        method:"POST",
+                        headers:{
+                            "Content-Type":
+                            "application/json"
+                        },
+                        body:JSON.stringify(
+                            payload
+                        )
+                    }
+                );
+
+                const data =
+                    await response.json();
+
+                document.getElementById(
+                    "resultado_ml2"
+                ).textContent =
+                    JSON.stringify(
+                        data,
+                        null,
+                        2
+                    );
+
+                document.getElementById(
+                    "recomendado_card"
+                ).textContent =
+                    data.recomendado ??
+                    "-";
+
+                document.getElementById(
+                    "consumo_card"
+                ).textContent =
+                    data.consumo_atual ??
+                    "-";
+
+                document.getElementById(
+                    "situacao_card"
+                ).textContent =
+                    data.situacao ??
+                    "-";
+
+            }catch(error){
+
+                document.getElementById(
+                    "resultado_ml2"
+                ).textContent =
+                    "Erro ao conectar com a API:\n\n"
+                    + error.message;
+
+            }
+
+        }
+
+        </script>
+
+        <footer>
+
+        TerraNova IA © 2026
+
+        <br><br>
+
+        Demonstração dos modelos de Machine Learning
+        para Agricultura Inteligente.
+
+        </footer>
+
+    </div>
 
 </body>
+
 </html>
